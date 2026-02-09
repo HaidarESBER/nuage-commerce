@@ -46,7 +46,7 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.9, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 1.2, delay: 2.5, ease: [0.16, 1, 0.3, 1] }}
-              className="backdrop-blur-md bg-white/10 border border-white/20 rounded-3xl p-8 md:p-12 lg:p-16 max-w-4xl shadow-2xl"
+              className="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-6 md:p-8 lg:p-10 max-w-3xl shadow-2xl"
             >
               {/* Brand tagline - synced with smoke clearing */}
               <motion.h1
@@ -57,7 +57,7 @@ export default function Home() {
                   delay: 3.2,
                   ease: [0.16, 1, 0.3, 1]
                 }}
-                className="font-heading text-6xl md:text-7xl lg:text-8xl text-white mb-8 drop-shadow-2xl tracking-wide"
+                className="font-heading text-4xl md:text-5xl lg:text-6xl text-white mb-6 drop-shadow-2xl tracking-wide"
                 style={{
                   textShadow: '0 4px 20px rgba(0,0,0,0.5), 0 0 60px rgba(212,165,165,0.3)',
                   letterSpacing: '0.05em'
@@ -79,7 +79,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 4, ease: "easeOut" }}
-                className="text-xl md:text-2xl text-white/90 max-w-2xl mb-10 drop-shadow-md"
+                className="text-base md:text-lg text-white/90 max-w-xl mb-8 drop-shadow-md"
               >
                 Accessoires chicha premium pour les connaisseurs
               </motion.p>
@@ -92,11 +92,11 @@ export default function Home() {
               >
                 <Link
                   href="/produits"
-                  className="group inline-flex items-center justify-center px-10 py-5 text-lg font-medium bg-white/95 text-[#2C2C2C] rounded-full hover:bg-[#D4A5A5] hover:text-white transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105"
+                  className="group inline-flex items-center justify-center px-8 py-3 text-base font-medium bg-white/95 text-[#2C2C2C] rounded-full hover:bg-[#D4A5A5] hover:text-white transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105"
                 >
                   Decouvrir la collection
                   <svg
-                    className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform"
+                    className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
