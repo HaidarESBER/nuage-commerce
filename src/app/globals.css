@@ -1,5 +1,87 @@
 @import "tailwindcss";
 
 @theme inline {
+  /* Typography */
   --font-sans: var(--font-inter);
+  --font-heading: var(--font-cormorant);
+
+  /* Brand Colors - Nuage */
+  --color-primary: #2D2D2D;
+  --color-primary-light: #4A4A4A;
+  --color-primary-dark: #1A1A1A;
+
+  --color-accent: #C4A98F;
+  --color-accent-light: #D4BDA6;
+  --color-accent-dark: #A68B6E;
+
+  --color-background: #F7F5F3;
+  --color-background-secondary: #E8E4DF;
+  --color-background-card: #FFFFFF;
+
+  --color-text: #2D2D2D;
+  --color-text-muted: #9B9590;
+
+  --color-muted: #9B9590;
+  --color-muted-light: #B5B0AB;
+
+  --color-success: #6B8E6B;
+  --color-error: #C47070;
+
+  /* Spacing - generous whitespace */
+  --spacing-section: 6rem;
+  --spacing-section-sm: 4rem;
+  --spacing-card: 1.5rem;
+  --spacing-card-lg: 2rem;
+
+  /* Border Radius */
+  --radius-button: 0.25rem;
+  --radius-card: 0.5rem;
+}
+
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+/* Global resets */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Typography defaults */
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+h2 {
+  font-size: 2.25rem;
+}
+
+h3 {
+  font-size: 1.75rem;
+}
+
+/* Focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Selection color */
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-background);
 }
