@@ -5,32 +5,33 @@
 See: .planning/PROJECT.md (updated 2026-02-09)
 
 **Core value:** The brand looks so premium and legitimate that visitors trust it instantly — visual identity drives conversion.
-**Current focus:** Phase 1 Complete — Foundation & Brand
+**Current focus:** Phase 2 In Progress — Product Catalog
 
 ## Current Position
 
-Phase: 1 of 4 (Foundation & Brand) - COMPLETE
-Plan: 3 of 3 in current phase - COMPLETE
-Status: Phase complete, ready for Phase 2
-Last activity: 2026-02-09 — Completed 01-03-PLAN.md
+Phase: 2 of 4 (Product Catalog) - IN PROGRESS
+Plan: 1 of 3 in current phase - COMPLETE
+Status: In progress
+Last activity: 2026-02-09 — Completed 02-01-PLAN.md
 
-Progress: ███░░░░░░░ 25%
+Progress: ████░░░░░░ 33%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: 7.7 min
-- Total execution time: 0.38 hours
+- Total plans completed: 4
+- Average duration: 8.3 min
+- Total execution time: 0.55 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation-brand | 3/3 | 23 min | 7.7 min |
+| 02-product-catalog | 1/3 | 10 min | 10 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (5 min), 01-02 (10 min), 01-03 (8 min)
+- Last 5 plans: 01-01 (5 min), 01-02 (10 min), 01-03 (8 min), 02-01 (10 min)
 - Trend: Stable
 
 ## Accumulated Context
@@ -50,20 +51,21 @@ Recent decisions affecting current work:
 - Semantic color naming (primary, accent, background) (01-03)
 - Button variants: primary/secondary (01-03)
 - Container sizes: sm/md/lg/xl/full (01-03)
+- Prices stored in cents for precision (02-01)
+- URL-based category filtering with ?categorie= param (02-01)
+- Static generation for product detail pages (02-01)
 
-### Phase 1 Summary
+### Phase 2 Progress
 
 **Completed Plans:**
-1. 01-01: Project scaffolding (Next.js 16, Tailwind 4, TypeScript)
-2. 01-02: Brand identity (Nuage, colors, typography)
-3. 01-03: Design system (theme config, fonts, UI components)
+1. 02-01: Product data model and catalog pages
 
-**Foundation Established:**
-- Next.js 16 with App Router
-- Tailwind CSS 4 with brand tokens
-- Cormorant Garamond + Inter fonts
-- Button and Container base components
-- French locale configuration
+**Established:**
+- Product TypeScript types (Product, ProductCategory)
+- 8 sample products in French
+- ProductCard and ProductGrid components
+- /produits listing page with category filtering
+- /produits/[slug] detail pages (static generation)
 
 ### Deferred Issues
 
@@ -76,6 +78,6 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-09
-Stopped at: Completed Phase 1 (01-03-PLAN.md)
+Stopped at: Completed 02-01-PLAN.md
 Resume file: None
-Next: Begin Phase 2 - Product Catalog
+Next: Continue Phase 2 - Product Catalog (02-02)
