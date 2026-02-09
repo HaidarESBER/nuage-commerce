@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { getProductStats } from "@/lib/products";
+import { getOrderStats } from "@/lib/orders";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-  const stats = await getProductStats();
+  const productStats = await getProductStats();
+  const orderStats = await getOrderStats();
 
   return (
     <div className="space-y-8">
@@ -18,23 +20,43 @@ export default async function AdminDashboard() {
         </p>
       </div>
 
-      {/* Stats Grid */}
+      {/* Product Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <StatCard
           title="Total Produits"
-          value={stats.total}
+          value={productStats.total}
           description="Produits dans le catalogue"
         />
         <StatCard
           title="Produits Vedettes"
-          value={stats.featured}
+          value={productStats.featured}
           description="Mis en avant sur le site"
         />
         <StatCard
           title="Rupture de Stock"
-          value={stats.outOfStock}
-          description={stats.outOfStock > 0 ? "A reapprovisionner" : "Tout est en stock"}
-          highlight={stats.outOfStock > 0}
+          value={productStats.outOfStock}
+          description={productStats.outOfStock > 0 ? "A reapprovisionner" : "Tout est en stock"}
+          highlight={productStats.outOfStock > 0}
+        />
+      </div>
+
+      {/* Order Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <StatCard
+          title="Total Commandes"
+          value={orderStats.total}
+          description="Commandes recues"
+        />
+        <StatCard
+          title="En attente"
+          value={orderStats.pending}
+          description={orderStats.pending > 0 ? "A traiter" : "Aucune en attente"}
+          highlight={orderStats.pending > 0}
+        />
+        <StatCard
+          title="En cours"
+          value={orderStats.processing}
+          description="En preparation"
         />
       </div>
 
@@ -55,6 +77,12 @@ export default async function AdminDashboard() {
             className="inline-flex items-center px-4 py-2 border border-primary text-primary rounded-md hover:bg-primary hover:text-background transition-colors"
           >
             Voir tous les produits
+          </Link>
+          <Link
+            href="/admin/commandes"
+            className="inline-flex items-center px-4 py-2 border border-primary text-primary rounded-md hover:bg-primary hover:text-background transition-colors"
+          >
+            Voir les commandes
           </Link>
         </div>
       </div>

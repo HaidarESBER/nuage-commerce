@@ -35,6 +35,12 @@ export default function AdminLayout({
             >
               Produits
             </Link>
+            <Link
+              href="/admin/commandes"
+              className="block px-4 py-2 rounded-md text-primary hover:bg-accent/20 transition-colors"
+            >
+              Commandes
+            </Link>
           </nav>
         </aside>
 

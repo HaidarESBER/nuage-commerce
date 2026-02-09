@@ -129,3 +129,30 @@ export async function updateOrderStatus(
   await writeOrdersFile(orders);
   return orders[index];
 }
+
+/**
+ * Order statistics for admin dashboard
+ */
+export interface OrderStats {
+  total: number;
+  pending: number;
+  processing: number;
+  shipped: number;
+  delivered: number;
+}
+
+/**
+ * Get order statistics
+ * @returns Order counts by status
+ */
+export async function getOrderStats(): Promise<OrderStats> {
+  const orders = await readOrdersFile();
+
+  return {
+    total: orders.length,
+    pending: orders.filter((o) => o.status === "pending").length,
+    processing: orders.filter((o) => o.status === "processing").length,
+    shipped: orders.filter((o) => o.status === "shipped").length,
+    delivered: orders.filter((o) => o.status === "delivered").length,
+  };
+}
