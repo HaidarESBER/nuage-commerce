@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { fontVariables } from "@/lib/fonts";
 import { CartProvider } from "@/contexts/CartContext";
+import { WishlistProvider } from "@/contexts/WishlistContext";
 import { Header, Footer } from "@/components/layout";
 import { FloatingCartButton } from "@/components/mobile/FloatingCartButton";
 import "./globals.css";
@@ -36,12 +37,14 @@ export default function RootLayout({
     <html lang="fr">
       <body className={`${fontVariables} font-sans antialiased`}>
         <CartProvider>
-          <Header />
-          <div className="flex flex-col min-h-screen">
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
-          <FloatingCartButton />
+          <WishlistProvider>
+            <Header />
+            <div className="flex flex-col min-h-screen">
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
+            <FloatingCartButton />
+          </WishlistProvider>
         </CartProvider>
       </body>
     </html>

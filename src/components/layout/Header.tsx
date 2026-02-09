@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui";
 import { CartButton } from "@/components/cart";
+import { useWishlist } from "@/contexts/WishlistContext";
+import { motion, AnimatePresence } from "framer-motion";
 
 /**
  * Site header with brand name and navigation
@@ -18,6 +20,7 @@ import { CartButton } from "@/components/cart";
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { wishlistItems } = useWishlist();
 
   // Close menu on navigation
   const handleNavClick = () => {
@@ -41,11 +44,62 @@ export function Header() {
             >
               Produits
             </Link>
+
+            {/* Wishlist button */}
+            <Link
+              href="/favoris"
+              className="relative text-primary hover:text-accent transition-colors"
+              aria-label={`Favoris (${wishlistItems.length} produit${wishlistItems.length > 1 ? 's' : ''})`}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+              </svg>
+              {wishlistItems.length > 0 && (
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={wishlistItems.length}
+                    initial={{ scale: 0.5 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0.5 }}
+                    transition={{ duration: 0.2, type: "spring", stiffness: 400, damping: 15 }}
+                    className="absolute -top-2 -right-2 bg-accent text-background text-xs font-medium w-5 h-5 rounded-full flex items-center justify-center"
+                  >
+                    {wishlistItems.length}
+                  </motion.span>
+                </AnimatePresence>
+              )}
+            </Link>
+
             <CartButton />
           </nav>
 
           {/* Mobile Navigation Controls */}
           <div className="flex md:hidden items-center gap-4">
+            {/* Wishlist button */}
+            <Link
+              href="/favoris"
+              className="relative text-primary hover:text-accent transition-colors"
+              aria-label={`Favoris (${wishlistItems.length} produit${wishlistItems.length > 1 ? 's' : ''})`}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+              </svg>
+              {wishlistItems.length > 0 && (
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={wishlistItems.length}
+                    initial={{ scale: 0.5 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0.5 }}
+                    transition={{ duration: 0.2, type: "spring", stiffness: 400, damping: 15 }}
+                    className="absolute -top-2 -right-2 bg-accent text-background text-xs font-medium w-5 h-5 rounded-full flex items-center justify-center"
+                  >
+                    {wishlistItems.length}
+                  </motion.span>
+                </AnimatePresence>
+              )}
+            </Link>
+
             <CartButton />
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -95,6 +149,17 @@ export function Header() {
                 }`}
               >
                 Produits
+              </Link>
+              <Link
+                href="/favoris"
+                onClick={handleNavClick}
+                className={`text-base font-medium transition-colors ${
+                  pathname === "/favoris"
+                    ? "text-accent"
+                    : "text-primary hover:text-accent"
+                }`}
+              >
+                Favoris {wishlistItems.length > 0 && `(${wishlistItems.length})`}
               </Link>
               <Link
                 href="/panier"

@@ -8,6 +8,7 @@ import { Product, formatPrice } from "@/types/product";
 import { useCart } from "@/contexts/CartContext";
 import { StarRatingDisplay } from "@/components/product/StarRating";
 import { StockIndicator } from "@/components/product/StockIndicator";
+import { WishlistButton } from "@/components/product/WishlistButton";
 import { getProductRatingStats } from "@/data/reviews";
 import { QuickViewModal } from "./QuickViewModal";
 
@@ -76,6 +77,11 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
               priority={priority}
             />
           </motion.div>
+
+          {/* Wishlist button - top right corner */}
+          <div className="absolute top-3 right-3 z-10">
+            <WishlistButton productId={product.id} size="sm" className="bg-background/90 backdrop-blur-sm rounded-full p-2 text-primary hover:bg-background transition-colors" />
+          </div>
 
           {/* Quick View Button - appears on hover */}
           <motion.button
