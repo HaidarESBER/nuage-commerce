@@ -41,21 +41,28 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -8, boxShadow: "0 10px 30px rgba(0, 0, 0, 0.15)" }}
       viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className="group bg-background-card rounded-[--radius-card] overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="group bg-background-card rounded-[--radius-card] overflow-hidden shadow-sm"
     >
       {/* Image container with 16:9 aspect ratio - links to product */}
       <Link href={`/produits/${product.slug}`} className="block">
         <div className="relative aspect-video overflow-hidden bg-background-secondary">
-          <Image
-            src={product.images[0]}
-            alt={product.name}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-            priority={priority}
-          />
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            transition={{ duration: 0.3 }}
+            className="relative w-full h-full"
+          >
+            <Image
+              src={product.images[0]}
+              alt={product.name}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-cover"
+              priority={priority}
+            />
+          </motion.div>
           {/* Out of stock overlay */}
           {!product.inStock && (
             <div className="absolute inset-0 bg-primary/60 flex items-center justify-center">
@@ -82,8 +89,12 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
           </h3>
         </Link>
 
-        {/* Price */}
-        <div className="flex items-baseline gap-2 mb-3">
+        {/* Price with hover effect */}
+        <motion.div
+          whileHover={{ color: "var(--color-accent)" }}
+          transition={{ duration: 0.3 }}
+          className="flex items-baseline gap-2 mb-3"
+        >
           <span className="text-lg font-medium text-primary">
             {formatPrice(product.price)}
           </span>
@@ -92,7 +103,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
               {formatPrice(product.compareAtPrice!)}
             </span>
           )}
-        </div>
+        </motion.div>
 
         {/* CTA Buttons */}
         <div className="flex gap-2">
@@ -103,12 +114,14 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
           >
             Ajouter au panier
           </button>
-          <Link
+          <motion.a
             href={`/produits/${product.slug}`}
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
             className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-primary border border-primary rounded-[--radius-button] hover:bg-primary hover:text-background transition-colors"
           >
             Voir
-          </Link>
+          </motion.a>
         </div>
       </div>
     </motion.div>
