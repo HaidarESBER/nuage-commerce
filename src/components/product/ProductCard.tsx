@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Product, formatPrice } from "@/types/product";
 import { useCart } from "@/contexts/CartContext";
 
@@ -37,7 +38,13 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
   };
 
   return (
-    <div className="group bg-background-card rounded-[--radius-card] overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="group bg-background-card rounded-[--radius-card] overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+    >
       {/* Image container with 16:9 aspect ratio - links to product */}
       <Link href={`/produits/${product.slug}`} className="block">
         <div className="relative aspect-video overflow-hidden bg-background-secondary">
@@ -104,6 +111,6 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
           </Link>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
