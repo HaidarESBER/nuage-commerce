@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Container } from "@/components/ui";
+import { TrustBadges } from "@/components/ui/TrustBadges";
 import { ProductCard } from "@/components/product";
 import { getFeaturedProducts } from "@/data/products";
 
@@ -93,6 +94,13 @@ export default function Home() {
               Voir tous les produits
             </Link>
           </div>
+        </Container>
+      </section>
+
+      {/* Trust Badges Section */}
+      <section className="py-12 bg-background">
+        <Container size="lg">
+          <TrustBadges />
         </Container>
       </section>
     </>

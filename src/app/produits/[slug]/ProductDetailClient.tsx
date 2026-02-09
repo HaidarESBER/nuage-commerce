@@ -8,6 +8,7 @@ import { Container } from "@/components/ui";
 import { AddToCartButton } from "@/components/product/AddToCartButton";
 import { SwipeableGallery } from "@/components/product/SwipeableGallery";
 import { ProductReviews } from "@/components/product/ProductReviews";
+import { TrustBadges } from "@/components/ui/TrustBadges";
 import { Product, formatPrice, categoryLabels } from "@/types/product";
 import { getProductReviews, getProductRatingStats } from "@/data/reviews";
 
@@ -238,6 +239,11 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             {/* Add to cart button */}
             <div className="mb-8">
               <AddToCartButton product={product} />
+            </div>
+
+            {/* Trust Badges */}
+            <div className="mb-8">
+              <TrustBadges />
             </div>
 
             {/* Divider */}

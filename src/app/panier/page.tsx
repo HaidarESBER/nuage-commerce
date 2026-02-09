@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "@/components/ui";
+import { TrustBadges } from "@/components/ui/TrustBadges";
 import { CartItem, CartSummary } from "@/components/cart";
 import { useCart } from "@/contexts/CartContext";
 
@@ -62,6 +63,13 @@ export default function PanierPage() {
             <div className="lg:col-span-1">
               <CartSummary />
             </div>
+          </div>
+        )}
+
+        {/* Trust Badges */}
+        {items.length > 0 && (
+          <div className="mt-12">
+            <TrustBadges />
           </div>
         )}
       </Container>
