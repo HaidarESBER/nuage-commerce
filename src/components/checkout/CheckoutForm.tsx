@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui";
+import { GuestCheckout } from "./GuestCheckout";
 import { ShippingForm } from "./ShippingForm";
 import { OrderSummary } from "./OrderSummary";
 import { CartItem } from "@/types/cart";
@@ -26,12 +27,19 @@ type FieldErrors = Partial<Record<keyof ShippingAddress, string>>;
  * CheckoutForm orchestrates the checkout flow
  *
  * Features:
+ * - Guest checkout with optional account creation
  * - Two-column layout on desktop (form + summary)
  * - Stacked on mobile (summary first)
+ * - Section-based progression (email → shipping → payment)
  * - Client-side validation
  * - Loading state during submission
  */
 export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
+  // Guest checkout state
+  const [email, setEmail] = useState("");
+  const [createAccount, setCreateAccount] = useState(false);
+  const [password, setPassword] = useState("");
+
   const [shippingAddress, setShippingAddress] = useState<ShippingAddress>(
     defaultShippingAddress
   );
@@ -43,17 +51,27 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
   const validateForm = useCallback((): boolean => {
     const newErrors: FieldErrors = {};
 
+    // Email validation (from guest checkout)
+    if (!email.trim()) {
+      setSubmitError("L'email est requis");
+      return false;
+    } else if (!isValidEmail(email)) {
+      setSubmitError("L'email n'est pas valide");
+      return false;
+    }
+
+    // Password validation (if account creation checked)
+    if (createAccount && password.length < 8) {
+      setSubmitError("Le mot de passe doit contenir au moins 8 caracteres");
+      return false;
+    }
+
     // Required fields validation
     if (!shippingAddress.firstName.trim()) {
       newErrors.firstName = "Le prenom est requis";
     }
     if (!shippingAddress.lastName.trim()) {
       newErrors.lastName = "Le nom est requis";
-    }
-    if (!shippingAddress.email.trim()) {
-      newErrors.email = "L'email est requis";
-    } else if (!isValidEmail(shippingAddress.email)) {
-      newErrors.email = "L'email n'est pas valide";
     }
     if (!shippingAddress.phone.trim()) {
       newErrors.phone = "Le telephone est requis";
@@ -74,7 +92,7 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [shippingAddress]);
+  }, [email, createAccount, password, shippingAddress]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,10 +105,18 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
     setIsSubmitting(true);
 
     try {
+      // Store email in shipping address for order data
+      const updatedAddress = { ...shippingAddress, email };
+
       await onSubmit({
-        shippingAddress,
+        shippingAddress: updatedAddress,
         notes: notes.trim() || undefined,
       });
+
+      // If account creation requested, store password in localStorage for future processing
+      if (createAccount && password) {
+        localStorage.setItem("pendingAccountPassword", password);
+      }
     } catch (error) {
       setSubmitError(
         error instanceof Error
@@ -111,11 +137,22 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
         </div>
 
         {/* Shipping form (2/3 width on desktop) */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-8">
+          {/* Section 1: Email + optional account */}
+          <GuestCheckout
+            email={email}
+            onEmailChange={setEmail}
+            createAccount={createAccount}
+            onCreateAccountChange={setCreateAccount}
+            password={password}
+            onPasswordChange={setPassword}
+          />
+
+          {/* Section 2: Shipping information */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, staggerChildren: 0.05 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
           >
             <ShippingForm
               address={shippingAddress}
