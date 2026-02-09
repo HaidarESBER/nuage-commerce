@@ -81,10 +81,8 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
             : { scale: 1 }
         }
         transition={{
-          type: "spring",
-          stiffness: 400,
-          damping: 15,
           duration: 0.4,
+          ease: "easeInOut",
         }}
       >
         <Button
