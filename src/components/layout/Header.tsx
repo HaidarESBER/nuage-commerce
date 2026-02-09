@@ -29,20 +29,39 @@ export function Header() {
     setIsMenuOpen(false);
   };
 
+  // Homepage has transparent header to blend with video
+  const isHomepage = pathname === "/";
+
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-background-secondary">
+    <header
+      className={`sticky top-0 z-50 transition-colors duration-300 ${
+        isHomepage
+          ? "bg-transparent border-b border-white/10"
+          : "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-background-secondary"
+      }`}
+    >
       <Container size="lg">
         <div className="flex items-center justify-between h-16">
           {/* Brand */}
           <Link href="/" className="flex items-center gap-2">
-            <span className="font-heading text-2xl text-primary">Nuage</span>
+            <span
+              className={`font-heading text-2xl transition-colors ${
+                isHomepage ? "text-white drop-shadow-lg" : "text-primary"
+              }`}
+            >
+              Nuage
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
             <Link
               href="/produits"
-              className="text-sm font-medium text-primary hover:text-accent transition-colors"
+              className={`text-sm font-medium transition-colors ${
+                isHomepage
+                  ? "text-white/90 hover:text-white drop-shadow"
+                  : "text-primary hover:text-accent"
+              }`}
             >
               Produits
             </Link>
@@ -50,7 +69,11 @@ export function Header() {
             {/* Wishlist button */}
             <Link
               href="/favoris"
-              className="relative text-primary hover:text-accent transition-colors"
+              className={`relative transition-colors ${
+                isHomepage
+                  ? "text-white/90 hover:text-white drop-shadow"
+                  : "text-primary hover:text-accent"
+              }`}
               aria-label={`Favoris (${wishlistItems.length} produit${wishlistItems.length > 1 ? 's' : ''})`}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -85,7 +108,7 @@ export function Header() {
               </Link>
             )}
 
-            <CartButton />
+            <CartButton isHomepage={isHomepage} />
           </nav>
 
           {/* Mobile Navigation Controls */}
@@ -93,7 +116,11 @@ export function Header() {
             {/* Wishlist button */}
             <Link
               href="/favoris"
-              className="relative text-primary hover:text-accent transition-colors"
+              className={`relative transition-colors ${
+                isHomepage
+                  ? "text-white/90 hover:text-white drop-shadow"
+                  : "text-primary hover:text-accent"
+              }`}
               aria-label={`Favoris (${wishlistItems.length} produit${wishlistItems.length > 1 ? 's' : ''})`}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -115,10 +142,14 @@ export function Header() {
               )}
             </Link>
 
-            <CartButton />
+            <CartButton isHomepage={isHomepage} />
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 text-primary hover:text-accent transition-colors"
+              className={`p-2 transition-colors ${
+                isHomepage
+                  ? "text-white/90 hover:text-white drop-shadow"
+                  : "text-primary hover:text-accent"
+              }`}
               aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
               aria-expanded={isMenuOpen}
             >

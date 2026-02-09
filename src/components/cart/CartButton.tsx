@@ -12,14 +12,18 @@ import { calculateTotalItems } from "@/types/cart";
  * - Links to /panier
  * - Badge only shows when items > 0
  */
-export function CartButton() {
+export function CartButton({ isHomepage }: { isHomepage?: boolean }) {
   const { items } = useCart();
   const totalItems = calculateTotalItems(items);
 
   return (
     <Link
       href="/panier"
-      className="relative inline-flex items-center justify-center p-2 text-primary hover:text-accent transition-colors"
+      className={`relative inline-flex items-center justify-center p-2 transition-colors ${
+        isHomepage
+          ? "text-white/90 hover:text-white drop-shadow"
+          : "text-primary hover:text-accent"
+      }`}
       aria-label={`Panier${totalItems > 0 ? ` (${totalItems} articles)` : ""}`}
     >
       {/* Cart icon */}

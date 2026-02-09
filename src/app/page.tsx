@@ -30,12 +30,6 @@ export default function Home() {
             muted
             playsInline
             className="absolute inset-0 w-full h-full object-cover"
-            onEnded={(e) => {
-              // Loop the last 2 seconds of video for subtle movement
-              const video = e.currentTarget;
-              video.currentTime = Math.max(0, video.duration - 2);
-              video.play();
-            }}
           >
             <source src="/nuage1.mp4" type="video/mp4" />
           </video>
@@ -63,11 +57,20 @@ export default function Home() {
                   delay: 3.2,
                   ease: [0.16, 1, 0.3, 1]
                 }}
-                className="font-heading text-5xl md:text-6xl lg:text-7xl text-white mb-6 drop-shadow-lg"
+                className="font-heading text-6xl md:text-7xl lg:text-8xl text-white mb-8 drop-shadow-2xl tracking-wide"
+                style={{
+                  textShadow: '0 4px 20px rgba(0,0,0,0.5), 0 0 60px rgba(212,165,165,0.3)',
+                  letterSpacing: '0.05em'
+                }}
               >
-                L&apos;art de la{" "}
-                <span className="text-[#D4A5A5] drop-shadow-[0_0_30px_rgba(212,165,165,0.6)]">
-                  detente
+                L&apos;Art de la{" "}
+                <span
+                  className="block md:inline mt-2 md:mt-0 italic text-[#D4A5A5]"
+                  style={{
+                    textShadow: '0 0 40px rgba(212,165,165,0.8), 0 4px 20px rgba(0,0,0,0.5)'
+                  }}
+                >
+                  Détente
                 </span>
               </motion.h1>
 
