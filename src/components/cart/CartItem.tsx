@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { CartItem as CartItemType } from "@/types/cart";
 import { formatPrice } from "@/types/product";
@@ -71,23 +71,36 @@ export function CartItem({ item }: CartItemProps) {
 
         {/* Quantity controls */}
         <div className="flex items-center gap-2">
-          <button
+          <motion.button
             onClick={handleDecrease}
+            whileTap={{ scale: 0.95 }}
             className="w-8 h-8 flex items-center justify-center border border-primary rounded-[--radius-button] text-primary hover:bg-primary hover:text-background transition-colors"
             aria-label="Diminuer la quantite"
           >
             <span className="text-lg leading-none">-</span>
-          </button>
-          <span className="w-8 text-center font-medium text-primary">
-            {quantity}
-          </span>
-          <button
+          </motion.button>
+          <div className="w-8 text-center font-medium text-primary overflow-hidden relative h-6">
+            <AnimatePresence mode="popLayout" initial={false}>
+              <motion.span
+                key={quantity}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.2 }}
+                className="absolute inset-0 flex items-center justify-center"
+              >
+                {quantity}
+              </motion.span>
+            </AnimatePresence>
+          </div>
+          <motion.button
             onClick={handleIncrease}
+            whileTap={{ scale: 0.95 }}
             className="w-8 h-8 flex items-center justify-center border border-primary rounded-[--radius-button] text-primary hover:bg-primary hover:text-background transition-colors"
             aria-label="Augmenter la quantite"
           >
             <span className="text-lg leading-none">+</span>
-          </button>
+          </motion.button>
         </div>
 
         {/* Line total */}
