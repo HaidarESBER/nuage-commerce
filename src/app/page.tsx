@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Container } from "@/components/ui";
 import { ProductCard } from "@/components/product";
 import { getFeaturedProducts } from "@/data/products";
@@ -21,22 +24,38 @@ export default function Home() {
         <Container size="lg">
           <div className="flex flex-col items-center text-center py-16 md:py-24">
             {/* Brand tagline */}
-            <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl text-primary mb-6">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0 }}
+              className="font-heading text-4xl md:text-5xl lg:text-6xl text-primary mb-6"
+            >
               L&apos;art de la detente
-            </h1>
+            </motion.h1>
 
             {/* Subheading */}
-            <p className="text-lg md:text-xl text-muted max-w-2xl mb-10">
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-lg md:text-xl text-muted max-w-2xl mb-10"
+            >
               Accessoires chicha premium pour les connaisseurs
-            </p>
+            </motion.p>
 
             {/* CTA Button */}
-            <Link
-              href="/produits"
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium bg-primary text-background rounded-[--radius-button] hover:bg-accent hover:text-primary transition-colors"
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
             >
-              Decouvrir la collection
-            </Link>
+              <Link
+                href="/produits"
+                className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium bg-primary text-background rounded-[--radius-button] hover:bg-accent hover:text-primary transition-colors"
+              >
+                Decouvrir la collection
+              </Link>
+            </motion.div>
           </div>
         </Container>
       </section>
