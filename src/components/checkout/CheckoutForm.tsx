@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui";
 import { ShippingForm } from "./ShippingForm";
@@ -111,14 +112,24 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
 
         {/* Shipping form (2/3 width on desktop) */}
         <div className="lg:col-span-2 space-y-6">
-          <ShippingForm
-            address={shippingAddress}
-            onChange={setShippingAddress}
-            errors={errors}
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, staggerChildren: 0.05 }}
+          >
+            <ShippingForm
+              address={shippingAddress}
+              onChange={setShippingAddress}
+              errors={errors}
+            />
+          </motion.div>
 
           {/* Notes */}
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+          >
             <label
               htmlFor="notes"
               className="block text-sm font-medium text-primary mb-1"
@@ -133,7 +144,7 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
               className="w-full px-4 py-3 rounded-[--radius-button] border border-background-secondary bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent resize-none"
               placeholder="Instructions speciales pour la livraison..."
             />
-          </div>
+          </motion.div>
 
           {/* Submit error */}
           {submitError && (
@@ -143,41 +154,49 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
           )}
 
           {/* Submit button */}
-          <Button
-            type="submit"
-            variant="primary"
-            size="lg"
-            className="w-full"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <span className="flex items-center justify-center gap-2">
-                <svg
-                  className="animate-spin h-5 w-5"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  />
-                </svg>
-                Traitement en cours...
-              </span>
-            ) : (
-              "Confirmer la commande"
-            )}
-          </Button>
+          <motion.div whileHover={{ scale: 1.01 }}>
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              className="w-full"
+              disabled={isSubmitting}
+            >
+              <motion.span
+                animate={{ opacity: isSubmitting ? 0.7 : 1 }}
+                transition={{ duration: 0.2 }}
+                className={isSubmitting ? "flex items-center justify-center gap-2" : ""}
+              >
+                {isSubmitting ? (
+                  <>
+                    <svg
+                      className="animate-spin h-5 w-5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
+                    </svg>
+                    Traitement en cours...
+                  </>
+                ) : (
+                  "Confirmer la commande"
+                )}
+              </motion.span>
+            </Button>
+          </motion.div>
 
           <p className="text-xs text-muted text-center">
             En confirmant votre commande, vous acceptez nos conditions generales de vente.
