@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui";
 import { Product } from "@/types/product";
 import { useCart } from "@/contexts/CartContext";
@@ -14,9 +15,10 @@ interface AddToCartButtonProps {
  *
  * Features:
  * - Quantity selection (default 1)
- * - Add to cart functionality
+ * - Add to cart functionality with celebratory animation
  * - Disabled state for out of stock
- * - Visual feedback on add
+ * - Spring animation with checkmark on success
+ * - Accessibility-friendly success feedback
  */
 export function AddToCartButton({ product }: AddToCartButtonProps) {
   const { addItem } = useCart();
@@ -71,16 +73,59 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
         </div>
       )}
 
-      {/* Add to cart button */}
-      <Button
-        variant="primary"
-        size="lg"
-        disabled={!product.inStock}
-        onClick={handleAddToCart}
-        className="w-full sm:w-auto"
+      {/* Add to cart button with celebration */}
+      <motion.div
+        animate={
+          isAdded
+            ? { scale: [1, 1.05, 1] }
+            : { scale: 1 }
+        }
+        transition={{
+          type: "spring",
+          stiffness: 400,
+          damping: 15,
+          duration: 0.4,
+        }}
       >
-        {isAdded ? "Ajoute au panier !" : "Ajouter au panier"}
-      </Button>
+        <Button
+          variant="primary"
+          size="lg"
+          disabled={!product.inStock}
+          onClick={handleAddToCart}
+          className={`w-full sm:w-auto transition-colors duration-300 ${
+            isAdded ? "!bg-green-50 !text-green-700 !border-green-200" : ""
+          }`}
+          aria-live="polite"
+          aria-label={isAdded ? "Produit ajouté au panier" : "Ajouter au panier"}
+        >
+          <span className="flex items-center justify-center gap-2">
+            {isAdded ? "Ajouté au panier !" : "Ajouter au panier"}
+            <AnimatePresence>
+              {isAdded && (
+                <motion.svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-green-600"
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </motion.svg>
+              )}
+            </AnimatePresence>
+          </span>
+        </Button>
+      </motion.div>
 
       {/* Out of stock message */}
       {!product.inStock && (
