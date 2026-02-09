@@ -1,0 +1,131 @@
+"use server";
+
+import { promises as fs } from "fs";
+import path from "path";
+import { Order, CreateOrderData, generateOrderNumber, generateOrderId } from "@/types/order";
+
+const DATA_FILE_PATH = path.join(process.cwd(), "data", "orders.json");
+
+/**
+ * Read orders from JSON file
+ */
+async function readOrdersFile(): Promise<Order[]> {
+  try {
+    const data = await fs.readFile(DATA_FILE_PATH, "utf-8");
+    return JSON.parse(data) as Order[];
+  } catch (error) {
+    // If file doesn't exist, return empty array
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      return [];
+    }
+    console.error("Error reading orders file:", error);
+    return [];
+  }
+}
+
+/**
+ * Write orders to JSON file
+ */
+async function writeOrdersFile(orders: Order[]): Promise<void> {
+  // Ensure data directory exists
+  const dataDir = path.dirname(DATA_FILE_PATH);
+  try {
+    await fs.access(dataDir);
+  } catch {
+    await fs.mkdir(dataDir, { recursive: true });
+  }
+
+  await fs.writeFile(DATA_FILE_PATH, JSON.stringify(orders, null, 2), "utf-8");
+}
+
+/**
+ * Create a new order
+ * @param data - Order data from checkout form
+ * @returns Created order with generated ID and order number
+ */
+export async function createOrder(data: CreateOrderData): Promise<Order> {
+  const orders = await readOrdersFile();
+
+  // Generate unique order number
+  const existingNumbers = orders.map((o) => o.orderNumber);
+  const orderNumber = generateOrderNumber(existingNumbers);
+
+  const now = new Date().toISOString();
+
+  const newOrder: Order = {
+    id: generateOrderId(),
+    orderNumber,
+    items: data.items,
+    subtotal: data.subtotal,
+    shipping: data.shipping,
+    total: data.total,
+    status: "pending",
+    shippingAddress: data.shippingAddress,
+    notes: data.notes,
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  orders.push(newOrder);
+  await writeOrdersFile(orders);
+
+  return newOrder;
+}
+
+/**
+ * Get an order by its order number
+ * @param orderNumber - Human-readable order number (e.g., NU-2026-0001)
+ * @returns Order if found, null otherwise
+ */
+export async function getOrderByNumber(orderNumber: string): Promise<Order | null> {
+  const orders = await readOrdersFile();
+  return orders.find((o) => o.orderNumber === orderNumber) ?? null;
+}
+
+/**
+ * Get an order by its ID
+ * @param id - Order UUID
+ * @returns Order if found, null otherwise
+ */
+export async function getOrderById(id: string): Promise<Order | null> {
+  const orders = await readOrdersFile();
+  return orders.find((o) => o.id === id) ?? null;
+}
+
+/**
+ * Get all orders
+ * @returns Array of all orders, sorted by creation date (newest first)
+ */
+export async function getAllOrders(): Promise<Order[]> {
+  const orders = await readOrdersFile();
+  return orders.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+}
+
+/**
+ * Update order status
+ * @param id - Order ID
+ * @param status - New status
+ * @returns Updated order
+ */
+export async function updateOrderStatus(
+  id: string,
+  status: Order["status"]
+): Promise<Order> {
+  const orders = await readOrdersFile();
+  const index = orders.findIndex((o) => o.id === id);
+
+  if (index === -1) {
+    throw new Error(`Order with id ${id} not found`);
+  }
+
+  orders[index] = {
+    ...orders[index],
+    status,
+    updatedAt: new Date().toISOString(),
+  };
+
+  await writeOrdersFile(orders);
+  return orders[index];
+}
