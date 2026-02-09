@@ -4,7 +4,8 @@
  * Components for site-wide layout elements.
  *
  * @example
- * import { Header } from "@/components/layout";
+ * import { Header, Footer } from "@/components/layout";
  */
 
 export { Header } from "./Header";
+export { Footer } from "./Footer";
