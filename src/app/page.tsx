@@ -46,7 +46,7 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.9, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 1.2, delay: 2.5, ease: [0.16, 1, 0.3, 1] }}
-              className="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-6 md:p-8 lg:p-10 max-w-3xl shadow-2xl"
+              className="backdrop-blur-md bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 lg:p-10 max-w-3xl shadow-2xl"
             >
               {/* Brand tagline - synced with smoke clearing */}
               <motion.h1
