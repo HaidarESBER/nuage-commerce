@@ -46,7 +46,8 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.9, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 1.2, delay: 2.5, ease: [0.16, 1, 0.3, 1] }}
-              className="backdrop-blur-md bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 lg:p-10 max-w-3xl shadow-2xl"
+              className="backdrop-blur-sm border border-white/5 rounded-2xl p-6 md:p-8 lg:p-10 max-w-3xl shadow-2xl"
+              style={{ backgroundColor: 'rgba(255, 255, 255, 0.02)' }}
             >
               {/* Brand tagline - synced with smoke clearing */}
               <motion.h1
@@ -57,17 +58,19 @@ export default function Home() {
                   delay: 3.2,
                   ease: [0.16, 1, 0.3, 1]
                 }}
-                className="font-heading text-4xl md:text-5xl lg:text-6xl text-white mb-6 drop-shadow-2xl tracking-wide"
+                className="font-heading text-4xl md:text-5xl lg:text-6xl text-white mb-6 drop-shadow-2xl"
                 style={{
                   textShadow: '0 4px 20px rgba(0,0,0,0.5), 0 0 60px rgba(212,165,165,0.3)',
-                  letterSpacing: '0.05em'
+                  fontWeight: 300,
+                  letterSpacing: '0.02em'
                 }}
               >
                 L&apos;Art de la{" "}
                 <span
                   className="block md:inline mt-2 md:mt-0 italic text-[#D4A5A5]"
                   style={{
-                    textShadow: '0 0 40px rgba(212,165,165,0.8), 0 4px 20px rgba(0,0,0,0.5)'
+                    textShadow: '0 0 40px rgba(212,165,165,0.8), 0 4px 20px rgba(0,0,0,0.5)',
+                    fontWeight: 300
                   }}
                 >
                   Détente
