@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import { OptimizedImage } from "@/components/ui/OptimizedImage";
 import { motion } from "framer-motion";
 import { Product, formatPrice } from "@/types/product";
 import { useCart } from "@/contexts/CartContext";
@@ -83,12 +83,12 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
             transition={{ duration: 0.3 }}
             className="relative w-full h-full"
           >
-            <Image
+            <OptimizedImage
               src={product.images[0]}
               alt={product.name}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="object-cover"
+              objectFit="cover"
               priority={priority}
             />
           </motion.div>
