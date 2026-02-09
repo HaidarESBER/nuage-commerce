@@ -233,12 +233,12 @@ export function ProduitsClientEnhanced({
           {displayProducts.length > 0 ? (
             <ProductGrid products={displayProducts} columns={view === "grid" ? 3 : 1} />
           ) : (
-            <div className="text-center py-16">
+            <div className="text-center py-16" key="desktop-empty-state">
               <p className="text-muted text-lg mb-2">
                 Aucun produit ne correspond à vos critères
               </p>
               {(searchQuery.trim() || hasActiveFilters) && (
-                <p className="text-sm text-muted mb-4">
+                <p className="text-sm text-muted mb-4" key="desktop-filter-hint">
                   Essayez de modifier vos filtres ou votre recherche
                 </p>
               )}
@@ -261,12 +261,12 @@ export function ProduitsClientEnhanced({
         {displayProducts.length > 0 ? (
           <ProductGrid products={displayProducts} columns={view === "grid" ? 2 : 1} />
         ) : (
-          <div className="text-center py-16">
+          <div className="text-center py-16" key="mobile-empty-state">
             <p className="text-muted text-lg mb-2">
               Aucun produit ne correspond à vos critères
             </p>
             {(searchQuery.trim() || hasActiveFilters) && (
-              <p className="text-sm text-muted mb-4">
+              <p className="text-sm text-muted mb-4" key="mobile-filter-hint">
                 Essayez de modifier vos filtres ou votre recherche
               </p>
             )}
