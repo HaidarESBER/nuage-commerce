@@ -17,6 +17,20 @@ const nextConfig: NextConfig = {
     // Image sizes for different layouts
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
+
+  // Performance optimizations
+  compiler: {
+    // Remove console.log in production
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
+  },
+
+  // Experimental features for better performance
+  experimental: {
+    // Optimize package imports
+    optimizePackageImports: ['framer-motion'],
+  },
 };
 
 export default nextConfig;
