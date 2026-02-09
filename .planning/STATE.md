@@ -5,33 +5,34 @@
 See: .planning/PROJECT.md (updated 2026-02-09)
 
 **Core value:** The brand looks so premium and legitimate that visitors trust it instantly — visual identity drives conversion.
-**Current focus:** Phase 2 In Progress — Product Catalog
+**Current focus:** Phase 3 In Progress — Shopping Experience
 
 ## Current Position
 
-Phase: 2 of 4 (Product Catalog) - IN PROGRESS
-Plan: 2 of 3 in current phase - COMPLETE
+Phase: 3 of 4 (Shopping Experience) - IN PROGRESS
+Plan: 1 of 3 in current phase - COMPLETE
 Status: In progress
-Last activity: 2026-02-09 — Completed 02-02-PLAN.md
+Last activity: 2026-02-09 — Completed 03-01-PLAN.md
 
-Progress: ██████░░░░ 67%
+Progress: ███████░░░ 67%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
-- Average duration: 9.6 min
-- Total execution time: 0.8 hours
+- Total plans completed: 6
+- Average duration: 10.0 min
+- Total execution time: 1.0 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-foundation-brand | 3/3 | 23 min | 7.7 min |
-| 02-product-catalog | 2/3 | 25 min | 12.5 min |
+| 02-product-catalog | 2/2 | 25 min | 12.5 min |
+| 03-shopping-experience | 1/3 | 12 min | 12 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-02 (10 min), 01-03 (8 min), 02-01 (10 min), 02-02 (15 min)
+- Last 5 plans: 01-03 (8 min), 02-01 (10 min), 02-02 (15 min), 03-01 (12 min)
 - Trend: Stable
 
 ## Accumulated Context
@@ -57,23 +58,22 @@ Recent decisions affecting current work:
 - File-based JSON storage for MVP (02-02)
 - Server Actions for CRUD operations (02-02)
 - No authentication for MVP admin (02-02)
+- localStorage for cart persistence (03-01)
+- useSyncExternalStore for hydration-safe state (03-01)
+- React Context for cart state management (03-01)
 
-### Phase 2 Progress
+### Phase 3 Progress
 
 **Completed Plans:**
-1. 02-01: Product data model and catalog pages
-2. 02-02: Admin interface for product management
+1. 03-01: Shopping cart functionality
 
 **Established:**
-- Product TypeScript types (Product, ProductCategory)
-- 8 sample products in French
-- ProductCard and ProductGrid components
-- /produits listing page with category filtering
-- /produits/[slug] detail pages (static generation)
-- Admin dashboard at /admin with product stats
-- Product CRUD operations via Server Actions
-- File-based JSON storage (data/products.json)
-- ProductForm component for create/edit modes
+- Cart type system (CartItem, Cart interfaces)
+- CartContext with localStorage persistence
+- Cart UI components (CartItem, CartSummary, CartButton)
+- Cart page at /panier
+- Add to cart on ProductCard and product detail pages
+- Site header with brand name and navigation
 
 ### Deferred Issues
 
@@ -86,6 +86,6 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-09
-Stopped at: Completed 02-02-PLAN.md
+Stopped at: Completed 03-01-PLAN.md
 Resume file: None
-Next: Continue Phase 2 - Product Catalog (02-03)
+Next: Continue Phase 3 - Shopping Experience (03-02: Checkout flow)
