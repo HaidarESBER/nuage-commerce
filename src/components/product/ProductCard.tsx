@@ -6,11 +6,13 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Product, formatPrice } from "@/types/product";
 import { useCart } from "@/contexts/CartContext";
+import { useComparison } from "@/contexts/ComparisonContext";
 import { StarRatingDisplay } from "@/components/product/StarRating";
 import { StockIndicator } from "@/components/product/StockIndicator";
 import { WishlistButton } from "@/components/product/WishlistButton";
 import { getProductRatingStats } from "@/data/reviews";
 import { QuickViewModal } from "./QuickViewModal";
+import { useState as useReactState } from "react";
 
 interface ProductCardProps {
   product: Product;
@@ -33,7 +35,9 @@ interface ProductCardProps {
  */
 export function ProductCard({ product, priority = false }: ProductCardProps) {
   const { addItem } = useCart();
-  const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
+  const { addToComparison, isInComparison } = useComparison();
+  const [isQuickViewOpen, setIsQuickViewOpen] = useReactState(false);
+  const [showCompareToast, setShowCompareToast] = useReactState(false);
   const hasDiscount = product.compareAtPrice && product.compareAtPrice > product.price;
   const ratingStats = getProductRatingStats(product.id);
 
@@ -49,6 +53,17 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
     e.preventDefault();
     e.stopPropagation();
     setIsQuickViewOpen(true);
+  };
+
+  const handleAddToComparison = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const added = addToComparison(product.id);
+    if (!added) {
+      // Show toast that max limit reached
+      setShowCompareToast(true);
+      setTimeout(() => setShowCompareToast(false), 3000);
+    }
   };
 
   return (
@@ -82,6 +97,22 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
           <div className="absolute top-3 right-3 z-10">
             <WishlistButton productId={product.id} size="sm" className="bg-background/90 backdrop-blur-sm rounded-full p-2 text-primary hover:bg-background transition-colors" />
           </div>
+
+          {/* Compare button - top left corner, appears on hover */}
+          <motion.button
+            initial={{ opacity: 0 }}
+            whileHover={{ scale: 1.05 }}
+            onClick={handleAddToComparison}
+            className="absolute top-3 left-3 z-10 bg-background/90 backdrop-blur-sm rounded-full p-2 text-primary hover:bg-background transition-all opacity-0 group-hover:opacity-100"
+            title={isInComparison(product.id) ? "Dans la comparaison" : "Comparer"}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+            </svg>
+            {isInComparison(product.id) && (
+              <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-accent rounded-full" />
+            )}
+          </motion.button>
 
           {/* Quick View Button - appears on hover */}
           <motion.button
@@ -186,6 +217,18 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
         isOpen={isQuickViewOpen}
         onClose={() => setIsQuickViewOpen(false)}
       />
+
+      {/* Toast notification for max comparison limit */}
+      {showCompareToast && (
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 50 }}
+          className="fixed bottom-4 right-4 bg-primary text-background px-4 py-3 rounded-[--radius-card] shadow-lg z-50 max-w-sm"
+        >
+          Maximum 3 produits pour la comparaison
+        </motion.div>
+      )}
     </motion.div>
   );
 }

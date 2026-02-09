@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { fontVariables } from "@/lib/fonts";
 import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
+import { ComparisonProvider } from "@/contexts/ComparisonContext";
 import { Header, Footer } from "@/components/layout";
 import { FloatingCartButton } from "@/components/mobile/FloatingCartButton";
 import { ExitIntentModal } from "@/components/marketing/ExitIntentModal";
@@ -39,13 +40,15 @@ export default function RootLayout({
       <body className={`${fontVariables} font-sans antialiased`}>
         <CartProvider>
           <WishlistProvider>
-            <Header />
-            <div className="flex flex-col min-h-screen">
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
-            <FloatingCartButton />
-            <ExitIntentModal />
+            <ComparisonProvider>
+              <Header />
+              <div className="flex flex-col min-h-screen">
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </div>
+              <FloatingCartButton />
+              <ExitIntentModal />
+            </ComparisonProvider>
           </WishlistProvider>
         </CartProvider>
       </body>
