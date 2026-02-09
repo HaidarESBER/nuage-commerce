@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 3 of 4 (Shopping Experience) - IN PROGRESS
-Plan: 1 of 3 in current phase - COMPLETE
+Plan: 2 of 3 in current phase - COMPLETE
 Status: In progress
-Last activity: 2026-02-09 — Completed 03-01-PLAN.md
+Last activity: 2026-02-09 — Completed 03-02-PLAN.md
 
-Progress: ███████░░░ 67%
+Progress: ████████░░ 78%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
-- Average duration: 10.0 min
-- Total execution time: 1.0 hours
+- Total plans completed: 7
+- Average duration: 10.6 min
+- Total execution time: 1.25 hours
 
 **By Phase:**
 
@@ -29,10 +29,10 @@ Progress: ███████░░░ 67%
 |-------|-------|-------|----------|
 | 01-foundation-brand | 3/3 | 23 min | 7.7 min |
 | 02-product-catalog | 2/2 | 25 min | 12.5 min |
-| 03-shopping-experience | 1/3 | 12 min | 12 min |
+| 03-shopping-experience | 2/3 | 27 min | 13.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-03 (8 min), 02-01 (10 min), 02-02 (15 min), 03-01 (12 min)
+- Last 5 plans: 02-01 (10 min), 02-02 (15 min), 03-01 (12 min), 03-02 (15 min)
 - Trend: Stable
 
 ## Accumulated Context
@@ -61,11 +61,16 @@ Recent decisions affecting current work:
 - localStorage for cart persistence (03-01)
 - useSyncExternalStore for hydration-safe state (03-01)
 - React Context for cart state management (03-01)
+- Free shipping for MVP (03-02)
+- Order numbers in NU-YYYY-NNNN format (03-02)
+- Client-side validation with French messages (03-02)
+- Server Actions for order creation (03-02)
 
 ### Phase 3 Progress
 
 **Completed Plans:**
 1. 03-01: Shopping cart functionality
+2. 03-02: Checkout flow and order creation
 
 **Established:**
 - Cart type system (CartItem, Cart interfaces)
@@ -74,6 +79,11 @@ Recent decisions affecting current work:
 - Cart page at /panier
 - Add to cart on ProductCard and product detail pages
 - Site header with brand name and navigation
+- Order and checkout type system
+- Checkout page at /commande with shipping form
+- Order confirmation page at /commande/confirmation/[orderNumber]
+- Server Actions for order CRUD (createOrder, getOrderByNumber)
+- File-based order storage (data/orders.json)
 
 ### Deferred Issues
 
@@ -86,6 +96,6 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-09
-Stopped at: Completed 03-01-PLAN.md
+Stopped at: Completed 03-02-PLAN.md
 Resume file: None
-Next: Continue Phase 3 - Shopping Experience (03-02: Checkout flow)
+Next: Continue Phase 3 - Shopping Experience (03-03: Order confirmation and customer notifications)
