@@ -1,1 +1,63 @@
-[]
+[
+  {
+    "id": "788c4e4f-86ed-4ad7-b61b-c481b5a38758",
+    "orderNumber": "NU-2026-0001",
+    "items": [
+      {
+        "productId": "1",
+        "productName": "Chicha Crystal Premium",
+        "productImage": "https://placehold.co/600x600/2D2D2D/F7F5F3?text=Chicha+Crystal",
+        "price": 12999,
+        "quantity": 2
+      }
+    ],
+    "subtotal": 25998,
+    "shipping": 0,
+    "total": 25998,
+    "status": "pending",
+    "shippingAddress": {
+      "firstName": "lab",
+      "lastName": "labo",
+      "email": "haidar@haidar.com",
+      "phone": "0749033679",
+      "address": "1 square du pré du bondon",
+      "addressLine2": "",
+      "city": "Vannes",
+      "postalCode": "56000",
+      "country": "France"
+    },
+    "createdAt": "2026-02-09T11:44:20.429Z",
+    "updatedAt": "2026-02-09T11:44:20.429Z"
+  },
+  {
+    "id": "076ec0bc-9760-4df8-9f04-cd2c6f64764e",
+    "orderNumber": "NU-2026-0002",
+    "items": [
+      {
+        "productId": "2",
+        "productName": "Chicha Classic Noir",
+        "productImage": "https://placehold.co/600x600/1A1A1A/F7F5F3?text=Classic+Noir",
+        "price": 8999,
+        "quantity": 1
+      }
+    ],
+    "subtotal": 8999,
+    "shipping": 0,
+    "total": 8999,
+    "status": "pending",
+    "shippingAddress": {
+      "firstName": "lab",
+      "lastName": "labo",
+      "email": "haidar@haidar.com",
+      "phone": "0707070707",
+      "address": "1 square du pré du bondon",
+      "addressLine2": "appt 6",
+      "city": "Vannes",
+      "postalCode": "56000",
+      "country": "France"
+    },
+    "notes": "sdfsdfsd",
+    "createdAt": "2026-02-09T14:57:55.019Z",
+    "updatedAt": "2026-02-09T14:57:55.019Z"
+  }
+]

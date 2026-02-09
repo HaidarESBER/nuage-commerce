@@ -3,6 +3,7 @@ import Image from "next/image";
 import { revalidatePath } from "next/cache";
 import { getAllProducts, deleteProduct } from "@/lib/products";
 import { formatPrice, categoryLabels } from "@/types/product";
+import { DeleteButton } from "./DeleteButton";
 
 export const dynamic = "force-dynamic";
 
@@ -115,7 +116,7 @@ export default async function AdminProductsPage() {
                       >
                         Modifier
                       </Link>
-                      <DeleteButton id={product.id} name={product.name} />
+                      <DeleteButton id={product.id} name={product.name} onDelete={handleDelete} />
                     </div>
                   </td>
                 </tr>
@@ -131,24 +132,5 @@ export default async function AdminProductsPage() {
         )}
       </div>
     </div>
-  );
-}
-
-function DeleteButton({ id, name }: { id: string; name: string }) {
-  return (
-    <form action={handleDelete}>
-      <input type="hidden" name="id" value={id} />
-      <button
-        type="submit"
-        className="px-3 py-1 text-sm border border-red-300 text-red-600 rounded hover:bg-red-600 hover:text-white transition-colors"
-        onClick={(e) => {
-          if (!confirm(`Supprimer "${name}" ?`)) {
-            e.preventDefault();
-          }
-        }}
-      >
-        Supprimer
-      </button>
-    </form>
   );
 }
