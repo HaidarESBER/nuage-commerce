@@ -4,6 +4,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { Header, Footer } from "@/components/layout";
 import { FloatingCartButton } from "@/components/mobile/FloatingCartButton";
+import { ExitIntentModal } from "@/components/marketing/ExitIntentModal";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -44,6 +45,7 @@ export default function RootLayout({
               <Footer />
             </div>
             <FloatingCartButton />
+            <ExitIntentModal />
           </WishlistProvider>
         </CartProvider>
       </body>
