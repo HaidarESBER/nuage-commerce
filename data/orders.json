@@ -96,5 +96,65 @@
     },
     "createdAt": "2026-02-09T19:00:33.356Z",
     "updatedAt": "2026-02-09T19:00:33.356Z"
+  },
+  {
+    "id": "41954b85-793b-4c5d-83fe-558ecccf355e",
+    "orderNumber": "NU-2026-0004",
+    "items": [
+      {
+        "productId": "2",
+        "productName": "Chicha Classic Noir",
+        "productImage": "https://placehold.co/600x600/1A1A1A/F7F5F3?text=Classic+Noir",
+        "price": 8999,
+        "quantity": 1
+      }
+    ],
+    "subtotal": 8999,
+    "shipping": 0,
+    "total": 8999,
+    "status": "pending",
+    "shippingAddress": {
+      "firstName": "aa",
+      "lastName": "aa",
+      "email": "haidar@haidar.haidar",
+      "phone": "0707070707",
+      "address": "sdfsd",
+      "addressLine2": "",
+      "city": "Vannes",
+      "postalCode": "76000",
+      "country": "France"
+    },
+    "createdAt": "2026-02-09T19:15:14.946Z",
+    "updatedAt": "2026-02-09T19:15:14.946Z"
+  },
+  {
+    "id": "e49dbd76-5bed-4613-8e2f-0939b7717416",
+    "orderNumber": "NU-2026-0005",
+    "items": [
+      {
+        "productId": "2",
+        "productName": "Chicha Classic Noir",
+        "productImage": "https://placehold.co/600x600/1A1A1A/F7F5F3?text=Classic+Noir",
+        "price": 8999,
+        "quantity": 1
+      }
+    ],
+    "subtotal": 8999,
+    "shipping": 0,
+    "total": 8999,
+    "status": "pending",
+    "shippingAddress": {
+      "firstName": "aa",
+      "lastName": "aa",
+      "email": "haidar@haidar.haidar",
+      "phone": "0707070707",
+      "address": "sdfsd",
+      "addressLine2": "",
+      "city": "Vannes",
+      "postalCode": "76000",
+      "country": "France"
+    },
+    "createdAt": "2026-02-09T19:17:45.414Z",
+    "updatedAt": "2026-02-09T19:17:45.414Z"
   }
 ]

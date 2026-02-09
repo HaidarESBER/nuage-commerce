@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Order, orderStatusLabels } from "@/types/order";
 import { formatCartTotal } from "@/types/cart";
+import { formatDateLong } from "@/lib/date-utils";
 
 interface OrderDetailsProps {
   order: Order;
@@ -21,12 +22,7 @@ interface OrderDetailsProps {
  */
 export function OrderDetails({ order }: OrderDetailsProps) {
   // Format date in French locale
-  const orderDate = new Date(order.createdAt).toLocaleDateString("fr-FR", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const orderDate = formatDateLong(order.createdAt);
 
   return (
     <div className="bg-background-card rounded-[--radius-card] p-6">

@@ -5,6 +5,7 @@ import { getOrderById } from "@/lib/orders";
 import { formatPrice } from "@/types/product";
 import { OrderStatusSelect, OrderTrackingForm } from "@/components/admin";
 import { calculateLineTotal } from "@/types/order";
+import { formatDateTime } from "@/lib/date-utils";
 
 export const dynamic = "force-dynamic";
 
@@ -37,11 +38,7 @@ export default async function AdminOrderDetailPage({
             Commande {order.orderNumber}
           </h2>
           <p className="mt-1 text-sm text-primary/60">
-            Passee le {new Date(order.createdAt).toLocaleDateString("fr-FR")} a{" "}
-            {new Date(order.createdAt).toLocaleTimeString("fr-FR", {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
+            Passee le {formatDateTime(order.createdAt)}
           </p>
         </div>
         <div className="flex items-center gap-4">

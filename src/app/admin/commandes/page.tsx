@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getAllOrders } from "@/lib/orders";
 import { formatPrice } from "@/types/product";
 import { OrderStatusBadge } from "@/components/admin";
+import { formatDate } from "@/lib/date-utils";
 
 export const dynamic = "force-dynamic";
 
@@ -63,7 +64,7 @@ export default async function AdminOrdersPage() {
                     </div>
                   </td>
                   <td className="px-4 py-3 text-primary/70">
-                    {new Date(order.createdAt).toLocaleDateString("fr-FR")}
+                    {formatDate(order.createdAt)}
                   </td>
                   <td className="px-4 py-3 text-primary">
                     {formatPrice(order.total)}
