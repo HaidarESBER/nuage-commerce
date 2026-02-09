@@ -6,7 +6,6 @@ import {
   useState,
   useEffect,
   useCallback,
-  useSyncExternalStore,
   ReactNode,
 } from "react";
 import { Product } from "@/types/product";
@@ -60,41 +59,40 @@ function saveCartToStorage(items: CartItem[]): void {
 
 /**
  * CartProvider component that wraps the app and provides cart state
- * Persists cart to localStorage and handles hydration using useSyncExternalStore
+ * Persists cart to localStorage with hydration-safe initialization
  */
 export function CartProvider({ children }: CartProviderProps) {
-  // Use useSyncExternalStore for proper hydration-safe localStorage sync
-  const storedItems = useSyncExternalStore(
-    // Subscribe function (storage event listener)
-    (callback) => {
-      window.addEventListener("storage", callback);
-      return () => window.removeEventListener("storage", callback);
-    },
-    // Get snapshot (client)
-    loadCartFromStorage,
-    // Get server snapshot
-    () => []
-  );
+  // Start with empty array to avoid hydration mismatch
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Internal state for managing items
-  const [items, setItems] = useState<CartItem[]>(storedItems);
-
-  // Sync from storage on mount and storage events
+  // Load from localStorage after hydration
   useEffect(() => {
-    setItems(storedItems);
-  }, [storedItems]);
-
-  // Save to localStorage whenever items change (via user actions, not hydration)
-  const updateItems = useCallback((newItems: CartItem[] | ((prev: CartItem[]) => CartItem[])) => {
-    setItems((prev) => {
-      const updated = typeof newItems === "function" ? newItems(prev) : newItems;
-      saveCartToStorage(updated);
-      return updated;
-    });
+    const stored = loadCartFromStorage();
+    setItems(stored);
+    setIsHydrated(true);
   }, []);
 
+  // Listen for storage events from other tabs
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === CART_STORAGE_KEY) {
+        setItems(loadCartFromStorage());
+      }
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
+  // Save to localStorage whenever items change (after hydration)
+  useEffect(() => {
+    if (isHydrated) {
+      saveCartToStorage(items);
+    }
+  }, [items, isHydrated]);
+
   const addItem = useCallback((product: Product, quantity = 1) => {
-    updateItems((currentItems) => {
+    setItems((currentItems) => {
       const existingIndex = currentItems.findIndex(
         (item) => item.product.id === product.id
       );
@@ -112,33 +110,33 @@ export function CartProvider({ children }: CartProviderProps) {
       // Add new item
       return [...currentItems, { product, quantity }];
     });
-  }, [updateItems]);
+  }, []);
 
   const removeItem = useCallback((productId: string) => {
-    updateItems((currentItems) =>
+    setItems((currentItems) =>
       currentItems.filter((item) => item.product.id !== productId)
     );
-  }, [updateItems]);
+  }, []);
 
   const updateQuantity = useCallback((productId: string, quantity: number) => {
     if (quantity <= 0) {
       // Remove item if quantity is 0 or negative
-      updateItems((currentItems) =>
+      setItems((currentItems) =>
         currentItems.filter((item) => item.product.id !== productId)
       );
       return;
     }
 
-    updateItems((currentItems) =>
+    setItems((currentItems) =>
       currentItems.map((item) =>
         item.product.id === productId ? { ...item, quantity } : item
       )
     );
-  }, [updateItems]);
+  }, []);
 
   const clearCart = useCallback(() => {
-    updateItems([]);
-  }, [updateItems]);
+    setItems([]);
+  }, []);
 
   const value: CartContextValue = {
     items,
