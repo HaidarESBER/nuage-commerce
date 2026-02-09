@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,9 +14,61 @@ interface ProductDetailClientProps {
 
 export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [isZoomOpen, setIsZoomOpen] = useState(false);
 
   const hasDiscount =
     product.compareAtPrice && product.compareAtPrice > product.price;
+
+  // Handle ESC key to close modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isZoomOpen) {
+        setIsZoomOpen(false);
+      }
+      if (isZoomOpen && product.images.length > 1) {
+        if (e.key === "ArrowLeft") {
+          setSelectedImageIndex((prev) =>
+            prev === 0 ? product.images.length - 1 : prev - 1
+          );
+        }
+        if (e.key === "ArrowRight") {
+          setSelectedImageIndex((prev) =>
+            prev === product.images.length - 1 ? 0 : prev + 1
+          );
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isZoomOpen, product.images.length]);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isZoomOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isZoomOpen]);
+
+  const openZoom = () => setIsZoomOpen(true);
+  const closeZoom = () => setIsZoomOpen(false);
+
+  const navigatePrev = () => {
+    setSelectedImageIndex((prev) =>
+      prev === 0 ? product.images.length - 1 : prev - 1
+    );
+  };
+
+  const navigateNext = () => {
+    setSelectedImageIndex((prev) =>
+      prev === product.images.length - 1 ? 0 : prev + 1
+    );
+  };
 
   return (
     <main className="py-12 lg:py-16">
@@ -48,7 +100,10 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           {/* Image section - sticky on desktop */}
           <div className="lg:sticky lg:top-8 lg:self-start">
             {/* Main image with fade transition */}
-            <div className="relative aspect-square bg-background-secondary rounded-[--radius-card] overflow-hidden mb-4">
+            <button
+              onClick={openZoom}
+              className="relative aspect-square bg-background-secondary rounded-[--radius-card] overflow-hidden mb-4 w-full cursor-zoom-in"
+            >
               <AnimatePresence mode="wait">
                 <motion.div
                   key={selectedImageIndex}
@@ -74,7 +129,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                   Promo
                 </div>
               )}
-            </div>
+            </button>
 
             {/* Image gallery thumbnails */}
             {product.images.length > 1 && (
@@ -174,6 +229,115 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           </div>
         </div>
       </Container>
+
+      {/* Image Zoom Modal */}
+      <AnimatePresence>
+        {isZoomOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-primary/90"
+            onClick={closeZoom}
+          >
+            {/* Close button */}
+            <button
+              onClick={closeZoom}
+              className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center text-background hover:text-accent transition-colors z-10"
+              aria-label="Close zoom"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            {/* Navigation arrows for multiple images */}
+            {product.images.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigatePrev();
+                  }}
+                  className="absolute left-4 w-12 h-12 flex items-center justify-center text-background hover:text-accent transition-colors z-10"
+                  aria-label="Previous image"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="w-8 h-8"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.75 19.5L8.25 12l7.5-7.5"
+                    />
+                  </svg>
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigateNext();
+                  }}
+                  className="absolute right-4 w-12 h-12 flex items-center justify-center text-background hover:text-accent transition-colors z-10"
+                  aria-label="Next image"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="w-8 h-8"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M8.25 4.5l7.5 7.5-7.5 7.5"
+                    />
+                  </svg>
+                </button>
+              </>
+            )}
+
+            {/* Zoomed image */}
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="relative w-full h-full max-w-7xl max-h-screen p-4 md:p-8"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="relative w-full h-full">
+                <Image
+                  src={product.images[selectedImageIndex]}
+                  alt={product.name}
+                  fill
+                  sizes="100vw"
+                  className="object-contain"
+                  priority
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
