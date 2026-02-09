@@ -4,6 +4,13 @@ import {
   getProductBySlug,
   getAllProductSlugs,
 } from "@/data/products";
+import { getProductRatingStats } from "@/data/reviews";
+import {
+  generateProductSchema,
+  generateBreadcrumbSchema,
+  generateOpenGraphTags,
+  generateTwitterCardTags
+} from "@/lib/seo";
 import { ProductDetailClient } from "./ProductDetailClient";
 
 interface ProductPageProps {
@@ -33,12 +40,41 @@ export async function generateMetadata({
     };
   }
 
+  const productUrl = `https://nuage.fr/produits/${product.slug}`;
+  const ogTags = generateOpenGraphTags({
+    title: product.name,
+    description: product.shortDescription,
+    image: product.images[0],
+    url: productUrl,
+    type: "product",
+    price: product.price,
+    currency: "EUR"
+  });
+
+  const twitterTags = generateTwitterCardTags({
+    title: product.name,
+    description: product.shortDescription,
+    image: product.images[0]
+  });
+
   return {
     title: `${product.name} | Nuage`,
     description: product.shortDescription,
+    alternates: {
+      canonical: productUrl
+    },
     openGraph: {
-      title: product.name,
-      description: product.shortDescription,
+      title: ogTags["og:title"],
+      description: ogTags["og:description"],
+      url: ogTags["og:url"],
+      type: "website",
+      locale: ogTags["og:locale"],
+      images: product.images[0] ? [{ url: product.images[0], alt: product.name }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: twitterTags["twitter:title"],
+      description: twitterTags["twitter:description"],
       images: product.images[0] ? [product.images[0]] : [],
     },
   };
@@ -52,5 +88,30 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
-  return <ProductDetailClient product={product} />;
+  // Generate structured data
+  const ratingStats = getProductRatingStats(product.id);
+  const productSchema = generateProductSchema(product, ratingStats || undefined);
+
+  // Generate breadcrumb schema
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Accueil", url: "/" },
+    { name: "Produits", url: "/produits" },
+    { name: product.name, url: `/produits/${product.slug}` }
+  ]);
+
+  return (
+    <>
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+
+      <ProductDetailClient product={product} />
+    </>
+  );
 }

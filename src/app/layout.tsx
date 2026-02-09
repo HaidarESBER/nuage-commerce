@@ -6,6 +6,7 @@ import { ComparisonProvider } from "@/contexts/ComparisonContext";
 import { Header, Footer } from "@/components/layout";
 import { FloatingCartButton } from "@/components/mobile/FloatingCartButton";
 import { ExitIntentModal } from "@/components/marketing/ExitIntentModal";
+import { generateOrganizationSchema } from "@/lib/seo";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -35,8 +36,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationSchema = generateOrganizationSchema();
+
   return (
     <html lang="fr">
+      <head>
+        {/* Organization Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+      </head>
       <body className={`${fontVariables} font-sans antialiased`}>
         <CartProvider>
           <WishlistProvider>
