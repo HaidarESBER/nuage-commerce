@@ -1,9 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ProductGrid } from "@/components/product";
+import { ProductSearch, useProductSearch } from "@/components/product/ProductSearch";
 import { ProductFilters, useProductFilters } from "@/components/product/ProductFilters";
+import { ProductSort, useProductSort } from "@/components/product/ProductSort";
 import { BottomSheet } from "@/components/mobile/BottomSheet";
 import { Product, ProductCategory, categoryLabels } from "@/types/product";
 
@@ -47,10 +50,16 @@ function CategoryButton({
 export function ProduitsClient({ products, activeCategory }: ProduitsClientProps) {
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
+  // Search functionality
+  const { query: searchQuery, setQuery: setSearchQuery, results: searchResults } = useProductSearch(products);
+
+  // Filter functionality
   const {
     filters,
-    filteredProducts,
+    filteredProducts: filteredByFilters,
     hasActiveFilters,
     priceRangeLimits,
     toggleCategory,
@@ -58,6 +67,78 @@ export function ProduitsClient({ products, activeCategory }: ProduitsClientProps
     toggleInStockOnly,
     resetFilters,
   } = useProductFilters(products);
+
+  // Sort functionality
+  const initialSort = (searchParams.get("sort") as any) || "relevance";
+  const { sortOption, setSortOption, sortedProducts } = useProductSort(filteredByFilters, initialSort);
+
+  // Combine search, filters, and sort
+  // Apply in order: search → filter → sort
+  const displayProducts = useMemo(() => {
+    // Start with all products
+    let result = products;
+
+    // Apply search if query exists
+    if (searchQuery.trim()) {
+      result = searchResults;
+    }
+
+    // Apply filters
+    result = result.filter((product) => {
+      // Category filter
+      if (filters.categories.length > 0 && !filters.categories.includes(product.category)) {
+        return false;
+      }
+
+      // Price range filter
+      if (product.price < filters.priceRange[0] || product.price > filters.priceRange[1]) {
+        return false;
+      }
+
+      // Stock filter
+      if (filters.inStockOnly && !product.inStock) {
+        return false;
+      }
+
+      return true;
+    });
+
+    // Apply sort
+    const productsToSort = [...result];
+    switch (sortOption) {
+      case "price-asc":
+        return productsToSort.sort((a, b) => a.price - b.price);
+      case "price-desc":
+        return productsToSort.sort((a, b) => b.price - a.price);
+      case "newest":
+        return productsToSort.reverse();
+      case "popularity":
+        return productsToSort.sort((a, b) => {
+          if (a.featured && !b.featured) return -1;
+          if (!a.featured && b.featured) return 1;
+          return 0;
+        });
+      case "relevance":
+      default:
+        return productsToSort.sort((a, b) => {
+          if (a.featured && !b.featured) return -1;
+          if (!a.featured && b.featured) return 1;
+          return 0;
+        });
+    }
+  }, [products, searchQuery, searchResults, filters, sortOption]);
+
+  // Sync sort to URL params
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (sortOption !== "relevance") {
+      params.set("sort", sortOption);
+    } else {
+      params.delete("sort");
+    }
+    const newUrl = params.toString() ? `?${params.toString()}` : "/produits";
+    router.replace(newUrl, { scroll: false });
+  }, [sortOption, router, searchParams]);
 
   // Detect mobile viewport
   useEffect(() => {
@@ -105,8 +186,13 @@ export function ProduitsClient({ products, activeCategory }: ProduitsClientProps
         </p>
       </div>
 
+      {/* Search Bar */}
+      <div className="mb-8">
+        <ProductSearch products={products} />
+      </div>
+
       {/* Category filters */}
-      <div className="mb-8 lg:mb-10">
+      <div className="mb-6 lg:mb-8">
         <div className="flex flex-wrap gap-3 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:overflow-visible">
           <CategoryButton
             category={null}
@@ -122,6 +208,14 @@ export function ProduitsClient({ products, activeCategory }: ProduitsClientProps
             />
           ))}
         </div>
+      </div>
+
+      {/* Sort and Result Count */}
+      <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
+        <div className="text-sm text-muted">
+          {displayProducts.length} produit{displayProducts.length !== 1 ? "s" : ""}
+        </div>
+        <ProductSort sortOption={sortOption} onSortChange={setSortOption} />
       </div>
 
       {/* Desktop: Sidebar layout */}
@@ -142,15 +236,23 @@ export function ProduitsClient({ products, activeCategory }: ProduitsClientProps
 
         {/* Products grid */}
         <div>
-          {filteredProducts.length > 0 ? (
-            <ProductGrid products={filteredProducts} columns={3} />
+          {displayProducts.length > 0 ? (
+            <ProductGrid products={displayProducts} columns={3} />
           ) : (
             <div className="text-center py-16">
-              <p className="text-muted text-lg">
+              <p className="text-muted text-lg mb-2">
                 Aucun produit ne correspond à vos critères
               </p>
+              {(searchQuery.trim() || hasActiveFilters) && (
+                <p className="text-sm text-muted mb-4">
+                  Essayez de modifier vos filtres ou votre recherche
+                </p>
+              )}
               <button
-                onClick={resetFilters}
+                onClick={() => {
+                  setSearchQuery("");
+                  resetFilters();
+                }}
                 className="inline-flex items-center justify-center mt-4 px-6 py-3 text-sm font-medium bg-primary text-background rounded-[--radius-button] hover:bg-accent hover:text-primary transition-colors"
               >
                 Réinitialiser les filtres
@@ -163,15 +265,23 @@ export function ProduitsClient({ products, activeCategory }: ProduitsClientProps
       {/* Mobile: Products with filter button */}
       <div className="md:hidden">
         {/* Products grid */}
-        {filteredProducts.length > 0 ? (
-          <ProductGrid products={filteredProducts} columns={2} />
+        {displayProducts.length > 0 ? (
+          <ProductGrid products={displayProducts} columns={2} />
         ) : (
           <div className="text-center py-16">
-            <p className="text-muted text-lg">
+            <p className="text-muted text-lg mb-2">
               Aucun produit ne correspond à vos critères
             </p>
+            {(searchQuery.trim() || hasActiveFilters) && (
+              <p className="text-sm text-muted mb-4">
+                Essayez de modifier vos filtres ou votre recherche
+              </p>
+            )}
             <button
-              onClick={handleResetFilters}
+              onClick={() => {
+                setSearchQuery("");
+                handleResetFilters();
+              }}
               className="inline-flex items-center justify-center mt-4 px-6 py-3 text-sm font-medium bg-primary text-background rounded-[--radius-button] hover:bg-accent hover:text-primary transition-colors"
             >
               Réinitialiser les filtres
