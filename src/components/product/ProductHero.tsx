@@ -23,60 +23,38 @@ export function ProductHero() {
         }} />
       </div>
 
-      <div className="relative px-6 py-8 md:py-10">
-        <div className="max-w-2xl">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 bg-background/10 backdrop-blur-sm rounded-full text-background text-xs font-medium mb-4"
-          >
-            <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse" />
-            Nouveautés disponibles
-          </motion.div>
-
-          {/* Title */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="font-heading text-2xl md:text-3xl lg:text-4xl text-background mb-3"
-          >
-            Découvrez Notre{" "}
-            <span className="text-accent italic">Collection Premium</span>
-          </motion.h1>
-
-          {/* Description */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-background/90 text-sm md:text-base mb-6"
-          >
-            Des chichas et accessoires de qualité supérieure pour une expérience unique.
-          </motion.p>
-
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-wrap gap-3"
-          >
-            <a
-              href="#products"
-              className="inline-flex items-center justify-center px-6 py-2 text-sm font-medium bg-background text-primary rounded-[--radius-button] hover:bg-accent hover:text-background transition-colors"
+      <div className="relative px-6 py-6">
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          {/* Left: Title & Description */}
+          <div className="flex-1 min-w-0">
+            <motion.h1
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="font-heading text-xl md:text-2xl text-background mb-1"
             >
-              Explorer
-            </a>
-            <Link
-              href="/favoris"
-              className="inline-flex items-center justify-center px-6 py-2 text-sm font-medium bg-transparent border border-background text-background rounded-[--radius-button] hover:bg-background hover:text-primary transition-colors"
+              Collection <span className="text-accent italic">Premium</span>
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className="text-background/80 text-xs md:text-sm"
             >
-              Favoris
-            </Link>
-          </motion.div>
+              Chichas et accessoires de qualité supérieure
+            </motion.p>
+          </div>
+
+          {/* Right: CTA Button */}
+          <motion.a
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+            href="#products"
+            className="inline-flex items-center justify-center px-5 py-2 text-sm font-medium bg-background text-primary rounded-[--radius-button] hover:bg-accent hover:text-background transition-colors whitespace-nowrap"
+          >
+            Explorer
+          </motion.a>
         </div>
       </div>
     </div>
