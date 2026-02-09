@@ -9,6 +9,21 @@ export const metadata: Metadata = {
   description:
     "Boutique en ligne d'accessoires chicha haut de gamme. Chichas, bols, tuyaux, charbon et accessoires de qualite pour les connaisseurs.",
   keywords: ["chicha", "hookah", "narguilé", "accessoires", "premium", "France"],
+  metadataBase: new URL("https://nuage.fr"),
+  openGraph: {
+    title: "Nuage | L'art de la detente",
+    description:
+      "Boutique en ligne d'accessoires chicha haut de gamme. Chichas, bols, tuyaux, charbon et accessoires de qualite pour les connaisseurs.",
+    type: "website",
+    locale: "fr_FR",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nuage | L'art de la detente",
+    description:
+      "Boutique en ligne d'accessoires chicha haut de gamme. Chichas, bols, tuyaux, charbon et accessoires de qualite pour les connaisseurs.",
+  },
+  robots: "index, follow",
 };
 
 export default function RootLayout({
