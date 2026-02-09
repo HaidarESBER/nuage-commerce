@@ -96,6 +96,9 @@ Progress: ████████████ 100%
 - Recommendation logic: Category → price similarity (±30%) → featured fallback, 4-6 max
 - Urgency frequency: Max 1 indicator per product, 30% show none for authenticity
 - Exit-intent: Desktop only, 3s minimum page time, once per session
+- Guest checkout: Email-first flow with optional account creation, no forced registration
+- Shipping rates: France €5.90-€9.90, EU Schengen €8.90-€15.90, Non-EU €14.90-€19.90
+- Customs warning: Non-EU orders over €200 show customs notice
 
 ### Deferred Issues
 
@@ -112,6 +115,6 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-09
-Stopped at: Completed 08-06-PLAN.md
+Stopped at: Completed 08-07-PLAN.md
 Resume file: None
-Next: Continue Phase 8 (plans 7-8)
+Next: Continue Phase 8 (plan 8)
