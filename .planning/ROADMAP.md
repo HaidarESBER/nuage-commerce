@@ -27,16 +27,15 @@ See [v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md) for full details.
 
 **Milestone Goal:** Transform the static storefront into a dynamic, animated experience that showcases the premium brand through motion and interaction.
 
-#### Phase 5: Motion Foundation
+#### Phase 5: Motion Foundation ✅
 
 **Goal**: Implement smooth page transitions, scroll animations, and micro-interactions throughout the site
 **Depends on**: Phase 4 (v1.0 complete)
-**Research**: Likely (animation library selection and performance optimization)
-**Research topics**: Framer Motion vs GSAP vs CSS-only animations for Next.js App Router, performance considerations, accessibility
-**Plans**: TBD
+**Status**: Complete
+**Completed**: 2026-02-09
 
 Plans:
-- [ ] 05-01: TBD (run /gsd:plan-phase 5 to break down)
+- [x] 05-01: Page transitions, scroll animations, hero entrance (Complete)
 
 #### Phase 6: Product Experience
 
@@ -76,7 +75,7 @@ Plans:
 | 2. Product Catalog | v1.0 | 2/2 | Complete | 2026-02-09 |
 | 3. Shopping Experience | v1.0 | 3/3 | Complete | 2026-02-09 |
 | 4. Launch Prep | v1.0 | 3/3 | Complete | 2026-02-09 |
-| 5. Motion Foundation | v1.1 | 0/? | Not started | - |
+| 5. Motion Foundation | v1.1 | 1/1 | Complete | 2026-02-09 |
 | 6. Product Experience | v1.1 | 0/? | Not started | - |
 | 7. Cart & Checkout Polish | v1.1 | 0/? | Not started | - |
 | 8. Character & Delight | v1.1 | 0/? | Not started | - |

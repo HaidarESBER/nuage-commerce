@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 5 of 8 (Motion Foundation)
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-02-09 — Milestone v1.1 created
+Plan: 1 of 1 in current phase
+Status: Phase complete
+Last activity: 2026-02-09 — Completed 05-01-PLAN.md
 
-Progress: ░░░░░░░░░░ 0%
+Progress: ██████████ 100%
 
 ## Milestone Summary
 
@@ -34,9 +34,9 @@ Progress: ░░░░░░░░░░ 0%
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 11
-- Average duration: 10.3 min
-- Total execution time: 1.72 hours
+- Total plans completed: 12
+- Average duration: 9.8 min
+- Total execution time: 1.8 hours
 
 **By Phase:**
 
@@ -46,6 +46,7 @@ Progress: ░░░░░░░░░░ 0%
 | 02-product-catalog | 2/2 | 25 min | 12.5 min |
 | 03-shopping-experience | 3/3 | 45 min | 15 min |
 | 04-launch-prep | 3/3 | 22 min | 7.3 min |
+| 05-motion-foundation | 1/1 | 5 min | 5 min |
 
 ## Accumulated Context
 
@@ -53,16 +54,19 @@ Progress: ░░░░░░░░░░ 0%
 
 - Milestone v1.1 created: Enhanced Experience with animations and dynamism, 4 phases (Phase 5-8)
 
-### Key Decisions (v1.0)
+### Key Decisions
 
-See PROJECT.md Key Decisions table for full list.
-
-Highlights:
+**v1.0:**
 - Brand: Nuage ("L'art de la detente")
 - Typography: Cormorant Garamond + Inter
 - Colors: Charcoal, Mist, Stone, Blush, Cream
 - Storage: File-based JSON (MVP)
 - Pricing: Cents-based for precision
+
+**v1.1 (Phase 5):**
+- Page transition duration: 300ms fade for premium, non-jarring feel
+- Scroll animations trigger once with viewport intersection (better UX)
+- Hero stagger timing: 0.2s intervals creates elegant cascading reveal
 
 ### Deferred Issues
 
@@ -79,6 +83,6 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-09
-Stopped at: Milestone v1.1 initialization
+Stopped at: Completed 05-01-PLAN.md (Phase 5 complete)
 Resume file: None
-Next: `/gsd:plan-phase 5` to plan Motion Foundation
+Next: Phase 6 planning
