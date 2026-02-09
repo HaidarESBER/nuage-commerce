@@ -6,7 +6,10 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "@/components/ui";
 import { AddToCartButton } from "@/components/product/AddToCartButton";
+import { SwipeableGallery } from "@/components/product/SwipeableGallery";
+import { ProductReviews } from "@/components/product/ProductReviews";
 import { Product, formatPrice, categoryLabels } from "@/types/product";
+import { getProductReviews, getProductRatingStats } from "@/data/reviews";
 
 interface ProductDetailClientProps {
   product: Product;
@@ -15,9 +18,25 @@ interface ProductDetailClientProps {
 export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isZoomOpen, setIsZoomOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const hasDiscount =
     product.compareAtPrice && product.compareAtPrice > product.price;
+
+  // Get reviews data
+  const reviews = getProductReviews(product.id);
+  const stats = getProductRatingStats(product.id);
+
+  // Detect mobile viewport
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Handle ESC key to close modal
   useEffect(() => {
@@ -99,62 +118,82 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Image section - sticky on desktop */}
           <div className="lg:sticky lg:top-8 lg:self-start">
-            {/* Main image with fade transition */}
-            <button
-              onClick={openZoom}
-              className="relative aspect-square bg-background-secondary rounded-[--radius-card] overflow-hidden mb-4 w-full cursor-zoom-in"
-            >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={selectedImageIndex}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="relative w-full h-full"
-                >
-                  <Image
-                    src={product.images[selectedImageIndex]}
-                    alt={product.name}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover"
-                    priority={selectedImageIndex === 0}
-                  />
-                </motion.div>
-              </AnimatePresence>
-              {/* Sale badge */}
-              {hasDiscount && (
-                <div className="absolute top-4 left-4 bg-error text-background text-sm font-medium px-3 py-1.5 rounded">
-                  Promo
-                </div>
-              )}
-            </button>
-
-            {/* Image gallery thumbnails */}
-            {product.images.length > 1 && (
-              <div className="flex gap-3 overflow-x-auto pb-2">
-                {product.images.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImageIndex(index)}
-                    className={`
-                      relative w-20 h-20 flex-shrink-0 rounded-[--radius-button] overflow-hidden
-                      border-2 ${index === selectedImageIndex ? "border-accent" : "border-transparent hover:border-muted"}
-                      transition-colors
-                    `}
-                    title={`Image ${index + 1}`}
-                  >
-                    <Image
-                      src={image}
-                      alt={`${product.name} - Image ${index + 1}`}
-                      fill
-                      sizes="80px"
-                      className="object-cover"
-                    />
-                  </button>
-                ))}
+            {isMobile ? (
+              /* Mobile: Swipeable gallery */
+              <div className="relative">
+                <SwipeableGallery
+                  images={product.images}
+                  productName={product.name}
+                  onImageClick={openZoom}
+                />
+                {/* Sale badge */}
+                {hasDiscount && (
+                  <div className="absolute top-8 left-4 bg-error text-background text-sm font-medium px-3 py-1.5 rounded z-10">
+                    Promo
+                  </div>
+                )}
               </div>
+            ) : (
+              /* Desktop: Click gallery with thumbnails */
+              <>
+                {/* Main image with fade transition */}
+                <button
+                  onClick={openZoom}
+                  className="relative aspect-square bg-background-secondary rounded-[--radius-card] overflow-hidden mb-4 w-full cursor-zoom-in"
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={selectedImageIndex}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="relative w-full h-full"
+                    >
+                      <Image
+                        src={product.images[selectedImageIndex]}
+                        alt={product.name}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 50vw"
+                        className="object-cover"
+                        priority={selectedImageIndex === 0}
+                      />
+                    </motion.div>
+                  </AnimatePresence>
+                  {/* Sale badge */}
+                  {hasDiscount && (
+                    <div className="absolute top-4 left-4 bg-error text-background text-sm font-medium px-3 py-1.5 rounded">
+                      Promo
+                    </div>
+                  )}
+                </button>
+
+                {/* Image gallery thumbnails */}
+                {product.images.length > 1 && (
+                  <div className="flex gap-3 overflow-x-auto pb-2">
+                    {product.images.map((image, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setSelectedImageIndex(index)}
+                        className={`
+                          relative w-20 h-20 flex-shrink-0 rounded-[--radius-button] overflow-hidden
+                          border-2 ${index === selectedImageIndex ? "border-accent" : "border-transparent hover:border-muted"}
+                          transition-colors
+                        `}
+                        title={`Image ${index + 1}`}
+                      >
+                        <Image
+                          src={image}
+                          alt={`${product.name} - Image ${index + 1}`}
+                          fill
+                          sizes="80px"
+                          className="object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
             )}
           </div>
 
@@ -227,6 +266,11 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Reviews Section */}
+        <div className="mt-12 border-t border-background-secondary pt-12">
+          <ProductReviews reviews={reviews} stats={stats} />
         </div>
       </Container>
 
