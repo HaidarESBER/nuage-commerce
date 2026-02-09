@@ -5,18 +5,24 @@
 See: .planning/PROJECT.md (updated 2026-02-09)
 
 **Core value:** The brand looks so premium and legitimate that visitors trust it instantly — visual identity drives conversion.
-**Current focus:** v1.0 MVP Complete — Planning next milestone
+**Current focus:** v1.1 Enhanced Experience — Adding animations and dynamism
 
 ## Current Position
 
-Phase: 4 of 4 (Launch Prep) - MILESTONE COMPLETE
-Plan: All plans complete
-Status: v1.0 MVP shipped
-Last activity: 2026-02-09 — Milestone v1.0 complete
+Phase: 5 of 8 (Motion Foundation)
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-02-09 — Milestone v1.1 created
 
-Progress: ██████████ 100%
+Progress: ░░░░░░░░░░ 0%
 
 ## Milestone Summary
+
+**v1.1 Enhanced Experience (in progress)**
+
+- 4 phases planned (5-8)
+- Focus: Frontend animations, dynamism, character
+- Started: 2026-02-09
 
 **v1.0 MVP shipped 2026-02-09**
 
@@ -43,6 +49,10 @@ Progress: ██████████ 100%
 
 ## Accumulated Context
 
+### Roadmap Evolution
+
+- Milestone v1.1 created: Enhanced Experience with animations and dynamism, 4 phases (Phase 5-8)
+
 ### Key Decisions (v1.0)
 
 See PROJECT.md Key Decisions table for full list.
@@ -62,13 +72,13 @@ Highlights:
 - Legal pages content
 - Database migration
 
-### Blockers/Concerns
+### Blockers/Concerns (v1.1)
 
 None.
 
 ## Session Continuity
 
 Last session: 2026-02-09
-Stopped at: Milestone v1.0 complete
+Stopped at: Milestone v1.1 initialization
 Resume file: None
-Next: `/gsd:new-milestone` to plan v1.1
+Next: `/gsd:plan-phase 5` to plan Motion Foundation
