@@ -10,8 +10,11 @@ import { SwipeableGallery } from "@/components/product/SwipeableGallery";
 import { ProductReviews } from "@/components/product/ProductReviews";
 import { TrustBadges } from "@/components/ui/TrustBadges";
 import { StockIndicator } from "@/components/product/StockIndicator";
+import { ImageZoom } from "@/components/product/ImageZoom";
 import { Product, formatPrice, categoryLabels } from "@/types/product";
 import { getProductReviews, getProductRatingStats } from "@/data/reviews";
+import { RelatedProducts } from "@/components/product/RelatedProducts";
+import { getRelatedProducts } from "@/lib/recommendations";
 
 interface ProductDetailClientProps {
   product: Product;
@@ -28,6 +31,9 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   // Get reviews data
   const reviews = getProductReviews(product.id);
   const stats = getProductRatingStats(product.id);
+  
+  // Get related products
+  const relatedProducts = getRelatedProducts(product);
 
   // Detect mobile viewport
   useEffect(() => {
@@ -120,59 +126,34 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Image section - sticky on desktop */}
           <div className="lg:sticky lg:top-8 lg:self-start">
+            {/* Sale badge overlay */}
+            {hasDiscount && (
+              <div className="absolute top-4 left-4 bg-error text-background text-sm font-medium px-3 py-1.5 rounded z-10">
+                Promo
+              </div>
+            )}
+
             {isMobile ? (
-              /* Mobile: Swipeable gallery */
+              /* Mobile: Swipeable gallery with zoom on tap */
               <div className="relative">
                 <SwipeableGallery
                   images={product.images}
                   productName={product.name}
                   onImageClick={openZoom}
                 />
-                {/* Sale badge */}
-                {hasDiscount && (
-                  <div className="absolute top-8 left-4 bg-error text-background text-sm font-medium px-3 py-1.5 rounded z-10">
-                    Promo
-                  </div>
-                )}
               </div>
             ) : (
-              /* Desktop: Click gallery with thumbnails */
-              <>
-                {/* Main image with fade transition */}
-                <button
-                  onClick={openZoom}
-                  className="relative aspect-square bg-background-secondary rounded-[--radius-card] overflow-hidden mb-4 w-full cursor-zoom-in"
-                >
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={selectedImageIndex}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="relative w-full h-full"
-                    >
-                      <Image
-                        src={product.images[selectedImageIndex]}
-                        alt={product.name}
-                        fill
-                        sizes="(max-width: 1024px) 100vw, 50vw"
-                        className="object-cover"
-                        priority={selectedImageIndex === 0}
-                      />
-                    </motion.div>
-                  </AnimatePresence>
-                  {/* Sale badge */}
-                  {hasDiscount && (
-                    <div className="absolute top-4 left-4 bg-error text-background text-sm font-medium px-3 py-1.5 rounded">
-                      Promo
-                    </div>
-                  )}
-                </button>
+              /* Desktop: Advanced zoom with magnifying glass */
+              <div className="relative">
+                <ImageZoom
+                  src={product.images[selectedImageIndex]}
+                  alt={product.name}
+                  zoomLevel={2.5}
+                />
 
                 {/* Image gallery thumbnails */}
                 {product.images.length > 1 && (
-                  <div className="flex gap-3 overflow-x-auto pb-2">
+                  <div className="flex gap-3 overflow-x-auto pb-2 mt-4">
                     {product.images.map((image, index) => (
                       <button
                         key={index}
@@ -195,7 +176,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                     ))}
                   </div>
                 )}
-              </>
+              </div>
             )}
           </div>
 
@@ -273,6 +254,9 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           <ProductReviews reviews={reviews} stats={stats} />
         </div>
       </Container>
+      
+      {/* Related Products Section */}
+      <RelatedProducts products={relatedProducts} />
 
       {/* Image Zoom Modal */}
       <AnimatePresence>
