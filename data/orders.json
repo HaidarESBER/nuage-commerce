@@ -59,5 +59,42 @@
     "notes": "sdfsdfsd",
     "createdAt": "2026-02-09T14:57:55.019Z",
     "updatedAt": "2026-02-09T14:57:55.019Z"
+  },
+  {
+    "id": "db6778e7-41e3-487b-b807-81fe07239413",
+    "orderNumber": "NU-2026-0003",
+    "items": [
+      {
+        "productId": "2",
+        "productName": "Chicha Classic Noir",
+        "productImage": "https://placehold.co/600x600/1A1A1A/F7F5F3?text=Classic+Noir",
+        "price": 8999,
+        "quantity": 1
+      },
+      {
+        "productId": "1",
+        "productName": "Chicha Crystal Premium",
+        "productImage": "https://placehold.co/600x600/2D2D2D/F7F5F3?text=Chicha+Crystal",
+        "price": 12999,
+        "quantity": 7
+      }
+    ],
+    "subtotal": 99992,
+    "shipping": 0,
+    "total": 99992,
+    "status": "pending",
+    "shippingAddress": {
+      "firstName": "lab",
+      "lastName": "labo",
+      "email": "haidar@haidar.com",
+      "phone": "0707070707",
+      "address": "1 square du pré du bondon",
+      "addressLine2": "",
+      "city": "Vannes",
+      "postalCode": "70808",
+      "country": "France"
+    },
+    "createdAt": "2026-02-09T19:00:33.356Z",
+    "updatedAt": "2026-02-09T19:00:33.356Z"
   }
 ]

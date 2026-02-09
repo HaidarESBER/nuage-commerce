@@ -54,6 +54,17 @@ export default function CheckoutPage() {
       notes: formData.notes,
     });
 
+    // Send order confirmation email (non-blocking)
+    // Don't await - let email send in background
+    fetch("/api/send-order-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ order }),
+    }).catch((error) => {
+      // Log error but don't block user experience
+      console.error("Failed to send confirmation email:", error);
+    });
+
     // Clear cart after successful order
     clearCart();
 
