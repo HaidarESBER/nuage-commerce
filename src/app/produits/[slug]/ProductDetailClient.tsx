@@ -11,10 +11,12 @@ import { ProductReviews } from "@/components/product/ProductReviews";
 import { TrustBadges } from "@/components/ui/TrustBadges";
 import { StockIndicator } from "@/components/product/StockIndicator";
 import { ImageZoom } from "@/components/product/ImageZoom";
+import { WishlistButton } from "@/components/product/WishlistButton";
 import { Product, formatPrice, categoryLabels } from "@/types/product";
 import { getProductReviews, getProductRatingStats } from "@/data/reviews";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
 import { getRelatedProducts } from "@/lib/recommendations";
+import { UrgencyIndicators } from "@/components/product/UrgencyIndicators";
 
 interface ProductDetailClientProps {
   product: Product;
@@ -183,9 +185,19 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           {/* Details section */}
           <div>
             {/* Product name */}
-            <h1 className="text-3xl lg:text-4xl text-primary mb-4">
+            <h1 className="text-3xl lg:text-4xl text-primary mb-2">
               {product.name}
             </h1>
+
+            {/* Wishlist button */}
+            <div className="mb-4">
+              <WishlistButton
+                productId={product.id}
+                size="md"
+                showLabel={true}
+                className="text-primary hover:text-accent transition-colors"
+              />
+            </div>
 
             {/* Price display */}
             <div className="flex items-baseline gap-3 mb-6">
@@ -210,6 +222,9 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 size="md"
               />
             </div>
+            
+            {/* Urgency indicators */}
+            <UrgencyIndicators product={product} />
 
             {/* Add to cart button */}
             <div className="mb-8">
