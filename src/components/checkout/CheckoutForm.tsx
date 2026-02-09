@@ -6,6 +6,7 @@ import { Button } from "@/components/ui";
 import { GuestCheckout } from "./GuestCheckout";
 import { ShippingForm } from "./ShippingForm";
 import { ShippingCalculator } from "./ShippingCalculator";
+import { PaymentMethods } from "./PaymentMethods";
 import { OrderSummary } from "./OrderSummary";
 import { CartItem, calculateSubtotal } from "@/types/cart";
 import {
@@ -172,6 +173,9 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
             cartTotalCents={cartTotal}
             onShippingCostChange={setShippingCost}
           />
+
+          {/* Section 4: Payment */}
+          <PaymentMethods />
 
           {/* Notes */}
           <motion.div
