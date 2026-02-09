@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A premium e-commerce dropshipping store for hookah and chicha accessories, targeting the French market with European expansion in mind. Single brand store with a curated selection of quality products, presented with a modern minimalist aesthetic that builds instant trust.
+**Nuage** — A premium e-commerce store for hookah and chicha accessories, targeting the French market. Features a modern minimalist aesthetic with the "Nuage" brand identity, complete shopping flow, and admin panel for order management. Currently using file-based storage, ready for production deployment with database and payment integration.
 
 ## Core Value
 
@@ -12,20 +12,22 @@ The brand looks so premium and legitimate that visitors trust it instantly — v
 
 ### Validated
 
-(None yet — ship to validate)
+- Modern minimalist visual identity — v1.0
+- Product catalog for hookah accessories — v1.0
+- Curated product selection with quality presentation — v1.0
+- Shopping cart and checkout flow — v1.0
+- Order management and fulfillment tracking — v1.0
+- Mobile-responsive design — v1.0
+- French language content — v1.0
+- Brand identity (Nuage, L'art de la detente) — v1.0
 
 ### Active
 
-- [ ] Modern minimalist visual identity (clean, sophisticated, editorial — no "AI look")
-- [ ] Product catalog for hookah accessories (hookahs, bowls, hoses, charcoal, accessories — no tobacco)
-- [ ] Curated product selection with quality-focused presentation
-- [ ] Dropshipping integration with supplier(s)
-- [ ] Shopping cart and checkout flow
-- [ ] Payment processing (French market)
-- [ ] Order management and fulfillment tracking
-- [ ] Mobile-responsive design
-- [ ] French language content
-- [ ] Brand identity development (name, logo, visual system)
+- [ ] Payment processing (Stripe France)
+- [ ] Real supplier/dropshipping integration
+- [ ] Email notifications for orders
+- [ ] Legal pages (Mentions legales, CGV, Contact)
+- [ ] Admin authentication
 
 ### Out of Scope
 
@@ -55,11 +57,35 @@ The brand looks so premium and legitimate that visitors trust it instantly — v
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Single brand store (not marketplace) | Unified brand experience, simpler to build and manage | — Pending |
-| Modern minimalist aesthetic | Differentiates from busy/outdated competitors, builds trust | — Pending |
-| France-first launch | Home market, manageable scope, strong chicha culture | — Pending |
-| No tobacco products | Regulatory simplicity, focus on accessories | — Pending |
-| Brand name TBD | Will develop during project | — Pending |
+| Single brand store (not marketplace) | Unified brand experience, simpler to build and manage | Good |
+| Modern minimalist aesthetic | Differentiates from busy/outdated competitors, builds trust | Good |
+| France-first launch | Home market, manageable scope, strong chicha culture | Good |
+| No tobacco products | Regulatory simplicity, focus on accessories | Good |
+| Brand name: Nuage | French for "cloud", elegant, evokes smoke abstractly | Good |
+| Prices in cents | Avoids floating-point precision issues | Good |
+| File-based JSON storage | Simple MVP, no database needed | Revisit for production |
+| Server Actions for CRUD | Next.js 15 pattern, clean API | Good |
+| Free shipping for MVP | Simplify launch, can add shipping calc later | Good |
+| Static generation for products | Better performance and SEO | Good |
+
+## Current State
+
+**Version:** v1.0 MVP (shipped 2026-02-09)
+**Tech stack:** Next.js 15, TypeScript, Tailwind CSS
+**LOC:** 4,540 lines TypeScript
+**Storage:** File-based JSON (products.ts, orders.json)
+
+**What's working:**
+- Complete shopping flow (browse -> cart -> checkout -> confirmation)
+- Admin panel with product and order management
+- Mobile-responsive design with hamburger menu
+- SEO-optimized with meta tags and Open Graph
+
+**Known limitations:**
+- No payment processing (orders created as "pending")
+- No admin authentication
+- File-based storage (not production-ready)
+- Placeholder legal pages
 
 ---
-*Last updated: 2026-02-09 after initialization*
+*Last updated: 2026-02-09 after v1.0 milestone*
