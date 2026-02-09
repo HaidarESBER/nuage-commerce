@@ -62,8 +62,8 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 04-01: Order management and fulfillment tracking
-- [ ] 04-02: French language content and localization
+- [x] 04-01: Order management and fulfillment tracking
+- [x] 04-02: Homepage hero and site footer
 - [ ] 04-03: Mobile responsiveness and launch checklist
 
 ## Progress
@@ -76,4 +76,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Foundation & Brand | 3/3 | Complete | 2026-02-09 |
 | 2. Product Catalog | 2/2 | Complete | 2026-02-09 |
 | 3. Shopping Experience | 3/3 | Complete | 2026-02-09 |
-| 4. Launch Prep | 0/3 | Not started | - |
+| 4. Launch Prep | 2/3 | In progress | - |
