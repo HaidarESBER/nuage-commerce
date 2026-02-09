@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -7,6 +8,7 @@ import { Product, formatPrice } from "@/types/product";
 import { useCart } from "@/contexts/CartContext";
 import { StarRatingDisplay } from "@/components/product/StarRating";
 import { getProductRatingStats } from "@/data/reviews";
+import { QuickViewModal } from "./QuickViewModal";
 
 interface ProductCardProps {
   product: Product;
@@ -29,6 +31,7 @@ interface ProductCardProps {
  */
 export function ProductCard({ product, priority = false }: ProductCardProps) {
   const { addItem } = useCart();
+  const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const hasDiscount = product.compareAtPrice && product.compareAtPrice > product.price;
   const ratingStats = getProductRatingStats(product.id);
 
@@ -38,6 +41,12 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
     if (product.inStock) {
       addItem(product);
     }
+  };
+
+  const handleQuickView = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsQuickViewOpen(true);
   };
 
   return (
@@ -66,6 +75,21 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
               priority={priority}
             />
           </motion.div>
+
+          {/* Quick View Button - appears on hover */}
+          <motion.button
+            initial={{ opacity: 0, y: 10 }}
+            whileHover={{ scale: 1.05 }}
+            className="absolute inset-x-0 bottom-4 mx-auto w-fit px-4 py-2 bg-background/95 backdrop-blur-sm text-primary rounded-[--radius-button] text-sm font-medium shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 z-10"
+            onClick={handleQuickView}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            Aperçu rapide
+          </motion.button>
+
           {/* Out of stock overlay */}
           {!product.inStock && (
             <div className="absolute inset-0 bg-primary/60 flex items-center justify-center">
@@ -138,6 +162,13 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
           </motion.a>
         </div>
       </div>
+
+      {/* Quick View Modal */}
+      <QuickViewModal
+        product={product}
+        isOpen={isQuickViewOpen}
+        onClose={() => setIsQuickViewOpen(false)}
+      />
     </motion.div>
   );
 }
