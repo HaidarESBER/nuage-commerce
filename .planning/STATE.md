@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 8 of 8 (Character & Delight)
-Plan: 6 of 8 in current phase
+Plan: 7 of 8 in current phase
 Status: In progress
-Last activity: 2026-02-09 — Completed 08-06-PLAN.md
+Last activity: 2026-02-09 — Completed 08-07-PLAN.md
 
 Progress: ████████████ 100%
 
@@ -34,9 +34,9 @@ Progress: ████████████ 100%
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 19
-- Average duration: 10.0 min
-- Total execution time: 3.2 hours
+- Total plans completed: 20
+- Average duration: 9.9 min
+- Total execution time: 3.3 hours
 
 **By Phase:**
 
@@ -49,7 +49,7 @@ Progress: ████████████ 100%
 | 05-motion-foundation | 1/1 | 5 min | 5 min |
 | 06-product-experience | 1/1 | 8 min | 8 min |
 | 07-cart-checkout-polish | 1/1 | 8 min | 8 min |
-| 08-character-delight | 6/8 | 62 min | 10.3 min |
+| 08-character-delight | 7/8 | 70 min | 10.0 min |
 
 ## Accumulated Context
 
@@ -92,6 +92,10 @@ Progress: ████████████ 100%
 - Mobile gestures: 50px swipe threshold, velocity-based momentum, elastic bounce at edges
 - Bottom sheet: 100px close threshold, native iOS/Android feel, body scroll lock
 - FAB positioning: Bottom-right thumb zone, appears after 200px scroll, 56x56px size
+- Discount strategy: 10% first-purchase discount (BIENVENUE10) maintains premium positioning
+- Recommendation logic: Category → price similarity (±30%) → featured fallback, 4-6 max
+- Urgency frequency: Max 1 indicator per product, 30% show none for authenticity
+- Exit-intent: Desktop only, 3s minimum page time, once per session
 
 ### Deferred Issues
 
