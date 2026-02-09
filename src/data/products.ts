@@ -19,6 +19,7 @@ export const products: Product[] = [
     ],
     category: "chicha",
     inStock: true,
+    stockLevel: 3,
     featured: true,
   },
   {
@@ -35,6 +36,7 @@ export const products: Product[] = [
     ],
     category: "chicha",
     inStock: true,
+    stockLevel: 25,
     featured: true,
   },
   {
@@ -50,6 +52,7 @@ export const products: Product[] = [
     ],
     category: "bol",
     inStock: true,
+    stockLevel: 8,
     featured: false,
   },
   {
@@ -65,6 +68,7 @@ export const products: Product[] = [
     ],
     category: "bol",
     inStock: true,
+    stockLevel: 15,
     featured: true,
   },
   {
@@ -80,6 +84,7 @@ export const products: Product[] = [
     ],
     category: "tuyau",
     inStock: true,
+    stockLevel: 45,
     featured: false,
   },
   {
@@ -95,6 +100,7 @@ export const products: Product[] = [
     ],
     category: "charbon",
     inStock: true,
+    stockLevel: 120,
     featured: false,
   },
   {
@@ -111,6 +117,7 @@ export const products: Product[] = [
     ],
     category: "accessoire",
     inStock: true,
+    stockLevel: 32,
     featured: false,
   },
   {
@@ -126,6 +133,7 @@ export const products: Product[] = [
     ],
     category: "accessoire",
     inStock: false,
+    stockLevel: 0,
     featured: false,
   },
 ];

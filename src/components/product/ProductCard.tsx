@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Product, formatPrice } from "@/types/product";
 import { useCart } from "@/contexts/CartContext";
 import { StarRatingDisplay } from "@/components/product/StarRating";
+import { StockIndicator } from "@/components/product/StockIndicator";
 import { getProductRatingStats } from "@/data/reviews";
 import { QuickViewModal } from "./QuickViewModal";
 
@@ -142,6 +143,16 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
             />
           </div>
         )}
+
+        {/* Stock indicator */}
+        <div className="mb-3">
+          <StockIndicator
+            inStock={product.inStock}
+            stockLevel={product.stockLevel}
+            size="sm"
+            showDot={false}
+          />
+        </div>
 
         {/* CTA Buttons */}
         <div className="flex gap-2">

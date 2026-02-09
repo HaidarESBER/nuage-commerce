@@ -22,6 +22,8 @@ export interface Product {
   images: string[];
   category: ProductCategory;
   inStock: boolean;
+  /** Stock level: 0 = out of stock, 1-5 = urgent, 6-10 = limited, 11+ = in stock */
+  stockLevel?: number;
   featured: boolean;
 }
 

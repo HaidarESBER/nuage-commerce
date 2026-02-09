@@ -9,6 +9,7 @@ import { AddToCartButton } from "@/components/product/AddToCartButton";
 import { SwipeableGallery } from "@/components/product/SwipeableGallery";
 import { ProductReviews } from "@/components/product/ProductReviews";
 import { TrustBadges } from "@/components/ui/TrustBadges";
+import { StockIndicator } from "@/components/product/StockIndicator";
 import { Product, formatPrice, categoryLabels } from "@/types/product";
 import { getProductReviews, getProductRatingStats } from "@/data/reviews";
 
@@ -221,19 +222,12 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             <p className="text-muted text-lg mb-6">{product.shortDescription}</p>
 
             {/* Stock indicator */}
-            <div className="flex items-center gap-2 mb-6">
-              <span
-                className={`w-2.5 h-2.5 rounded-full ${
-                  product.inStock ? "bg-success" : "bg-error"
-                }`}
+            <div className="mb-6">
+              <StockIndicator
+                inStock={product.inStock}
+                stockLevel={product.stockLevel}
+                size="md"
               />
-              <span
-                className={`text-sm font-medium ${
-                  product.inStock ? "text-success" : "text-error"
-                }`}
-              >
-                {product.inStock ? "Stock disponible" : "Rupture de stock"}
-              </span>
             </div>
 
             {/* Add to cart button */}
