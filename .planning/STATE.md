@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-09)
 ## Current Position
 
 Phase: 8 of 8 (Character & Delight)
-Plan: 7 of 8 in current phase
-Status: In progress
-Last activity: 2026-02-09 — Completed 08-07-PLAN.md
+Plan: 8 of 8 in current phase
+Status: Phase complete
+Last activity: 2026-02-09 — Completed 08-08-PLAN.md
 
 Progress: ████████████ 100%
 
@@ -34,9 +34,9 @@ Progress: ████████████ 100%
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 20
-- Average duration: 9.9 min
-- Total execution time: 3.3 hours
+- Total plans completed: 21
+- Average duration: 10.0 min
+- Total execution time: 3.5 hours
 
 **By Phase:**
 
@@ -49,7 +49,7 @@ Progress: ████████████ 100%
 | 05-motion-foundation | 1/1 | 5 min | 5 min |
 | 06-product-experience | 1/1 | 8 min | 8 min |
 | 07-cart-checkout-polish | 1/1 | 8 min | 8 min |
-| 08-character-delight | 7/8 | 70 min | 10.0 min |
+| 08-character-delight | 8/8 | 92 min | 11.5 min |
 
 ## Accumulated Context
 
@@ -99,6 +99,11 @@ Progress: ████████████ 100%
 - Guest checkout: Email-first flow with optional account creation, no forced registration
 - Shipping rates: France €5.90-€9.90, EU Schengen €8.90-€15.90, Non-EU €14.90-€19.90
 - Customs warning: Non-EU orders over €200 show customs notice
+- Image formats: WebP/AVIF prioritized for 30-50% size reduction over JPEG
+- SEO structured data: Schema.org Product, Organization, and Breadcrumb schemas
+- Analytics MVP: Console + localStorage for event tracking, easy swap to GA4/Plausible
+- Core Web Vitals targets: LCP < 2.5s, CLS < 0.1, FID < 100ms
+- Privacy compliance: Respect Do Not Track, no cookies, no PII in analytics
 
 ### Deferred Issues
 
@@ -115,6 +120,6 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-09
-Stopped at: Completed 08-07-PLAN.md
+Stopped at: Completed 08-08-PLAN.md (Final plan in Phase 8)
 Resume file: None
-Next: Continue Phase 8 (plan 8)
+Next: Phase 8 complete, v1.1 Enhanced Experience milestone complete
