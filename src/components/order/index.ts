@@ -6,3 +6,4 @@
 
 export { OrderDetails } from "./OrderDetails";
 export { OrderConfirmation } from "./OrderConfirmation";
+export { OrderTracking } from "./OrderTracking";

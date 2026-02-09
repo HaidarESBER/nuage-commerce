@@ -56,6 +56,16 @@ export interface Order {
   status: OrderStatus;
   shippingAddress: ShippingAddress;
   notes?: string;
+  /** Tracking number from shipping carrier */
+  trackingNumber?: string;
+  /** URL to track shipment */
+  trackingUrl?: string;
+  /** Estimated delivery date */
+  estimatedDelivery?: string;
+  /** Date when order was shipped */
+  shippedAt?: string;
+  /** Date when order was delivered */
+  deliveredAt?: string;
   createdAt: string;
   updatedAt: string;
 }

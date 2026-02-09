@@ -120,9 +120,68 @@ export async function updateOrderStatus(
     throw new Error(`Order with id ${id} not found`);
   }
 
+  const now = new Date().toISOString();
+  const updates: Partial<Order> = {
+    status,
+    updatedAt: now,
+  };
+
+  // Set timestamp when shipped
+  if (status === "shipped" && orders[index].status !== "shipped") {
+    updates.shippedAt = now;
+  }
+
+  // Set timestamp when delivered
+  if (status === "delivered" && orders[index].status !== "delivered") {
+    updates.deliveredAt = now;
+  }
+
   orders[index] = {
     ...orders[index],
-    status,
+    ...updates,
+  };
+
+  await writeOrdersFile(orders);
+
+  // Send shipping notification email if status changed to shipped
+  if (status === "shipped" && orders[index].trackingNumber) {
+    // Trigger email in background (don't await)
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/send-shipping-email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ order: orders[index] }),
+    }).catch((error) => {
+      console.error("Failed to send shipping notification:", error);
+    });
+  }
+
+  return orders[index];
+}
+
+/**
+ * Update order tracking information
+ * @param id - Order ID
+ * @param trackingInfo - Tracking number, URL, and estimated delivery
+ * @returns Updated order
+ */
+export async function updateOrderTracking(
+  id: string,
+  trackingInfo: {
+    trackingNumber?: string;
+    trackingUrl?: string;
+    estimatedDelivery?: string;
+  }
+): Promise<Order> {
+  const orders = await readOrdersFile();
+  const index = orders.findIndex((o) => o.id === id);
+
+  if (index === -1) {
+    throw new Error(`Order with id ${id} not found`);
+  }
+
+  orders[index] = {
+    ...orders[index],
+    ...trackingInfo,
     updatedAt: new Date().toISOString(),
   };
 

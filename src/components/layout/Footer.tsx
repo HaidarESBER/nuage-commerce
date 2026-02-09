@@ -115,6 +115,21 @@ export function Footer() {
                     />
                   </motion.span>
                 </Link>
+                <Link href="/suivi" className="group inline-block w-fit">
+                  <motion.span
+                    className="relative text-background/80 transition-colors duration-200 group-hover:text-background"
+                    whileHover={{ y: -1, filter: "brightness(1.1)" }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                  >
+                    Suivre ma commande
+                    <motion.span
+                      className="absolute bottom-0 left-0 h-px bg-background"
+                      initial={{ width: "0%" }}
+                      whileHover={{ width: "100%" }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  </motion.span>
+                </Link>
               </nav>
             </motion.div>
 

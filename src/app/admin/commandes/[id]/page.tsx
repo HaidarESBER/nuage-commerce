@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getOrderById } from "@/lib/orders";
 import { formatPrice } from "@/types/product";
-import { OrderStatusSelect } from "@/components/admin";
+import { OrderStatusSelect, OrderTrackingForm } from "@/components/admin";
 import { calculateLineTotal } from "@/types/order";
 
 export const dynamic = "force-dynamic";
@@ -153,6 +153,16 @@ export default async function AdminOrderDetailPage({
               </div>
             </div>
           )}
+
+          {/* Tracking Information */}
+          <div className="bg-secondary rounded-lg border border-primary/10 overflow-hidden">
+            <div className="px-4 py-3 bg-primary/5 border-b border-primary/10">
+              <h3 className="font-medium text-primary">Informations de suivi</h3>
+            </div>
+            <div className="p-4">
+              <OrderTrackingForm order={order} />
+            </div>
+          </div>
         </div>
       </div>
     </div>
