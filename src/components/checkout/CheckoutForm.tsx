@@ -5,8 +5,9 @@ import { useState, useCallback } from "react";
 import { Button } from "@/components/ui";
 import { GuestCheckout } from "./GuestCheckout";
 import { ShippingForm } from "./ShippingForm";
+import { ShippingCalculator } from "./ShippingCalculator";
 import { OrderSummary } from "./OrderSummary";
-import { CartItem } from "@/types/cart";
+import { CartItem, calculateSubtotal } from "@/types/cart";
 import {
   ShippingAddress,
   CheckoutFormData,
@@ -40,13 +41,18 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
   const [createAccount, setCreateAccount] = useState(false);
   const [password, setPassword] = useState("");
 
+  // Shipping state
   const [shippingAddress, setShippingAddress] = useState<ShippingAddress>(
     defaultShippingAddress
   );
+  const [shippingCost, setShippingCost] = useState(0);
+
   const [notes, setNotes] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const cartTotal = calculateSubtotal(items);
 
   const validateForm = useCallback((): boolean => {
     const newErrors: FieldErrors = {};
@@ -133,7 +139,7 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Order summary on mobile (shown first) */}
         <div className="lg:hidden">
-          <OrderSummary items={items} />
+          <OrderSummary items={items} shippingCost={shippingCost} />
         </div>
 
         {/* Shipping form (2/3 width on desktop) */}
@@ -160,6 +166,12 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
               errors={errors}
             />
           </motion.div>
+
+          {/* Section 3: Shipping calculator */}
+          <ShippingCalculator
+            cartTotalCents={cartTotal}
+            onShippingCostChange={setShippingCost}
+          />
 
           {/* Notes */}
           <motion.div
@@ -320,7 +332,7 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
         {/* Order summary on desktop (1/3 width, right side) */}
         <div className="hidden lg:block">
           <div className="sticky top-24">
-            <OrderSummary items={items} />
+            <OrderSummary items={items} shippingCost={shippingCost} />
           </div>
         </div>
       </div>

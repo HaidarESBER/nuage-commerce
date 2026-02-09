@@ -5,6 +5,7 @@ import { CartItem, calculateSubtotal, formatCartTotal } from "@/types/cart";
 
 interface OrderSummaryProps {
   items: CartItem[];
+  shippingCost?: number; // in cents
 }
 
 /**
@@ -13,13 +14,12 @@ interface OrderSummaryProps {
  * Displays cart items in a compact format with:
  * - Product image, name, quantity, line total
  * - Subtotal
- * - Free shipping notice
+ * - Shipping cost (when provided)
  * - Order total
  */
-export function OrderSummary({ items }: OrderSummaryProps) {
+export function OrderSummary({ items, shippingCost = 0 }: OrderSummaryProps) {
   const subtotal = calculateSubtotal(items);
-  const shipping = 0; // Free shipping for MVP
-  const total = subtotal + shipping;
+  const total = subtotal + shippingCost;
 
   return (
     <div className="bg-background-card rounded-[--radius-card] p-6">
@@ -88,20 +88,13 @@ export function OrderSummary({ items }: OrderSummaryProps) {
         </div>
         <div className="flex justify-between text-sm text-muted">
           <span>Livraison</span>
-          <span className="text-green-600 font-medium">Gratuit</span>
+          <span>{shippingCost > 0 ? formatCartTotal(shippingCost) : "Calculer"}</span>
         </div>
         <hr className="border-background-secondary" />
         <div className="flex justify-between font-medium text-lg text-primary">
           <span>Total</span>
           <span>{formatCartTotal(total)}</span>
         </div>
-      </div>
-
-      {/* Free shipping notice */}
-      <div className="mt-4 p-3 bg-green-50 rounded-[--radius-button] text-center">
-        <p className="text-sm text-green-700">
-          Livraison offerte sur toutes les commandes
-        </p>
       </div>
     </div>
   );
