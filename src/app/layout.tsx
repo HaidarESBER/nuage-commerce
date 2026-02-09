@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { fontVariables } from "@/lib/fonts";
+import { CartProvider } from "@/contexts/CartContext";
+import { Header } from "@/components/layout";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,7 +19,10 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={`${fontVariables} font-sans antialiased`}>
-        {children}
+        <CartProvider>
+          <Header />
+          {children}
+        </CartProvider>
       </body>
     </html>
   );

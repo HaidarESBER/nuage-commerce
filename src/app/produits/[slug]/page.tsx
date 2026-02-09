@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/ui";
-import { Button } from "@/components/ui";
+import { AddToCartButton } from "@/components/product/AddToCartButton";
 import {
   getProductBySlug,
   getAllProductSlugs,
@@ -172,19 +172,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
             {/* Add to cart button */}
             <div className="mb-8">
-              <Button
-                variant="primary"
-                size="lg"
-                disabled={!product.inStock}
-                className="w-full sm:w-auto"
-              >
-                Ajouter au panier
-              </Button>
-              {!product.inStock && (
-                <p className="text-muted text-sm mt-2">
-                  Ce produit est actuellement indisponible.
-                </p>
-              )}
+              <AddToCartButton product={product} />
             </div>
 
             {/* Divider */}

@@ -2,7 +2,7 @@
 
 import { promises as fs } from "fs";
 import path from "path";
-import { Product, ProductCategory } from "@/types/product";
+import { Product } from "@/types/product";
 
 const DATA_FILE_PATH = path.join(process.cwd(), "data", "products.json");
 
@@ -85,7 +85,7 @@ export async function createProduct(
   };
 
   // Ensure unique slug
-  let slugBase = newProduct.slug;
+  const slugBase = newProduct.slug;
   let slugCounter = 1;
   while (products.some((p) => p.slug === newProduct.slug)) {
     newProduct.slug = `${slugBase}-${slugCounter}`;
@@ -117,7 +117,7 @@ export async function updateProduct(
   if (data.name && data.name !== products[index].name) {
     updatedSlug = slugify(data.name);
     // Ensure unique slug (excluding current product)
-    let slugBase = updatedSlug;
+    const slugBase = updatedSlug;
     let slugCounter = 1;
     while (products.some((p, i) => i !== index && p.slug === updatedSlug)) {
       updatedSlug = `${slugBase}-${slugCounter}`;
