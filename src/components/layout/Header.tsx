@@ -29,14 +29,14 @@ export function Header() {
     setIsMenuOpen(false);
   };
 
-  // Homepage has dark header to match video background
+  // Homepage has transparent header - video shows through
   const isHomepage = pathname === "/";
 
   return (
     <header
       className={`sticky top-0 z-50 transition-colors duration-300 ${
         isHomepage
-          ? "bg-black/60 backdrop-blur-sm border-b border-white/10"
+          ? "bg-transparent border-b border-white/5"
           : "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-background-secondary"
       }`}
     >

@@ -22,7 +22,7 @@ export default function Home() {
   return (
     <>
       {/* Hero Section - Cinematic Video Background */}
-      <section className="relative h-screen overflow-hidden">
+      <section className="relative h-screen overflow-hidden -mt-16">
         {/* Video Background */}
         <div className="absolute inset-0 w-full h-full">
           <video
