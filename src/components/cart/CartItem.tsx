@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { CartItem as CartItemType } from "@/types/cart";
 import { formatPrice } from "@/types/product";
@@ -18,6 +19,7 @@ interface CartItemProps {
  * - Quantity controls (+/-)
  * - Remove button
  * - Responsive: stack on mobile, row on desktop
+ * - Layout animations for smooth reordering
  */
 export function CartItem({ item }: CartItemProps) {
   const { updateQuantity, removeItem } = useCart();
@@ -40,7 +42,10 @@ export function CartItem({ item }: CartItemProps) {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row gap-4 py-4 border-b border-background-secondary last:border-b-0">
+    <motion.div
+      layout
+      className="flex flex-col sm:flex-row gap-4 py-4 border-b border-background-secondary last:border-b-0"
+    >
       {/* Product image */}
       <div className="relative w-20 h-20 flex-shrink-0 bg-background-secondary rounded-[--radius-card] overflow-hidden">
         <Image
@@ -117,6 +122,6 @@ export function CartItem({ item }: CartItemProps) {
           </svg>
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 }

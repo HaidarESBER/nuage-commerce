@@ -1,5 +1,6 @@
 "use client";
 
+import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "@/components/ui";
 import { CartItem, CartSummary } from "@/components/cart";
 import { useCart } from "@/contexts/CartContext";
@@ -9,6 +10,7 @@ import { useCart } from "@/contexts/CartContext";
  *
  * Displays cart contents with item list and order summary.
  * Uses client-side rendering for cart context.
+ * Features staggered entrance and slide-out removal animations.
  */
 export default function PanierPage() {
   const { items } = useCart();
@@ -27,9 +29,32 @@ export default function PanierPage() {
             {/* Cart items */}
             <div className="lg:col-span-2">
               <div className="bg-background-card rounded-[--radius-card] p-6">
-                {items.map((item) => (
-                  <CartItem key={item.product.id} item={item} />
-                ))}
+                <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  variants={{
+                    visible: {
+                      transition: {
+                        staggerChildren: 0.1,
+                      },
+                    },
+                  }}
+                >
+                  <AnimatePresence mode="popLayout">
+                    {items.map((item) => (
+                      <motion.div
+                        key={item.product.id}
+                        layout
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <CartItem item={item} />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </motion.div>
               </div>
             </div>
 
