@@ -5,3 +5,6 @@ export { ProductSearch, useProductSearch } from "./ProductSearch";
 export { ProductFilters, useProductFilters } from "./ProductFilters";
 export { ProductSort, useProductSort } from "./ProductSort";
 export { QuickViewModal } from "./QuickViewModal";
+export { ProductHero } from "./ProductHero";
+export { ViewToggle } from "./ViewToggle";
+export { FilterChips } from "./FilterChips";

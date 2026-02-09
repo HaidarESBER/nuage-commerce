@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { Container } from "@/components/ui";
-import { ProduitsClient } from "./ProduitsClient";
+import { ProduitsClientEnhanced } from "./ProduitsClientEnhanced";
 import {
   products,
   getProductsByCategory,
@@ -43,7 +43,7 @@ export default async function ProduitsPage({ searchParams }: ProduitsPageProps) 
   return (
     <main className="py-12 lg:py-16">
       <Container size="lg">
-        <ProduitsClient products={filteredProducts} activeCategory={activeCategory} />
+        <ProduitsClientEnhanced products={filteredProducts} activeCategory={activeCategory} />
       </Container>
     </main>
   );
