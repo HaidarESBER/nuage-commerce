@@ -5,6 +5,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Product, formatPrice } from "@/types/product";
 import { useCart } from "@/contexts/CartContext";
+import { StarRatingDisplay } from "@/components/product/StarRating";
+import { getProductRatingStats } from "@/data/reviews";
 
 interface ProductCardProps {
   product: Product;
@@ -28,6 +30,7 @@ interface ProductCardProps {
 export function ProductCard({ product, priority = false }: ProductCardProps) {
   const { addItem } = useCart();
   const hasDiscount = product.compareAtPrice && product.compareAtPrice > product.price;
+  const ratingStats = getProductRatingStats(product.id);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -104,6 +107,17 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
             </span>
           )}
         </motion.div>
+
+        {/* Star rating summary */}
+        {ratingStats && (
+          <div className="mb-3">
+            <StarRatingDisplay
+              rating={ratingStats.averageRating}
+              totalReviews={ratingStats.totalReviews}
+              size="sm"
+            />
+          </div>
+        )}
 
         {/* CTA Buttons */}
         <div className="flex gap-2">
