@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui";
 import { ShippingForm } from "./ShippingForm";
@@ -147,54 +147,131 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
           </motion.div>
 
           {/* Submit error */}
-          {submitError && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-[--radius-button] text-red-700">
-              {submitError}
-            </div>
-          )}
+          <AnimatePresence>
+            {submitError && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="p-4 bg-red-50 border border-red-200 rounded-[--radius-button] text-red-700 flex items-center gap-3"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="flex-shrink-0"
+                >
+                  <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                  <line x1="12" y1="9" x2="12" y2="13" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                <span className="flex-1">{submitError}</span>
+                <button
+                  onClick={() => setSubmitError(null)}
+                  className="flex-shrink-0 text-red-700 hover:text-red-900 transition-colors"
+                  aria-label="Fermer l'erreur"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Submit button */}
-          <motion.div whileHover={{ scale: 1.01 }}>
+          <motion.div whileHover={{ scale: isSubmitting ? 1 : 1.01 }}>
             <Button
               type="submit"
               variant="primary"
               size="lg"
-              className="w-full"
+              className={`w-full ${isSubmitting ? "cursor-wait" : ""}`}
               disabled={isSubmitting}
             >
-              <motion.span
-                animate={{ opacity: isSubmitting ? 0.7 : 1 }}
-                transition={{ duration: 0.2 }}
-                className={isSubmitting ? "flex items-center justify-center gap-2" : ""}
-              >
+              <span className="flex items-center justify-center gap-2">
                 {isSubmitting ? (
                   <>
-                    <svg
-                      className="animate-spin h-5 w-5"
+                    {/* Cloud icon (Nuage brand theme) rotating */}
+                    <motion.svg
                       xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
+                      width="20"
+                      height="20"
                       viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      animate={{ rotate: 360 }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
                     >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      />
-                    </svg>
-                    Traitement en cours...
+                      <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
+                    </motion.svg>
+                    <span>
+                      Traitement en cours
+                      <motion.span
+                        className="inline-flex gap-0.5 ml-0.5"
+                        initial={{ opacity: 1 }}
+                      >
+                        <motion.span
+                          animate={{ opacity: [0.3, 1, 0.3] }}
+                          transition={{
+                            duration: 1.2,
+                            repeat: Infinity,
+                            delay: 0,
+                          }}
+                        >
+                          .
+                        </motion.span>
+                        <motion.span
+                          animate={{ opacity: [0.3, 1, 0.3] }}
+                          transition={{
+                            duration: 1.2,
+                            repeat: Infinity,
+                            delay: 0.2,
+                          }}
+                        >
+                          .
+                        </motion.span>
+                        <motion.span
+                          animate={{ opacity: [0.3, 1, 0.3] }}
+                          transition={{
+                            duration: 1.2,
+                            repeat: Infinity,
+                            delay: 0.4,
+                          }}
+                        >
+                          .
+                        </motion.span>
+                      </motion.span>
+                    </span>
                   </>
                 ) : (
-                  "Confirmer la commande"
+                  "Commander"
                 )}
-              </motion.span>
+              </span>
             </Button>
           </motion.div>
 
