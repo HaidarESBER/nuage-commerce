@@ -27,7 +27,7 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
             preload="metadata"
             className="absolute inset-0 w-full h-full object-cover"
           >
-            <source src="/nuage1.mp4" type="video/mp4" />
+            <source src="/nuage.mp4" type="video/mp4" />
           </video>
 
           {/* Gradient overlay for text readability */}
