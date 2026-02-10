@@ -74,7 +74,7 @@ export default async function AdminOrdersPage() {
                   </td>
                   <td className="px-4 py-3">
                     <Link
-                      href={`/admin/commandés/${order.id}`}
+                      href={`/admin/commandes/${order.id}`}
                       className="px-3 py-1 text-sm border border-primary/30 text-primary rounded hover:bg-primary hover:text-background transition-colors"
                     >
                       Voir
