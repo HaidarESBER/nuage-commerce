@@ -13,16 +13,23 @@ import { XMarkIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline"
  * - Compliant with French health regulations
  */
 export function HealthWarning() {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
 
   useEffect(() => {
     // Check if dismissed in current session
     const dismissed = sessionStorage.getItem("nuage_health_warning_dismissed");
     if (dismissed === "true") {
-      setIsVisible(false);
       setIsDismissed(true);
+      return;
     }
+
+    // Show banner after hero video finishes (~5-7 seconds)
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 6000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handleDismiss = () => {

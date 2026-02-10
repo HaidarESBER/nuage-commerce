@@ -38,19 +38,19 @@ export function CookieConsent() {
     const savedConsent = localStorage.getItem("nuage_cookie_consent");
 
     if (!savedConsent) {
-      // Wait for user to scroll before showing banner
+      // Wait for user to scroll further down before showing banner
       const handleScroll = () => {
-        if (window.scrollY > 100) {
+        if (window.scrollY > 400) {
           setHasScrolled(true);
         }
       };
 
       window.addEventListener("scroll", handleScroll, { passive: true });
 
-      // Also show after 5 seconds if no scroll
+      // Also show after 10 seconds if no scroll
       const fallbackTimer = setTimeout(() => {
         setHasScrolled(true);
-      }, 5000);
+      }, 10000);
 
       return () => {
         window.removeEventListener("scroll", handleScroll);
