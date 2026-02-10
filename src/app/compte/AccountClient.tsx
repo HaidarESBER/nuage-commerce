@@ -64,7 +64,7 @@ export function AccountClient() {
       const response = await fetch(`/api/orders/by-email?email=${encodeURIComponent(user.email)}`);
 
       if (!response.ok) {
-        throw new Error("Erreur lors de la récupération des commandés");
+        throw new Error("Erreur lors de la récupération des commandes");
       }
 
       const data = await response.json();
@@ -189,7 +189,7 @@ export function AccountClient() {
             Mon Compte
           </h1>
           <p className="text-muted">
-            {user ? "Consultez vos commandés et suivez leur statut" : "Connectez-vous pour accéder à votre compte"}
+            {user ? "Consultez vos commandes et suivez leur statut" : "Connectez-vous pour accéder à votre compte"}
           </p>
         </div>
 

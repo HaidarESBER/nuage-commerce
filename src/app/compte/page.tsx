@@ -3,7 +3,7 @@ import { AccountClient } from "./AccountClient";
 
 export const metadata: Metadata = {
   title: "Mon Compte | Nuage",
-  description: "Gérez votre compte et consultez vos commandés",
+  description: "Gérez votre compte et consultez vos commandes",
 };
 
 export default function AccountPage() {

@@ -329,7 +329,7 @@
     "subtotal": 21998,
     "shipping": 990,
     "total": 22988,
-    "status": "pending",
+    "status": "processing",
     "shippingAddress": {
       "firstName": "aa",
       "lastName": "aa",
@@ -342,6 +342,9 @@
       "country": "France"
     },
     "createdAt": "2026-02-10T21:02:22.990Z",
-    "updatedAt": "2026-02-10T21:02:22.990Z"
+    "updatedAt": "2026-02-10T22:05:49.954Z",
+    "trackingNumber": "1234",
+    "trackingUrl": "https://tets.com",
+    "estimatedDelivery": "15 mars 2026"
   }
 ]

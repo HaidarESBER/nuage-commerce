@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
       const resend = getResend();
       // Send email using Resend
       const { data, error } = await resend.emails.send({
-        from: "Nuage <commandés@nuage.fr>", // Update with your verified domain
+        from: "Nuage <commandes@nuage.fr>", // Update with your verified domain
         to: [order.shippingAddress.email],
         subject: `Votre commande ${order.orderNumber} a été expédiée !`,
         react: ShippingNotificationEmail({

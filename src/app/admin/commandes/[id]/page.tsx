@@ -29,10 +29,10 @@ export default async function AdminOrderDetailPage({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <Link
-            href="/admin/commandés"
+            href="/admin/commandes"
             className="text-sm text-primary/60 hover:text-primary transition-colors"
           >
-            &larr; Retour aux commandés
+            &larr; Retour aux commandes
           </Link>
           <h2 className="mt-2 text-2xl font-heading font-semibold text-primary">
             Commande {order.orderNumber}

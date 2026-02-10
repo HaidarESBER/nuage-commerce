@@ -135,7 +135,7 @@ export function GuestCheckout({
             className="mt-0.5 w-4 h-4 rounded border-background-secondary text-accent focus:ring-accent focus:ring-2"
           />
           <span className="text-sm text-primary group-hover:text-accent transition-colors">
-            Créer un compte pour suivre vos commandés
+            Créer un compte pour suivre vos commandes
           </span>
         </label>
 
