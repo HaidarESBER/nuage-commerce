@@ -72,7 +72,7 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
               animate={{ opacity: videoEnded ? 0 : 1 }}
               transition={{ duration: 0.5 }}
             >
-              <source src="/nuage-loading-video.mp4" type="video/mp4" />
+              <source src="/nuage-loading-video (1).mp4" type="video/mp4" />
             </motion.video>
 
             {/* Loading text overlay */}
@@ -275,7 +275,7 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
                   playsInline
                   className="h-28 md:h-36 w-auto rounded-xl shadow-2xl ring-2 ring-primary/20 group-hover:ring-accent/40 transition-all"
                 >
-                  <source src="/nuage-loading-video.mp4" type="video/mp4" />
+                  <source src="/nuage-loading-video (1).mp4" type="video/mp4" />
                 </video>
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent rounded-xl pointer-events-none" />
               </div>

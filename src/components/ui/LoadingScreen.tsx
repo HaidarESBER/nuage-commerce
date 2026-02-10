@@ -57,7 +57,7 @@ export function LoadingScreen() {
             playsInline
             className="w-full h-full object-cover"
           >
-            <source src="/nuage-loading-video.mp4" type="video/mp4" />
+            <source src="/nuage-loading-video (1).mp4" type="video/mp4" />
           </video>
 
           {/* Optional: Loading text overlay */}
