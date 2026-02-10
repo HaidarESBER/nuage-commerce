@@ -70,6 +70,22 @@ export async function getProductById(id: string): Promise<Product | null> {
 }
 
 /**
+ * Get a product by its slug
+ */
+export async function getProductBySlug(slug: string): Promise<Product | undefined> {
+  const products = await readProductsFile();
+  return products.find((p) => p.slug === slug);
+}
+
+/**
+ * Get all product slugs (for static generation)
+ */
+export async function getAllProductSlugs(): Promise<string[]> {
+  const products = await readProductsFile();
+  return products.map((p) => p.slug);
+}
+
+/**
  * Create a new product
  * Auto-generates id and slug
  */
