@@ -159,7 +159,7 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
               Accessoires chicha premium pour les connaisseurs
             </motion.p>
 
-            {/* CTA Button */}
+            {/* CTA Button with Logo */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -167,11 +167,16 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
             >
               <Link
                 href="/produits"
-                className="group inline-flex items-center justify-center px-8 py-3 text-base font-medium bg-white/95 text-[#2C2C2C] rounded-full hover:bg-[#D4A5A5] hover:text-white transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105"
+                className="group inline-flex items-center justify-center gap-4 px-8 py-3 text-base font-medium bg-white/95 text-[#2C2C2C] rounded-full hover:bg-[#D4A5A5] hover:text-white transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105"
               >
+                <img
+                  src="/nuagelogonobg.png"
+                  alt="Nuage Logo"
+                  className="h-8 w-auto"
+                />
                 Decouvrir la collection
                 <svg
-                  className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform"
+                  className="w-4 h-4 group-hover:translate-x-1 transition-transform"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
