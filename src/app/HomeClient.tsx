@@ -38,6 +38,17 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
       setIsLoading(false);
       // Restore body overflow
       document.body.style.overflow = '';
+
+      // On mobile, scroll down a bit after loading completes
+      if (window.innerWidth < 768) {
+        setTimeout(() => {
+          window.scrollTo({
+            top: 50,
+            behavior: 'smooth'
+          });
+        }, 500);
+      }
+
       // Start playing the hero video after loading screen ends
       if (heroVideoRef.current) {
         heroVideoRef.current.play().catch(err => {
