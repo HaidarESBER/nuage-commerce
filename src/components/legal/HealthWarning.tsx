@@ -37,40 +37,33 @@ export function HealthWarning() {
   }
 
   return (
-    <div className="sticky top-0 z-[9998] bg-amber-50 border-b-2 border-amber-300 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 py-3">
-        <div className="flex items-center gap-3">
+    <div className="sticky top-0 z-[9998] bg-amber-50 border-b border-amber-200">
+      <div className="max-w-7xl mx-auto px-3 py-1.5">
+        <div className="flex items-center gap-2">
           {/* Warning icon */}
           <div className="flex-shrink-0">
-            <ExclamationTriangleIcon className="w-5 h-5 text-amber-700" />
+            <ExclamationTriangleIcon className="w-4 h-4 text-amber-600" />
           </div>
 
           {/* Warning text */}
           <div className="flex-1 min-w-0">
-            <p className="text-sm md:text-base text-amber-900">
-              <strong className="font-semibold">Avertissement santé :</strong>{" "}
-              <span className="font-medium">Fumer est dangereux pour la santé.</span>{" "}
-              <span className="hidden sm:inline text-amber-800">
-                Produits réservés aux personnes majeures (18+).
-              </span>
+            <p className="text-xs text-amber-900">
+              <strong className="font-semibold">Avertissement :</strong>{" "}
+              <span>Fumer est dangereux pour la santé.</span>{" "}
+              <span className="hidden sm:inline text-amber-800">18+ uniquement.</span>
             </p>
           </div>
 
           {/* Close button */}
           <button
             onClick={handleDismiss}
-            className="flex-shrink-0 ml-auto p-1 text-amber-700 hover:text-amber-900 hover:bg-amber-100 rounded-lg transition-colors"
+            className="flex-shrink-0 ml-auto p-0.5 text-amber-600 hover:text-amber-800 transition-colors"
             aria-label="Masquer l'avertissement"
-            title="Masquer (réapparaîtra à la prochaine visite)"
+            title="Masquer"
           >
-            <XMarkIcon className="w-5 h-5" />
+            <XMarkIcon className="w-4 h-4" />
           </button>
         </div>
-
-        {/* Mobile: Additional line */}
-        <p className="sm:hidden mt-2 text-xs text-amber-800">
-          Réservé aux +18 ans
-        </p>
       </div>
     </div>
   );

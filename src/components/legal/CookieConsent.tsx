@@ -25,6 +25,7 @@ interface CookiePreferences {
 export function CookieConsent() {
   const [isVisible, setIsVisible] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
   const [preferences, setPreferences] = useState<CookiePreferences>({
     essential: true, // Always true
     analytics: false,
@@ -37,12 +38,24 @@ export function CookieConsent() {
     const savedConsent = localStorage.getItem("nuage_cookie_consent");
 
     if (!savedConsent) {
-      // Show banner after short delay
-      const timer = setTimeout(() => {
-        setIsVisible(true);
-      }, 1000);
+      // Wait for user to scroll before showing banner
+      const handleScroll = () => {
+        if (window.scrollY > 100) {
+          setHasScrolled(true);
+        }
+      };
 
-      return () => clearTimeout(timer);
+      window.addEventListener("scroll", handleScroll, { passive: true });
+
+      // Also show after 5 seconds if no scroll
+      const fallbackTimer = setTimeout(() => {
+        setHasScrolled(true);
+      }, 5000);
+
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+        clearTimeout(fallbackTimer);
+      };
     } else {
       // Load saved preferences
       try {
@@ -52,13 +65,24 @@ export function CookieConsent() {
         // Re-show banner if consent is > 6 months old (RGPD requirement)
         const sixMonthsAgo = Date.now() - (6 * 30 * 24 * 60 * 60 * 1000);
         if (parsed.timestamp < sixMonthsAgo) {
-          setIsVisible(true);
+          setHasScrolled(true);
         }
       } catch (error) {
-        setIsVisible(true);
+        setHasScrolled(true);
       }
     }
   }, []);
+
+  // Show banner with delay after scroll detected
+  useEffect(() => {
+    if (hasScrolled && !isVisible) {
+      const timer = setTimeout(() => {
+        setIsVisible(true);
+      }, 500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [hasScrolled, isVisible]);
 
   const savePreferences = (prefs: CookiePreferences) => {
     const consentData = {
@@ -105,23 +129,22 @@ export function CookieConsent() {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 100, opacity: 0 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className="fixed bottom-0 left-0 right-0 z-[9999] p-4 md:p-6"
+        className="fixed bottom-0 left-0 right-0 z-[9999] p-3 md:p-4"
       >
-        <div className="max-w-4xl mx-auto bg-background border-2 border-primary/20 rounded-2xl shadow-2xl overflow-hidden">
+        <div className="max-w-3xl mx-auto bg-background border border-primary/20 rounded-xl shadow-xl overflow-hidden">
           {/* Header */}
-          <div className="p-6 md:p-8">
-            <div className="flex items-start gap-4 mb-4">
-              <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                <span className="text-2xl">🍪</span>
+          <div className="p-4 md:p-5">
+            <div className="flex items-start gap-3 mb-3">
+              <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                <span className="text-lg">🍪</span>
               </div>
               <div className="flex-1">
-                <h3 className="text-xl font-heading font-bold text-primary mb-2">
-                  Respect de votre vie privée
+                <h3 className="text-base font-heading font-bold text-primary mb-1">
+                  Cookies
                 </h3>
-                <p className="text-sm text-primary/70">
-                  Nous utilisons des cookies pour améliorer votre expérience sur notre site,
-                  analyser le trafic et personnaliser le contenu. Vous pouvez choisir d&apos;accepter
-                  tous les cookies ou personnaliser vos préférences.
+                <p className="text-xs text-primary/70">
+                  Nous utilisons des cookies pour améliorer votre expérience.
+                  Vous pouvez accepter, refuser ou personnaliser.
                 </p>
               </div>
             </div>
@@ -196,12 +219,12 @@ export function CookieConsent() {
             )}
 
             {/* Buttons */}
-            <div className="mt-6 flex flex-col sm:flex-row gap-3">
+            <div className="mt-3 flex flex-col sm:flex-row gap-2">
               <button
                 onClick={() => setShowDetails(!showDetails)}
-                className="px-4 py-2 text-sm text-primary hover:bg-primary/5 rounded-[--radius-button] transition-colors"
+                className="px-3 py-1.5 text-xs text-primary hover:bg-primary/5 rounded-[--radius-button] transition-colors"
               >
-                {showDetails ? "Masquer les détails" : "Personnaliser"}
+                {showDetails ? "Masquer" : "Personnaliser"}
               </button>
 
               <div className="flex-1" />
@@ -210,39 +233,39 @@ export function CookieConsent() {
                 <>
                   <button
                     onClick={handleRejectAll}
-                    className="px-6 py-3 border-2 border-primary/20 text-primary rounded-[--radius-button] hover:bg-primary/5 hover:border-primary/30 transition-all font-medium"
+                    className="px-4 py-2 text-sm border border-primary/20 text-primary rounded-[--radius-button] hover:bg-primary/5 hover:border-primary/30 transition-all"
                   >
-                    Tout refuser
+                    Refuser
                   </button>
                   <button
                     onClick={handleSaveCustom}
-                    className="px-6 py-3 bg-primary text-background rounded-[--radius-button] hover:bg-accent transition-colors font-semibold"
+                    className="px-4 py-2 text-sm bg-primary text-background rounded-[--radius-button] hover:bg-accent transition-colors font-medium"
                   >
-                    Enregistrer mes choix
+                    Enregistrer
                   </button>
                 </>
               ) : (
                 <>
                   <button
                     onClick={handleRejectAll}
-                    className="px-6 py-3 border-2 border-primary/20 text-primary rounded-[--radius-button] hover:bg-primary/5 hover:border-primary/30 transition-all font-medium"
+                    className="px-4 py-2 text-sm border border-primary/20 text-primary rounded-[--radius-button] hover:bg-primary/5 transition-all"
                   >
                     Refuser
                   </button>
                   <button
                     onClick={handleAcceptAll}
-                    className="px-6 py-3 bg-primary text-background rounded-[--radius-button] hover:bg-accent transition-colors font-semibold shadow-lg"
+                    className="px-4 py-2 text-sm bg-primary text-background rounded-[--radius-button] hover:bg-accent transition-colors font-medium"
                   >
-                    Accepter tout
+                    Accepter
                   </button>
                 </>
               )}
             </div>
 
             {/* Link to privacy policy */}
-            <p className="mt-4 text-xs text-primary/50 text-center">
+            <p className="mt-2 text-[10px] text-primary/40 text-center">
               <Link href="/mentions-legales" className="underline hover:text-primary">
-                En savoir plus sur notre politique de confidentialité
+                Politique de confidentialité
               </Link>
             </p>
           </div>
