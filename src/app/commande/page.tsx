@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Container } from "@/components/ui";
 import { CheckoutForm } from "@/components/checkout";
@@ -22,54 +22,63 @@ import { calculateSubtotal } from "@/types/cart";
 export default function CheckoutPage() {
   const { items, clearCart } = useCart();
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Redirect to cart if empty
+  // Redirect to cart if empty (but not while submitting order)
   useEffect(() => {
-    if (items.length === 0) {
+    if (items.length === 0 && !isSubmitting) {
       router.push("/panier");
     }
-  }, [items.length, router]);
+  }, [items.length, router, isSubmitting]);
 
   const handleSubmit = async (formData: CheckoutFormData) => {
-    // Convert cart items to order items
-    const orderItems: OrderItem[] = items.map((item) => ({
-      productId: item.product.id,
-      productName: item.product.name,
-      productImage: item.product.images[0] || "",
-      price: item.product.price,
-      quantity: item.quantity,
-    }));
+    setIsSubmitting(true);
 
-    const subtotal = calculateSubtotal(items);
-    const shipping = 0; // Free shipping for MVP
-    const total = subtotal + shipping;
+    try {
+      // Convert cart items to order items
+      const orderItems: OrderItem[] = items.map((item) => ({
+        productId: item.product.id,
+        productName: item.product.name,
+        productImage: item.product.images[0] || "",
+        price: item.product.price,
+        quantity: item.quantity,
+      }));
 
-    // Create order
-    const order = await createOrder({
-      items: orderItems,
-      subtotal,
-      shipping,
-      total,
-      shippingAddress: formData.shippingAddress,
-      notes: formData.notes,
-    });
+      const subtotal = calculateSubtotal(items);
+      const shipping = 0; // Free shipping for MVP
+      const total = subtotal + shipping;
 
-    // Send order confirmation email (non-blocking)
-    // Don't await - let email send in background
-    fetch("/api/send-order-email", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ order }),
-    }).catch((error) => {
-      // Log error but don't block user experience
-      console.error("Failed to send confirmation email:", error);
-    });
+      // Create order
+      const order = await createOrder({
+        items: orderItems,
+        subtotal,
+        shipping,
+        total,
+        shippingAddress: formData.shippingAddress,
+        notes: formData.notes,
+      });
 
-    // Clear cart after successful order
-    clearCart();
+      // Send order confirmation email (non-blocking)
+      // Don't await - let email send in background
+      fetch("/api/send-order-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ order }),
+      }).catch((error) => {
+        // Log error but don't block user experience
+        console.error("Failed to send confirmation email:", error);
+      });
 
-    // Redirect to confirmation page
-    router.push(`/commande/confirmation/${order.orderNumber}`);
+      // Clear cart after successful order
+      clearCart();
+
+      // Redirect to confirmation page
+      router.push(`/commande/confirmation/${order.orderNumber}`);
+    } catch (error) {
+      console.error("Order creation failed:", error);
+      setIsSubmitting(false);
+      throw error;
+    }
   };
 
   // Don't render if cart is empty (will redirect)
