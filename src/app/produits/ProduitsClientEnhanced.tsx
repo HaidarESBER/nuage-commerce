@@ -288,7 +288,7 @@ export function ProduitsClientEnhanced({
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
-              <ProductGrid products={displayProducts} columns={view === "grid" ? 3 : 1} />
+              <ProductGrid products={displayProducts} columns={view === "grid" ? 3 : 2} />
             </motion.div>
           ) : (
             <motion.div
