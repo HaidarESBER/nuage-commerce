@@ -15,14 +15,23 @@ interface HomeClientProps {
 
 export function HomeClient({ featuredProducts }: HomeClientProps) {
   const [isLoading, setIsLoading] = useState(true);
+  const [videoEnded, setVideoEnded] = useState(false);
 
   useEffect(() => {
-    // Show loading screen for 3 seconds every time homepage loads
-    const timer = setTimeout(() => {
+    // Fade video to black at 2.5 seconds
+    const fadeTimer = setTimeout(() => {
+      setVideoEnded(true);
+    }, 2500);
+
+    // Remove loading screen at 3 seconds (after fade completes)
+    const endTimer = setTimeout(() => {
       setIsLoading(false);
     }, 3000);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(endTimer);
+    };
   }, []);
 
   return (
@@ -36,15 +45,17 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
             transition={{ duration: 0.5 }}
             className="fixed inset-0 z-[9999] bg-black flex items-center justify-center"
           >
-            <video
+            <motion.video
               autoPlay
               muted
               loop
               playsInline
               className="w-full h-full object-cover"
+              animate={{ opacity: videoEnded ? 0 : 1 }}
+              transition={{ duration: 0.5 }}
             >
               <source src="/nuage-loading-video.mp4" type="video/mp4" />
-            </video>
+            </motion.video>
 
             {/* Loading text overlay */}
             <motion.div
