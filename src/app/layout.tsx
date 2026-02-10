@@ -7,6 +7,7 @@ import { Header, Footer } from "@/components/layout";
 import { FloatingCartButton } from "@/components/mobile/FloatingCartButton";
 import { ExitIntentModal } from "@/components/marketing/ExitIntentModal";
 import { WebVitalsReporter } from "@/components/analytics/WebVitalsReporter";
+import { AnalyticsScripts } from "@/components/analytics/AnalyticsScripts";
 import { HealthWarning } from "@/components/legal/HealthWarning";
 import { CookieConsent } from "@/components/legal/CookieConsent";
 import { generateOrganizationSchema } from "@/lib/seo";
@@ -58,6 +59,7 @@ export default function RootLayout({
       </head>
       <body className={`${fontVariables} font-sans antialiased`}>
         <WebVitalsReporter />
+        <AnalyticsScripts />
 
         {/* Legal Components - MANDATORY for compliance */}
         <CookieConsent />
