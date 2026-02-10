@@ -45,13 +45,11 @@ export function Header() {
         <div className="flex items-center justify-between h-16 gap-4">
           {/* Brand */}
           <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-            <span
-              className={`font-heading text-2xl transition-colors ${
-                isHomepage ? "text-white drop-shadow-lg" : "text-primary"
-              }`}
-            >
-              Nuage
-            </span>
+            <img
+              src="/nuagelogonobg1.png"
+              alt="Nuage Logo"
+              className="h-12 w-auto object-contain"
+            />
           </Link>
 
           {/* Search Bar - Desktop */}

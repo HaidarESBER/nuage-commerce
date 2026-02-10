@@ -10,3 +10,4 @@
 
 export { Button, type ButtonProps, type ButtonVariant, type ButtonSize } from "./Button";
 export { Container, type ContainerProps, type ContainerSize } from "./Container";
+export { LoadingScreen } from "./LoadingScreen";

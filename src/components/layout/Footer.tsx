@@ -54,13 +54,17 @@ export function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Column 1 - Brand */}
             <motion.div variants={columnVariants}>
-              <motion.h3
-                className="font-heading text-2xl mb-2 inline-block"
+              <motion.div
                 whileHover={{ scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                className="mb-4"
               >
-                Nuage
-              </motion.h3>
+                <img
+                  src="/nuagelogonobg1.png"
+                  alt="Nuage Logo"
+                  className="h-20 w-auto object-contain brightness-0 invert"
+                />
+              </motion.div>
               <p className="text-background/80">L&apos;art de la detente</p>
             </motion.div>
 
