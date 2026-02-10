@@ -57,10 +57,9 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
               muted
               loop
               playsInline
-              className="w-[85%] h-[50vh] md:w-full md:h-full object-cover"
+              className="w-[85%] h-[50vh] md:w-full md:h-full object-cover scale-[1.2] md:scale-[0.9]"
               animate={{ opacity: videoEnded ? 0 : 1 }}
               transition={{ duration: 0.5 }}
-              style={{ transform: 'scale(1.2)' }}
             >
               <source src="/nuage-loading-video.mp4" type="video/mp4" />
             </motion.video>
