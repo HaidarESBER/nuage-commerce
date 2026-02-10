@@ -19,6 +19,15 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
   const heroVideoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    // Hide overflow on body to prevent scrolling and content visibility during loading
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
+
+  useEffect(() => {
     // Fade loading video to black at 2.5 seconds
     const fadeTimer = setTimeout(() => {
       setVideoEnded(true);
@@ -27,6 +36,8 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
     // Remove loading screen and start hero video at 3 seconds
     const endTimer = setTimeout(() => {
       setIsLoading(false);
+      // Restore body overflow
+      document.body.style.overflow = '';
       // Start playing the hero video after loading screen ends
       if (heroVideoRef.current) {
         heroVideoRef.current.play().catch(err => {
@@ -42,7 +53,7 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
   }, []);
 
   return (
-    <>
+    <div className="relative">
       {/* Loading Screen - Shows every time homepage is visited */}
       <AnimatePresence>
         {isLoading && (
@@ -96,8 +107,10 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
         )}
       </AnimatePresence>
 
-      {/* Hero Section - Cinematic Video Background */}
-      <section className="relative h-screen overflow-hidden -mt-16">
+      {/* Main Content - Hidden during loading */}
+      <div className={`transition-opacity duration-300 ${isLoading ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        {/* Hero Section - Cinematic Video Background */}
+        <section className="relative h-screen overflow-hidden -mt-16">
         {/* Video Background */}
         <div className="absolute inset-0 w-full h-full">
           <video
@@ -333,6 +346,7 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
           <TrustBadges />
         </Container>
       </section>
-    </>
+      </div>
+    </div>
   );
 }
