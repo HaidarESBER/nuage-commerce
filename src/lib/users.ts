@@ -9,6 +9,44 @@ const DATA_FILE_PATH = path.join(process.cwd(), "data", "users.json");
 const SALT_ROUNDS = 10;
 
 /**
+ * Validate password strength
+ * @param password - Password to validate
+ * @returns Validation result with error message if invalid
+ */
+function validatePassword(password: string): { valid: boolean; error?: string } {
+  if (password.length < 12) {
+    return { valid: false, error: "Le mot de passe doit contenir au moins 12 caractères" };
+  }
+
+  if (!/[A-Z]/.test(password)) {
+    return { valid: false, error: "Le mot de passe doit contenir au moins une majuscule" };
+  }
+
+  if (!/[a-z]/.test(password)) {
+    return { valid: false, error: "Le mot de passe doit contenir au moins une minuscule" };
+  }
+
+  if (!/[0-9]/.test(password)) {
+    return { valid: false, error: "Le mot de passe doit contenir au moins un chiffre" };
+  }
+
+  if (!/[^A-Za-z0-9]/.test(password)) {
+    return { valid: false, error: "Le mot de passe doit contenir au moins un caractère spécial (!@#$%^&*)" };
+  }
+
+  // Check against common passwords
+  const commonPasswords = [
+    'password123!', 'password123', 'azerty123!', 'azerty123',
+    '123456789!', 'motdepasse123', 'password1234!', 'admin123!'
+  ];
+  if (commonPasswords.some(p => p.toLowerCase() === password.toLowerCase())) {
+    return { valid: false, error: "Ce mot de passe est trop commun. Veuillez en choisir un autre." };
+  }
+
+  return { valid: true };
+}
+
+/**
  * Read users from JSON file
  */
 async function readUsersFile(): Promise<User[]> {
@@ -56,9 +94,10 @@ export async function registerUser(data: RegisterData): Promise<UserSession> {
     throw new Error("Un compte existe déjà avec cette adresse email");
   }
 
-  // Validate password
-  if (data.password.length < 8) {
-    throw new Error("Le mot de passe doit contenir au moins 8 caractères");
+  // Validate password with enhanced requirements
+  const passwordValidation = validatePassword(data.password);
+  if (!passwordValidation.valid) {
+    throw new Error(passwordValidation.error!);
   }
 
   // Hash password
@@ -84,6 +123,7 @@ export async function registerUser(data: RegisterData): Promise<UserSession> {
     email: newUser.email,
     firstName: newUser.firstName,
     lastName: newUser.lastName,
+    isAdmin: newUser.isAdmin || false,
   };
 }
 
@@ -119,6 +159,7 @@ export async function loginUser(
     email: user.email,
     firstName: user.firstName,
     lastName: user.lastName,
+    isAdmin: user.isAdmin || false,
   };
 }
 
@@ -140,6 +181,7 @@ export async function getUserById(id: string): Promise<UserSession | null> {
     email: user.email,
     firstName: user.firstName,
     lastName: user.lastName,
+    isAdmin: user.isAdmin || false,
   };
 }
 
@@ -163,5 +205,6 @@ export async function getUserByEmail(email: string): Promise<UserSession | null>
     email: user.email,
     firstName: user.firstName,
     lastName: user.lastName,
+    isAdmin: user.isAdmin || false,
   };
 }

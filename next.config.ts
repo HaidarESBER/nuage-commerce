@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
+    // Allow SVG images (with security restrictions)
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     // Modern image formats (WebP/AVIF) for optimal compression
     formats: ['image/webp', 'image/avif'],
     // Device sizes for responsive images
@@ -32,6 +36,41 @@ const nextConfig: NextConfig = {
   experimental: {
     // Optimize package imports
     optimizePackageImports: ['framer-motion'],
+  },
+
+  // Security headers
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), payment=()',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains',
+          },
+        ],
+      },
+    ];
   },
 };
 

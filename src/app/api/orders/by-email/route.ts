@@ -1,7 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getOrdersByEmail } from "@/lib/orders";
+import { getSession } from "@/lib/session";
 
 export async function GET(request: NextRequest) {
+  // Require authentication
+  const session = await getSession();
+
+  if (!session) {
+    return NextResponse.json(
+      { error: "Authentication required" },
+      { status: 401 }
+    );
+  }
+
   const { searchParams } = new URL(request.url);
   const email = searchParams.get("email");
 
@@ -9,6 +20,14 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       { error: "Email is required" },
       { status: 400 }
+    );
+  }
+
+  // Only allow users to query their own orders (or admins to query any)
+  if (email.toLowerCase() !== session.email.toLowerCase() && !session.isAdmin) {
+    return NextResponse.json(
+      { error: "Forbidden: You can only access your own orders" },
+      { status: 403 }
     );
   }
 

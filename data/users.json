@@ -7,5 +7,15 @@
     "lastName": "man",
     "createdAt": "2026-02-09T21:14:30.790Z",
     "updatedAt": "2026-02-09T21:14:30.790Z"
+  },
+  {
+    "id": "5d5bbf75-e947-4944-896b-eeeba7ca6bc3",
+    "email": "admin@nuage.fr",
+    "passwordHash": "$2b$10$54lJ3L0i1ykUOO4aMnf70u7oo4yacpExedCryAG2Pph9qd5/UROwm",
+    "firstName": "Admin",
+    "lastName": "Nuage",
+    "isAdmin": true,
+    "createdAt": "2026-02-10T20:53:40.569Z",
+    "updatedAt": "2026-02-10T20:53:40.570Z"
   }
 ]

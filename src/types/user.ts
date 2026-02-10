@@ -9,6 +9,8 @@ export interface User {
   passwordHash: string;
   firstName: string;
   lastName: string;
+  /** Admin role flag */
+  isAdmin?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -39,12 +41,20 @@ export interface UserSession {
   email: string;
   firstName: string;
   lastName: string;
+  /** Admin role flag */
+  isAdmin?: boolean;
 }
 
 /**
- * Generate a UUID v4
+ * Generate a cryptographically secure UUID v4
  */
 export function generateUserId(): string {
+  // Use crypto.randomUUID() for secure UUID generation
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+
+  // Fallback for older environments (should not happen in modern Node.js/browsers)
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0;
     const v = c === "x" ? r : (r & 0x3) | 0x8;
