@@ -143,13 +143,13 @@ export function Footer() {
                 Informations
               </h4>
               <nav className="flex flex-col gap-2">
-                <Link href="#" className="group inline-block w-fit">
+                <Link href="/mentions-legales" className="group inline-block w-fit">
                   <motion.span
                     className="relative text-background/80 transition-colors duration-200 group-hover:text-background"
                     whileHover={{ y: -1, filter: "brightness(1.1)" }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
                   >
-                    Mentions legales
+                    Mentions légales
                     <motion.span
                       className="absolute bottom-0 left-0 h-px bg-background"
                       initial={{ width: "0%" }}
@@ -158,7 +158,7 @@ export function Footer() {
                     />
                   </motion.span>
                 </Link>
-                <Link href="#" className="group inline-block w-fit">
+                <Link href="/cgv" className="group inline-block w-fit">
                   <motion.span
                     className="relative text-background/80 transition-colors duration-200 group-hover:text-background"
                     whileHover={{ y: -1, filter: "brightness(1.1)" }}
@@ -173,7 +173,7 @@ export function Footer() {
                     />
                   </motion.span>
                 </Link>
-                <Link href="#" className="group inline-block w-fit">
+                <Link href="/contact" className="group inline-block w-fit">
                   <motion.span
                     className="relative text-background/80 transition-colors duration-200 group-hover:text-background"
                     whileHover={{ y: -1, filter: "brightness(1.1)" }}
@@ -198,7 +198,7 @@ export function Footer() {
       <div className="py-4 border-t border-background/20">
         <Container size="lg">
           <p className="text-sm text-background/60 text-center">
-            &copy; {currentYear} Nuage. Tous droits reserves.
+            &copy; {currentYear} Nuage. Tous droits réservés.
           </p>
         </Container>
       </div>
