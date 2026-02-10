@@ -3,8 +3,14 @@ import { Resend } from "resend";
 import { OrderConfirmationEmail } from "@/emails/OrderConfirmationEmail";
 import { Order } from "@/types/order";
 
-// Initialize Resend with API key from environment
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Initialize Resend with API key from environment (lazy initialization)
+const getResend = () => {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error("RESEND_API_KEY is not configured");
+  }
+  return new Resend(apiKey);
+};
 
 /**
  * POST /api/send-order-email
@@ -32,26 +38,36 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Send email using Resend
-    const { data, error } = await resend.emails.send({
+    // Check if Resend is configured
+    try {
+      const resend = getResend();
+      // Send email using Resend
+      const { data, error } = await resend.emails.send({
       from: "Nuage <commandes@nuage.fr>", // Update with your verified domain
       to: [order.shippingAddress.email],
       subject: `Confirmation de commande ${order.orderNumber}`,
       react: OrderConfirmationEmail({ order }),
     });
 
-    if (error) {
-      console.error("Error sending email:", error);
+      if (error) {
+        console.error("Error sending email:", error);
+        return NextResponse.json(
+          { error: "Failed to send email", details: error },
+          { status: 500 }
+        );
+      }
+
       return NextResponse.json(
-        { error: "Failed to send email", details: error },
-        { status: 500 }
+        { success: true, messageId: data?.id },
+        { status: 200 }
+      );
+    } catch (resendError) {
+      console.error("Resend configuration error:", resendError);
+      return NextResponse.json(
+        { error: "Email service not configured" },
+        { status: 503 }
       );
     }
-
-    return NextResponse.json(
-      { success: true, messageId: data?.id },
-      { status: 200 }
-    );
   } catch (error) {
     console.error("Unexpected error in send-order-email:", error);
     return NextResponse.json(
