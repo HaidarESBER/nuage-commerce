@@ -22,7 +22,10 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
           <video
             autoPlay
             muted
+            loop
             playsInline
+            preload="metadata"
+            poster="/video-poster.jpg"
             className="absolute inset-0 w-full h-full object-cover"
           >
             <source src="/nuage1.mp4" type="video/mp4" />

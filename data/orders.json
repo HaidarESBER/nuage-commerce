@@ -276,5 +276,35 @@
     },
     "createdAt": "2026-02-10T17:19:25.668Z",
     "updatedAt": "2026-02-10T17:19:25.668Z"
+  },
+  {
+    "id": "ca843242-d905-4b14-9ad0-8f3e9fca1fa1",
+    "orderNumber": "NU-2026-0010",
+    "items": [
+      {
+        "productId": "1",
+        "productName": "Chicha Crystal Premium",
+        "productImage": "https://placehold.co/600x600/2D2D2D/F7F5F3?text=Chicha+Crystal",
+        "price": 12999,
+        "quantity": 1
+      }
+    ],
+    "subtotal": 12999,
+    "shipping": 0,
+    "total": 12999,
+    "status": "pending",
+    "shippingAddress": {
+      "firstName": "aa",
+      "lastName": "aa",
+      "email": "haidar@haidar.haidar",
+      "phone": "0707070707",
+      "address": "3 square luli",
+      "addressLine2": "",
+      "city": "Vannes",
+      "postalCode": "76000",
+      "country": "France"
+    },
+    "createdAt": "2026-02-10T17:21:31.019Z",
+    "updatedAt": "2026-02-10T17:21:31.019Z"
   }
 ]
