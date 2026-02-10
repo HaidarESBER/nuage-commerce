@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { isValidEmail } from "@/types/checkout";
 
 /**
  * Exit-intent modal to capture abandoning visitors with first-purchase discount
@@ -86,9 +87,8 @@ export function ExitIntentModal() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Simple email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    // Email validation
+    if (!isValidEmail(email)) {
       setStatus("error");
       return;
     }

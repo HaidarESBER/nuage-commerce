@@ -8,6 +8,7 @@ import { Container } from "@/components/ui";
 import { Order, orderStatusLabels } from "@/types/order";
 import { UserSession } from "@/types/user";
 import { formatPrice } from "@/types/product";
+import { formatDateLong } from "@/lib/date-utils";
 
 type ViewMode = "login" | "register";
 
@@ -455,11 +456,7 @@ export function AccountClient() {
                               Commande {order.orderNumber}
                             </h3>
                             <p className="text-sm text-muted">
-                              {new Date(order.createdAt).toLocaleDateString("fr-FR", {
-                                day: "numeric",
-                                month: "long",
-                                year: "numeric",
-                              })}
+                              {formatDateLong(order.createdAt)}
                             </p>
                           </div>
                           <div className="flex items-center gap-3">
