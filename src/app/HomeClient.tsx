@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "@/components/ui";
@@ -16,16 +16,23 @@ interface HomeClientProps {
 export function HomeClient({ featuredProducts }: HomeClientProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [videoEnded, setVideoEnded] = useState(false);
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    // Fade video to black at 2.5 seconds
+    // Fade loading video to black at 2.5 seconds
     const fadeTimer = setTimeout(() => {
       setVideoEnded(true);
     }, 2500);
 
-    // Remove loading screen at 3 seconds (after fade completes)
+    // Remove loading screen and start hero video at 3 seconds
     const endTimer = setTimeout(() => {
       setIsLoading(false);
+      // Start playing the hero video after loading screen ends
+      if (heroVideoRef.current) {
+        heroVideoRef.current.play().catch(err => {
+          console.log("Hero video autoplay prevented:", err);
+        });
+      }
     }, 3000);
 
     return () => {
@@ -94,7 +101,7 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
         {/* Video Background */}
         <div className="absolute inset-0 w-full h-full">
           <video
-            autoPlay
+            ref={heroVideoRef}
             muted
             loop
             playsInline
