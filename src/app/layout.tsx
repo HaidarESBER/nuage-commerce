@@ -7,7 +7,6 @@ import { Header, Footer } from "@/components/layout";
 import { FloatingCartButton } from "@/components/mobile/FloatingCartButton";
 import { ExitIntentModal } from "@/components/marketing/ExitIntentModal";
 import { WebVitalsReporter } from "@/components/analytics/WebVitalsReporter";
-import { LoadingScreen } from "@/components/ui";
 import { generateOrganizationSchema } from "@/lib/seo";
 import "./globals.css";
 
@@ -56,7 +55,6 @@ export default function RootLayout({
         />
       </head>
       <body className={`${fontVariables} font-sans antialiased`}>
-        <LoadingScreen />
         <WebVitalsReporter />
         <CartProvider>
           <WishlistProvider>

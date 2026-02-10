@@ -1,7 +1,8 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "@/components/ui";
 import { TrustBadges } from "@/components/ui/TrustBadges";
 import { ProductCard } from "@/components/product";
@@ -13,8 +14,70 @@ interface HomeClientProps {
 }
 
 export function HomeClient({ featuredProducts }: HomeClientProps) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Show loading screen for 3 seconds every time homepage loads
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <>
+      {/* Loading Screen - Shows every time homepage is visited */}
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="fixed inset-0 z-[9999] bg-black flex items-center justify-center"
+          >
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover"
+            >
+              <source src="/nuage-loading-video.mp4" type="video/mp4" />
+            </video>
+
+            {/* Loading text overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className="absolute bottom-12 left-1/2 -translate-x-1/2"
+            >
+              <div className="flex flex-col items-center gap-4">
+                <div className="flex gap-1">
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 1, repeat: Infinity, delay: 0 }}
+                    className="w-2 h-2 bg-white rounded-full"
+                  />
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
+                    className="w-2 h-2 bg-white rounded-full"
+                  />
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
+                    className="w-2 h-2 bg-white rounded-full"
+                  />
+                </div>
+                <p className="text-white/80 text-sm tracking-wider">CHARGEMENT...</p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Hero Section - Cinematic Video Background */}
       <section className="relative h-screen overflow-hidden -mt-16">
         {/* Video Background */}
