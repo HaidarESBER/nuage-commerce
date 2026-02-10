@@ -50,14 +50,14 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="fixed inset-0 z-[9999] bg-black flex items-center justify-center"
+            className="fixed inset-0 z-[9999] bg-white md:bg-black flex items-center justify-center"
           >
             <motion.video
               autoPlay
               muted
               loop
               playsInline
-              className="w-full h-full object-cover"
+              className="w-[85%] h-auto md:w-full md:h-full object-contain md:object-cover"
               animate={{ opacity: videoEnded ? 0 : 1 }}
               transition={{ duration: 0.5 }}
             >
@@ -76,20 +76,20 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
                   <motion.div
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ duration: 1, repeat: Infinity, delay: 0 }}
-                    className="w-2 h-2 bg-white rounded-full"
+                    className="w-2 h-2 bg-primary md:bg-white rounded-full"
                   />
                   <motion.div
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
-                    className="w-2 h-2 bg-white rounded-full"
+                    className="w-2 h-2 bg-primary md:bg-white rounded-full"
                   />
                   <motion.div
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
-                    className="w-2 h-2 bg-white rounded-full"
+                    className="w-2 h-2 bg-primary md:bg-white rounded-full"
                   />
                 </div>
-                <p className="text-white/80 text-sm tracking-wider">CHARGEMENT...</p>
+                <p className="text-primary md:text-white/80 text-sm tracking-wider">CHARGEMENT...</p>
               </div>
             </motion.div>
           </motion.div>
