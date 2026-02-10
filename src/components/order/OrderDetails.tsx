@@ -140,7 +140,7 @@ export function OrderDetails({ order }: OrderDetailsProps) {
           </div>
           <div className="flex justify-between text-muted">
             <span>Livraison</span>
-            <span className="text-green-600 font-medium">Gratuit</span>
+            <span>{formatCartTotal(order.shipping)}</span>
           </div>
           <div className="flex justify-between font-medium text-lg text-primary pt-2 border-t border-background-secondary">
             <span>Total</span>

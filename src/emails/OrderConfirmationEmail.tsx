@@ -78,7 +78,7 @@ export function OrderConfirmationEmail({ order }: OrderConfirmationEmailProps) {
             <div style={totalRow}>
               <Text style={totalLabel}>Frais de livraison</Text>
               <Text style={totalValue}>
-                {shipping === 0 ? "Gratuit" : `${(shipping / 100).toFixed(2)} €`}
+                {(shipping / 100).toFixed(2)} €
               </Text>
             </div>
             <div style={totalRow}>

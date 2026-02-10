@@ -125,7 +125,7 @@ export default async function AdminOrderDetailPage({
               <div className="flex justify-between text-sm">
                 <span className="text-primary/70">Livraison</span>
                 <span className="text-primary">
-                  {order.shipping === 0 ? "Gratuit" : formatPrice(order.shipping)}
+                  {formatPrice(order.shipping)}
                 </span>
               </div>
               <div className="pt-3 border-t border-primary/10 flex justify-between">

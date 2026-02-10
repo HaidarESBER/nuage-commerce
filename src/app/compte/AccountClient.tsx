@@ -516,7 +516,7 @@ export function AccountClient() {
                           <div className="flex justify-between items-center text-sm mb-2">
                             <span className="text-muted">Livraison</span>
                             <span className="text-primary">
-                              {order.shipping === 0 ? "Gratuite" : formatPrice(order.shipping)}
+                              {formatPrice(order.shipping)}
                             </span>
                           </div>
                           <div className="flex justify-between items-center font-semibold text-lg">
