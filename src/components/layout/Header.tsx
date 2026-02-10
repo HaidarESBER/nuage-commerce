@@ -50,6 +50,13 @@ export function Header() {
               alt="Nuage Logo"
               className="h-12 w-auto object-contain"
             />
+            <span
+              className={`font-heading text-2xl transition-colors ${
+                isHomepage ? "text-white drop-shadow-lg" : "text-primary"
+              }`}
+            >
+              Nuage
+            </span>
           </Link>
 
           {/* Search Bar - Desktop */}

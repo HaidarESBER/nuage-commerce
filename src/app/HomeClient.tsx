@@ -57,9 +57,10 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
               muted
               loop
               playsInline
-              className="w-[85%] h-auto md:w-full md:h-full object-contain md:object-cover"
+              className="w-[85%] h-[50vh] md:w-full md:h-full object-cover"
               animate={{ opacity: videoEnded ? 0 : 1 }}
               transition={{ duration: 0.5 }}
+              style={{ transform: 'scale(1.2)' }}
             >
               <source src="/nuage-loading-video.mp4" type="video/mp4" />
             </motion.video>
@@ -159,7 +160,7 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
               Accessoires chicha premium pour les connaisseurs
             </motion.p>
 
-            {/* CTA Button with Logo */}
+            {/* CTA Button */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -167,16 +168,11 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
             >
               <Link
                 href="/produits"
-                className="group inline-flex items-center justify-center gap-4 px-8 py-3 text-base font-medium bg-white/95 text-[#2C2C2C] rounded-full hover:bg-[#D4A5A5] hover:text-white transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105"
+                className="group inline-flex items-center justify-center px-8 py-3 text-base font-medium bg-white/95 text-[#2C2C2C] rounded-full hover:bg-[#D4A5A5] hover:text-white transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105"
               >
-                <img
-                  src="/nuagelogonobg.png"
-                  alt="Nuage Logo"
-                  className="h-8 w-auto"
-                />
                 Decouvrir la collection
                 <svg
-                  className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                  className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -223,8 +219,78 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
         </Container>
       </section>
 
+      {/* Video with Keywords Section */}
+      <section className="py-12 bg-gradient-to-b from-white to-background-secondary border-y border-border/50">
+        <Container size="lg">
+          <motion.button
+            onClick={() => {
+              const productsSection = document.querySelector('#products-section');
+              if (productsSection) {
+                productsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            whileHover={{ scale: 1.02 }}
+            className="w-full grid grid-cols-1 md:grid-cols-3 gap-8 items-center cursor-pointer group"
+          >
+            {/* Left Keywords */}
+            <div className="text-center md:text-right space-y-4">
+              <motion.p
+                className="text-xl md:text-2xl font-heading font-semibold text-primary group-hover:text-accent transition-colors"
+                whileHover={{ x: 5 }}
+              >
+                Premium
+              </motion.p>
+              <p className="text-sm md:text-base text-muted italic">Qualité Supérieure</p>
+              <motion.p
+                className="text-xl md:text-2xl font-heading font-semibold text-primary group-hover:text-accent transition-colors"
+                whileHover={{ x: 5 }}
+              >
+                Luxe
+              </motion.p>
+            </div>
+
+            {/* Center Video */}
+            <div className="flex justify-center">
+              <div className="relative">
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="h-28 md:h-36 w-auto rounded-xl shadow-2xl ring-2 ring-primary/20 group-hover:ring-accent/40 transition-all"
+                >
+                  <source src="/nuage-loading-video.mp4" type="video/mp4" />
+                </video>
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent rounded-xl pointer-events-none" />
+              </div>
+            </div>
+
+            {/* Right Keywords */}
+            <div className="text-center md:text-left space-y-4">
+              <motion.p
+                className="text-xl md:text-2xl font-heading font-semibold text-primary group-hover:text-accent transition-colors"
+                whileHover={{ x: -5 }}
+              >
+                Chicha
+              </motion.p>
+              <p className="text-sm md:text-base text-muted italic">Accessoires Haut de Gamme</p>
+              <motion.p
+                className="text-xl md:text-2xl font-heading font-semibold text-primary group-hover:text-accent transition-colors"
+                whileHover={{ x: -5 }}
+              >
+                Excellence
+              </motion.p>
+            </div>
+          </motion.button>
+        </Container>
+      </section>
+
       {/* Featured Products Section */}
-      <section className="py-16 md:py-24 bg-background-secondary">
+      <section id="products-section" className="py-16 md:py-24 bg-background-secondary">
         <Container size="lg">
           {/* Section title */}
           <div className="text-center mb-12">
