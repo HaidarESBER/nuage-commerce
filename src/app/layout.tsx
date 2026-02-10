@@ -7,7 +7,6 @@ import { Header, Footer } from "@/components/layout";
 import { FloatingCartButton } from "@/components/mobile/FloatingCartButton";
 import { ExitIntentModal } from "@/components/marketing/ExitIntentModal";
 import { WebVitalsReporter } from "@/components/analytics/WebVitalsReporter";
-import { AgeVerification } from "@/components/legal/AgeVerification";
 import { HealthWarning } from "@/components/legal/HealthWarning";
 import { CookieConsent } from "@/components/legal/CookieConsent";
 import { generateOrganizationSchema } from "@/lib/seo";
@@ -61,7 +60,6 @@ export default function RootLayout({
         <WebVitalsReporter />
 
         {/* Legal Components - MANDATORY for compliance */}
-        <AgeVerification />
         <CookieConsent />
 
         <CartProvider>

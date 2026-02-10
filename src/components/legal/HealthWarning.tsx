@@ -37,7 +37,7 @@ export function HealthWarning() {
   }
 
   return (
-    <div className="sticky top-0 z-[9998] bg-amber-50 border-b border-amber-200">
+    <div className="relative z-[9998] bg-amber-50 border-b border-amber-200">
       <div className="max-w-7xl mx-auto px-3 py-1.5">
         <div className="flex items-center gap-2">
           {/* Warning icon */}

@@ -129,22 +129,21 @@ export function CookieConsent() {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 100, opacity: 0 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className="fixed bottom-0 left-0 right-0 z-[9999] p-3 md:p-4"
+        className="fixed bottom-4 right-4 z-[9999] max-w-sm"
       >
-        <div className="max-w-3xl mx-auto bg-background border border-primary/20 rounded-xl shadow-xl overflow-hidden">
+        <div className="bg-background border border-primary/20 rounded-lg shadow-xl overflow-hidden">
           {/* Header */}
-          <div className="p-4 md:p-5">
-            <div className="flex items-start gap-3 mb-3">
-              <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                <span className="text-lg">🍪</span>
+          <div className="p-3">
+            <div className="flex items-start gap-2 mb-2">
+              <div className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center">
+                <span className="text-sm">🍪</span>
               </div>
               <div className="flex-1">
-                <h3 className="text-base font-heading font-bold text-primary mb-1">
+                <h3 className="text-sm font-heading font-bold text-primary mb-0.5">
                   Cookies
                 </h3>
-                <p className="text-xs text-primary/70">
+                <p className="text-[11px] text-primary/70 leading-tight">
                   Nous utilisons des cookies pour améliorer votre expérience.
-                  Vous pouvez accepter, refuser ou personnaliser.
                 </p>
               </div>
             </div>
@@ -219,42 +218,45 @@ export function CookieConsent() {
             )}
 
             {/* Buttons */}
-            <div className="mt-3 flex flex-col sm:flex-row gap-2">
-              <button
-                onClick={() => setShowDetails(!showDetails)}
-                className="px-3 py-1.5 text-xs text-primary hover:bg-primary/5 rounded-[--radius-button] transition-colors"
-              >
-                {showDetails ? "Masquer" : "Personnaliser"}
-              </button>
-
-              <div className="flex-1" />
-
+            <div className="mt-2 flex gap-2">
               {showDetails ? (
                 <>
                   <button
+                    onClick={() => setShowDetails(false)}
+                    className="flex-1 px-2 py-1.5 text-[11px] text-primary hover:bg-primary/5 rounded-md transition-colors"
+                  >
+                    Retour
+                  </button>
+                  <button
                     onClick={handleRejectAll}
-                    className="px-4 py-2 text-sm border border-primary/20 text-primary rounded-[--radius-button] hover:bg-primary/5 hover:border-primary/30 transition-all"
+                    className="flex-1 px-2 py-1.5 text-[11px] border border-primary/20 text-primary rounded-md hover:bg-primary/5 transition-all"
                   >
                     Refuser
                   </button>
                   <button
                     onClick={handleSaveCustom}
-                    className="px-4 py-2 text-sm bg-primary text-background rounded-[--radius-button] hover:bg-accent transition-colors font-medium"
+                    className="flex-1 px-2 py-1.5 text-[11px] bg-primary text-background rounded-md hover:bg-accent transition-colors font-medium"
                   >
-                    Enregistrer
+                    OK
                   </button>
                 </>
               ) : (
                 <>
                   <button
+                    onClick={() => setShowDetails(true)}
+                    className="flex-1 px-2 py-1.5 text-[11px] text-primary hover:bg-primary/5 rounded-md transition-colors"
+                  >
+                    Options
+                  </button>
+                  <button
                     onClick={handleRejectAll}
-                    className="px-4 py-2 text-sm border border-primary/20 text-primary rounded-[--radius-button] hover:bg-primary/5 transition-all"
+                    className="flex-1 px-2 py-1.5 text-[11px] border border-primary/20 text-primary rounded-md hover:bg-primary/5 transition-all"
                   >
                     Refuser
                   </button>
                   <button
                     onClick={handleAcceptAll}
-                    className="px-4 py-2 text-sm bg-primary text-background rounded-[--radius-button] hover:bg-accent transition-colors font-medium"
+                    className="flex-1 px-2 py-1.5 text-[11px] bg-primary text-background rounded-md hover:bg-accent transition-colors font-medium"
                   >
                     Accepter
                   </button>
@@ -263,7 +265,7 @@ export function CookieConsent() {
             </div>
 
             {/* Link to privacy policy */}
-            <p className="mt-2 text-[10px] text-primary/40 text-center">
+            <p className="mt-1.5 text-[9px] text-primary/40 text-center">
               <Link href="/mentions-legales" className="underline hover:text-primary">
                 Politique de confidentialité
               </Link>
