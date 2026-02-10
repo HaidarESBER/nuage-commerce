@@ -49,13 +49,13 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
       {/* Quantity selector */}
       {product.inStock && (
         <div className="flex items-center gap-4">
-          <span className="text-sm text-muted">Quantite:</span>
+          <span className="text-sm text-muted">Quantité:</span>
           <div className="flex items-center gap-2">
             <button
               onClick={handleDecrease}
               disabled={quantity <= 1}
               className="w-10 h-10 flex items-center justify-center border border-primary rounded-[--radius-button] text-primary hover:bg-primary hover:text-background transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              aria-label="Diminuer la quantite"
+              aria-label="Diminuer la quantité"
             >
               <span className="text-lg leading-none">-</span>
             </button>
@@ -65,7 +65,7 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
             <button
               onClick={handleIncrease}
               className="w-10 h-10 flex items-center justify-center border border-primary rounded-[--radius-button] text-primary hover:bg-primary hover:text-background transition-colors"
-              aria-label="Augmenter la quantite"
+              aria-label="Augmenter la quantité"
             >
               <span className="text-lg leading-none">+</span>
             </button>

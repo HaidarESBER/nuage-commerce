@@ -29,10 +29,10 @@ export default async function AdminOrderDetailPage({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <Link
-            href="/admin/commandes"
+            href="/admin/commandés"
             className="text-sm text-primary/60 hover:text-primary transition-colors"
           >
-            &larr; Retour aux commandes
+            &larr; Retour aux commandés
           </Link>
           <h2 className="mt-2 text-2xl font-heading font-semibold text-primary">
             Commande {order.orderNumber}
@@ -52,7 +52,7 @@ export default async function AdminOrderDetailPage({
         {/* Order Items (Left Column - 2/3) */}
         <div className="lg:col-span-2 bg-secondary rounded-lg border border-primary/10 overflow-hidden">
           <div className="px-4 py-3 bg-primary/5 border-b border-primary/10">
-            <h3 className="font-medium text-primary">Articles commandes</h3>
+            <h3 className="font-medium text-primary">Articles commandés</h3>
           </div>
           <div className="divide-y divide-primary/10">
             {order.items.map((item, index) => (

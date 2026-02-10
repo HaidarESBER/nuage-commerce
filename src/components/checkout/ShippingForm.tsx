@@ -46,7 +46,7 @@ export function ShippingForm({ address, onChange, errors }: ShippingFormProps) {
             htmlFor="firstName"
             className="block text-sm font-medium text-primary mb-1"
           >
-            Prenom *
+            Prénom *
           </label>
           <input
             type="text"
@@ -121,7 +121,7 @@ export function ShippingForm({ address, onChange, errors }: ShippingFormProps) {
             htmlFor="phone"
             className="block text-sm font-medium text-primary mb-1"
           >
-            Telephone *
+            Téléphone *
           </label>
           <input
             type="tel"
@@ -156,7 +156,7 @@ export function ShippingForm({ address, onChange, errors }: ShippingFormProps) {
           htmlFor="addressLine2"
           className="block text-sm font-medium text-primary mb-1"
         >
-          Complement d&apos;adresse
+          Complément d&apos;adresse
         </label>
         <input
           type="text"
@@ -164,7 +164,7 @@ export function ShippingForm({ address, onChange, errors }: ShippingFormProps) {
           value={address.addressLine2 || ""}
           onChange={(e) => handleChange("addressLine2", e.target.value)}
           className="w-full px-4 py-3 rounded-[--radius-button] border border-background-secondary bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
-          placeholder="Appartement, etage, batiment..."
+          placeholder="Appartement, étage, bâtiment..."
         />
       </div>
 

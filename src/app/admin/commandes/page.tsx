@@ -25,7 +25,7 @@ export default async function AdminOrdersPage() {
             <thead className="bg-primary/5 border-b border-primary/10">
               <tr>
                 <th className="px-4 py-3 text-left text-sm font-medium text-primary/70">
-                  Numero
+                  Numéro
                 </th>
                 <th className="px-4 py-3 text-left text-sm font-medium text-primary/70">
                   Client
@@ -74,7 +74,7 @@ export default async function AdminOrdersPage() {
                   </td>
                   <td className="px-4 py-3">
                     <Link
-                      href={`/admin/commandes/${order.id}`}
+                      href={`/admin/commandés/${order.id}`}
                       className="px-3 py-1 text-sm border border-primary/30 text-primary rounded hover:bg-primary hover:text-background transition-colors"
                     >
                       Voir

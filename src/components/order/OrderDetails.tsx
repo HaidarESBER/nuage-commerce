@@ -29,7 +29,7 @@ export function OrderDetails({ order }: OrderDetailsProps) {
       {/* Order header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
         <div>
-          <p className="text-sm text-muted">Numero de commande</p>
+          <p className="text-sm text-muted">Numéro de commande</p>
           <p className="font-heading text-xl text-primary">{order.orderNumber}</p>
         </div>
         <div className="text-left sm:text-right">
@@ -43,7 +43,7 @@ export function OrderDetails({ order }: OrderDetailsProps) {
       {/* Order date */}
       <div className="border-t border-background-secondary pt-4 mb-6">
         <p className="text-sm text-muted">
-          Commande passee le {orderDate}
+          Commande passée le {orderDate}
         </p>
       </div>
 
@@ -77,7 +77,7 @@ export function OrderDetails({ order }: OrderDetailsProps) {
       {/* Order items */}
       <div className="border-t border-background-secondary pt-6">
         <h2 className="font-heading text-lg text-primary mb-4">
-          Articles commandes
+          Articles commandés
         </h2>
         <div className="space-y-4">
           {order.items.map((item) => (
@@ -116,7 +116,7 @@ export function OrderDetails({ order }: OrderDetailsProps) {
               {/* Product details */}
               <div className="flex-1 min-w-0">
                 <h3 className="font-medium text-primary">{item.productName}</h3>
-                <p className="text-sm text-muted">Quantite: {item.quantity}</p>
+                <p className="text-sm text-muted">Quantité: {item.quantity}</p>
                 <p className="text-sm text-muted">
                   Prix unitaire: {formatCartTotal(item.price)}
                 </p>

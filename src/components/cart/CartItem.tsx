@@ -75,7 +75,7 @@ export function CartItem({ item }: CartItemProps) {
             onClick={handleDecrease}
             whileTap={{ scale: 0.95 }}
             className="w-8 h-8 flex items-center justify-center border border-primary rounded-[--radius-button] text-primary hover:bg-primary hover:text-background transition-colors"
-            aria-label="Diminuer la quantite"
+            aria-label="Diminuer la quantité"
           >
             <span className="text-lg leading-none">-</span>
           </motion.button>
@@ -97,7 +97,7 @@ export function CartItem({ item }: CartItemProps) {
             onClick={handleIncrease}
             whileTap={{ scale: 0.95 }}
             className="w-8 h-8 flex items-center justify-center border border-primary rounded-[--radius-button] text-primary hover:bg-primary hover:text-background transition-colors"
-            aria-label="Augmenter la quantite"
+            aria-label="Augmenter la quantité"
           >
             <span className="text-lg leading-none">+</span>
           </motion.button>

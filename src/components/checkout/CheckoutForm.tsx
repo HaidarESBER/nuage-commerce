@@ -68,22 +68,22 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
     }
 
     // Password validation (if account creation checked)
-    if (createAccount && password.length < 8) {
-      setSubmitError("Le mot de passe doit contenir au moins 8 caracteres");
+    if (createAccount && password.length < 12) {
+      setSubmitError("Le mot de passe doit contenir au moins 12 caractères");
       return false;
     }
 
     // Required fields validation
     if (!shippingAddress.firstName.trim()) {
-      newErrors.firstName = "Le prenom est requis";
+      newErrors.firstName = "Le prénom est requis";
     }
     if (!shippingAddress.lastName.trim()) {
       newErrors.lastName = "Le nom est requis";
     }
     if (!shippingAddress.phone.trim()) {
-      newErrors.phone = "Le telephone est requis";
+      newErrors.phone = "Le téléphone est requis";
     } else if (!isValidPhone(shippingAddress.phone)) {
-      newErrors.phone = "Le numero de telephone n'est pas valide";
+      newErrors.phone = "Le numéro de téléphone n'est pas valide";
     }
     if (!shippingAddress.address.trim()) {
       newErrors.address = "L'adresse est requise";
@@ -196,7 +196,7 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
               className="w-full px-4 py-3 rounded-[--radius-button] border border-background-secondary bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent resize-none"
-              placeholder="Instructions speciales pour la livraison..."
+              placeholder="Instructions spéciales pour la livraison..."
             />
           </motion.div>
 
@@ -333,7 +333,7 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
           </motion.div>
 
           <p className="text-xs text-muted text-center">
-            En confirmant votre commande, vous acceptez nos conditions generales de vente.
+            En confirmant votre commande, vous acceptez nos conditions générales de vente.
           </p>
         </div>
 

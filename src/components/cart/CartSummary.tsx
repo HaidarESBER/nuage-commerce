@@ -59,7 +59,7 @@ export function CartSummary() {
             Votre panier est vide
           </h2>
           <p className="text-muted mb-6">
-            Decouvrez nos produits et trouvez votre bonheur
+            Découvrez nos produits et trouvez votre bonheur
           </p>
           <Link href="/produits">
             <Button variant="primary" size="md">

@@ -65,7 +65,7 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
 
   return (
     <div className="relative">
-      {/* Loading Screen - Shows every time homepage is visited */}
+      {/* Loading Scréén - Shows every time homepage is visited */}
       <AnimatePresence>
         {isLoading && (
           <motion.div

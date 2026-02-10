@@ -47,8 +47,8 @@ export function GuestCheckout({
   };
 
   const handlePasswordBlur = () => {
-    if (createAccount && password.length > 0 && password.length < 8) {
-      setPasswordError("Le mot de passe doit contenir au moins 8 caracteres");
+    if (createAccount && password.length > 0 && password.length < 12) {
+      setPasswordError("Le mot de passe doit contenir au moins 12 caractères");
     } else {
       setPasswordError("");
     }
@@ -68,10 +68,10 @@ export function GuestCheckout({
           className="text-sm text-accent hover:underline focus:outline-none"
           onClick={() => {
             // Placeholder for future auth system
-            alert("Fonctionnalite a venir");
+            alert("Fonctionnalité a venir");
           }}
         >
-          Deja client ? Connectez-vous
+          Déjà client ? Connectez-vous
         </button>
       </div>
 
@@ -135,7 +135,7 @@ export function GuestCheckout({
             className="mt-0.5 w-4 h-4 rounded border-background-secondary text-accent focus:ring-accent focus:ring-2"
           />
           <span className="text-sm text-primary group-hover:text-accent transition-colors">
-            Creer un compte pour suivre vos commandes
+            Créer un compte pour suivre vos commandés
           </span>
         </label>
 
@@ -164,7 +164,7 @@ export function GuestCheckout({
                     ? "border-red-500 focus:ring-red-500"
                     : "border-background-secondary focus:ring-accent"
                 } bg-background text-primary focus:outline-none focus:ring-2`}
-                placeholder="Min. 8 caracteres"
+                placeholder="Min. 8 caractères"
                 minLength={8}
                 autoComplete="new-password"
               />
@@ -178,7 +178,7 @@ export function GuestCheckout({
                 </motion.p>
               )}
               <p className="mt-2 text-xs text-muted">
-                Votre compte sera cree apres la validation de votre commande
+                Votre compte sera créé apres la validation de votre commande
               </p>
             </motion.div>
           )}
@@ -202,7 +202,7 @@ export function GuestCheckout({
           <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
           <path d="M7 11V7a5 5 0 0 1 10 0v4" />
         </svg>
-        <span>Vos donnees sont securisees. Aucun email marketing sans votre consentement.</span>
+        <span>Vos donnees sont sécurisées. Aucun email marketing sans votre consentement.</span>
       </div>
     </motion.div>
   );

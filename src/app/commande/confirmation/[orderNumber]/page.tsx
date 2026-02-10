@@ -62,10 +62,10 @@ export default async function ConfirmationPage({ params }: ConfirmationPageProps
             Commande introuvable
           </h1>
           <p className="text-muted mb-8">
-            Nous n&apos;avons pas trouve de commande avec le numero{" "}
+            Nous n&apos;avons pas trouve de commande avec le numéro{" "}
             <span className="font-medium text-primary">{orderNumber}</span>.
             <br />
-            Veuillez verifier le numero et reessayer.
+            Veuillez verifier le numéro et reessayer.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/produits">

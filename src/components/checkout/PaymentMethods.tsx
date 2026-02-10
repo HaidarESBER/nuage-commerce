@@ -204,7 +204,7 @@ export function PaymentMethods({
           Le paiement sera active prochainement
         </p>
         <p className="text-xs text-blue-700">
-          Votre commande sera creee en attente de paiement. Nous vous
+          Votre commande sera créée en attente de paiement. Nous vous
           contacterons pour finaliser le reglement.
         </p>
       </div>
@@ -213,7 +213,7 @@ export function PaymentMethods({
       <div className="space-y-3 opacity-50 pointer-events-none">
         <div>
           <label className="block text-sm font-medium text-primary mb-1">
-            Numero de carte
+            Numéro de carte
           </label>
           <input
             type="text"

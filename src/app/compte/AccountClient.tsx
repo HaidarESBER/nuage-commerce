@@ -63,7 +63,7 @@ export function AccountClient() {
       const response = await fetch(`/api/orders/by-email?email=${encodeURIComponent(user.email)}`);
 
       if (!response.ok) {
-        throw new Error("Erreur lors de la récupération des commandes");
+        throw new Error("Erreur lors de la récupération des commandés");
       }
 
       const data = await response.json();
@@ -188,7 +188,7 @@ export function AccountClient() {
             Mon Compte
           </h1>
           <p className="text-muted">
-            {user ? "Consultez vos commandes et suivez leur statut" : "Connectez-vous pour accéder à votre compte"}
+            {user ? "Consultez vos commandés et suivez leur statut" : "Connectez-vous pour accéder à votre compte"}
           </p>
         </div>
 
@@ -353,11 +353,11 @@ export function AccountClient() {
                       value={registerPassword}
                       onChange={(e) => setRegisterPassword(e.target.value)}
                       className="w-full px-4 py-3 rounded-lg border border-border bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
-                      placeholder="••••••••"
-                      minLength={8}
+                      placeholder="••••••••••••"
+                      minLength={12}
                       required
                     />
-                    <p className="mt-1 text-xs text-muted">Minimum 8 caractères</p>
+                    <p className="mt-1 text-xs text-muted">Minimum 12 caractères, avec majuscule, minuscule, chiffre et caractère spécial</p>
                   </div>
 
                   <button

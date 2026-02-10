@@ -79,10 +79,10 @@ export default async function AdminDashboard() {
             Voir tous les produits
           </Link>
           <Link
-            href="/admin/commandes"
+            href="/admin/commandés"
             className="inline-flex items-center px-4 py-2 border border-primary text-primary rounded-md hover:bg-primary hover:text-background transition-colors"
           >
-            Voir les commandes
+            Voir les commandés
           </Link>
         </div>
       </div>
