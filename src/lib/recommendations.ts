@@ -1,5 +1,4 @@
 import { Product } from "@/types/product";
-import { products } from "@/data/products";
 
 /**
  * Get related products based on intelligent recommendation logic
@@ -13,10 +12,11 @@ import { products } from "@/data/products";
  */
 export function getRelatedProducts(
   currentProduct: Product,
+  allProducts: Product[],
   count: number = 6
 ): Product[] {
   // Filter out current product and out-of-stock items
-  const availableProducts = products.filter(
+  const availableProducts = allProducts.filter(
     (p) => p.id !== currentProduct.id && p.inStock
   );
 

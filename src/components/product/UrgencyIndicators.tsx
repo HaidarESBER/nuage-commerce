@@ -139,7 +139,7 @@ export function UrgencyIndicators({ product }: UrgencyIndicatorsProps) {
               <span className="text-sm text-primary">
                 <motion.span
                   animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, type: "tween" }}
                   className="inline-block font-medium"
                 >
                   {viewerCount}

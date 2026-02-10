@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import {
   getProductBySlug,
   getAllProductSlugs,
-} from "@/data/products";
+} from "@/lib/products";
 import { getProductRatingStats } from "@/data/reviews";
 import {
   generateProductSchema,
@@ -21,7 +21,7 @@ interface ProductPageProps {
  * Generate static params for all product pages
  */
 export async function generateStaticParams() {
-  const slugs = getAllProductSlugs();
+  const slugs = await getAllProductSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 
@@ -32,7 +32,7 @@ export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     return {
@@ -82,11 +82,15 @@ export async function generateMetadata({
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     notFound();
   }
+
+  // Fetch all products for related products recommendations
+  const { getAllProducts } = await import("@/lib/products");
+  const allProducts = await getAllProducts();
 
   // Generate structured data
   const ratingStats = getProductRatingStats(product.id);
@@ -111,7 +115,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
-      <ProductDetailClient product={product} />
+      <ProductDetailClient product={product} allProducts={allProducts} />
     </>
   );
 }

@@ -93,8 +93,8 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
     }
     if (!shippingAddress.postalCode.trim()) {
       newErrors.postalCode = "Le code postal est requis";
-    } else if (!isValidFrenchPostalCode(shippingAddress.postalCode)) {
-      newErrors.postalCode = "Le code postal doit contenir 5 chiffres";
+    } else if (!isValidFrenchPostalCode(shippingAddress.postalCode, shippingAddress.country)) {
+      newErrors.postalCode = "Le code postal n'est pas valide pour ce pays";
     }
 
     setErrors(newErrors);
@@ -294,6 +294,7 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
                             duration: 1.2,
                             repeat: Infinity,
                             delay: 0,
+                            type: "tween",
                           }}
                         >
                           .
@@ -304,6 +305,7 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
                             duration: 1.2,
                             repeat: Infinity,
                             delay: 0.2,
+                            type: "tween",
                           }}
                         >
                           .
@@ -314,6 +316,7 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
                             duration: 1.2,
                             repeat: Infinity,
                             delay: 0.4,
+                            type: "tween",
                           }}
                         >
                           .

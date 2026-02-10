@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
-import { getAllProductSlugs } from '@/data/products';
+import { getAllProductSlugs } from '@/lib/products';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://nuage.fr';
 
   // Static pages
@@ -45,7 +45,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   // Product pages
-  const productSlugs = getAllProductSlugs();
+  const productSlugs = await getAllProductSlugs();
   const productPages = productSlugs.map((slug) => ({
     url: `${baseUrl}/produits/${slug}`,
     lastModified: new Date(),

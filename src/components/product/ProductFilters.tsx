@@ -21,26 +21,33 @@ export function useProductFilters(products: Product[]) {
     inStockOnly: false,
   });
 
-  // Calculate price range from products
+  // Fixed price range limits
   const priceRangeLimits = useMemo(() => {
-    if (products.length === 0) return { min: 0, max: 100 };
+    return { min: 0, max: 40000 }; // 0€ to 400€
+  }, []);
 
-    const prices = products.map((p) => p.price);
-    const min = 0;
-    const max = Math.ceil((Math.max(...prices) + 1000) / 500) * 500; // Round up to nearest 500 with buffer
-
-    return { min, max };
-  }, [products]);
-
-  // Initialize price range when products change
+  // Initialize price range on first load, reset only if out of bounds
   useMemo(() => {
-    if (filters.priceRange[0] === 0 && filters.priceRange[1] === 0) {
-      setFilters((prev) => ({
-        ...prev,
-        priceRange: [priceRangeLimits.min, priceRangeLimits.max],
-      }));
-    }
-  }, [priceRangeLimits, filters.priceRange]);
+    setFilters((prev) => {
+      // Initialize if never set
+      if (prev.priceRange[0] === 0 && prev.priceRange[1] === 0) {
+        return {
+          ...prev,
+          priceRange: [priceRangeLimits.min, priceRangeLimits.max],
+        };
+      }
+
+      // Reset only if current range is completely outside new limits
+      if (prev.priceRange[1] > priceRangeLimits.max || prev.priceRange[0] < priceRangeLimits.min) {
+        return {
+          ...prev,
+          priceRange: [priceRangeLimits.min, priceRangeLimits.max],
+        };
+      }
+
+      return prev;
+    });
+  }, [priceRangeLimits]);
 
   // Filter products based on current filters
   const filteredProducts = useMemo(() => {

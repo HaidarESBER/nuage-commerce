@@ -1,10 +1,7 @@
 import { Metadata } from "next";
 import { Container } from "@/components/ui";
 import { ProduitsClientEnhanced } from "./ProduitsClientEnhanced";
-import {
-  products,
-  getProductsByCategory,
-} from "@/data/products";
+import { getAllProducts } from "@/lib/products";
 import {
   ProductCategory,
 } from "@/types/product";
@@ -35,15 +32,13 @@ export default async function ProduitsPage({ searchParams }: ProduitsPageProps) 
     categoryParam && validCategories.includes(categoryParam);
   const activeCategory = isValidCategory ? categoryParam : null;
 
-  // Get filtered products
-  const filteredProducts = activeCategory
-    ? getProductsByCategory(activeCategory)
-    : products;
+  // Load products from JSON file
+  const products = await getAllProducts();
 
   return (
     <main className="py-12 lg:py-16">
       <Container size="lg">
-        <ProduitsClientEnhanced products={filteredProducts} activeCategory={activeCategory} />
+        <ProduitsClientEnhanced products={products} activeCategory={activeCategory} />
       </Container>
     </main>
   );

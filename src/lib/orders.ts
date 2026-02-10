@@ -104,6 +104,21 @@ export async function getAllOrders(): Promise<Order[]> {
 }
 
 /**
+ * Get orders by customer email
+ * @param email - Customer email address
+ * @returns Array of orders for this customer, sorted by creation date (newest first)
+ */
+export async function getOrdersByEmail(email: string): Promise<Order[]> {
+  const orders = await readOrdersFile();
+  const customerOrders = orders.filter(
+    (o) => o.shippingAddress.email.toLowerCase() === email.toLowerCase()
+  );
+  return customerOrders.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+}
+
+/**
  * Update order status
  * @param id - Order ID
  * @param status - New status

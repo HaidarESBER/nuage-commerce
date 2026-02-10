@@ -8,6 +8,7 @@ import { CartButton } from "@/components/cart";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useComparison } from "@/contexts/ComparisonContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { categoryLabels, ProductCategory } from "@/types/product";
 
 /**
  * Site header with brand name and navigation
@@ -36,14 +37,14 @@ export function Header() {
     <header
       className={`sticky top-0 z-50 transition-colors duration-300 ${
         isHomepage
-          ? "bg-transparent border-b border-white/5"
+          ? "bg-black/30 backdrop-blur-md border-b border-white/10"
           : "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-background-secondary"
       }`}
     >
       <Container size="lg">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 gap-4">
           {/* Brand */}
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
             <span
               className={`font-heading text-2xl transition-colors ${
                 isHomepage ? "text-white drop-shadow-lg" : "text-primary"
@@ -53,8 +54,38 @@ export function Header() {
             </span>
           </Link>
 
+          {/* Search Bar - Desktop */}
+          <div className="hidden md:block flex-1 max-w-md">
+            <div className="relative">
+              <input
+                type="search"
+                placeholder="Rechercher..."
+                className={`w-full pl-9 pr-4 py-2 text-sm rounded-full border transition-all ${
+                  isHomepage
+                    ? "bg-white/10 border-white/20 text-white placeholder-white/60 focus:bg-white/20 focus:border-white/40"
+                    : "bg-background-secondary/50 border-border text-primary placeholder-muted focus:bg-background-secondary focus:border-primary/30"
+                } focus:outline-none`}
+              />
+              <svg
+                className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${
+                  isHomepage ? "text-white/60" : "text-muted"
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+          </div>
+
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-6 flex-shrink-0">
             <Link
               href="/produits"
               className={`text-sm font-medium transition-colors ${
@@ -107,6 +138,21 @@ export function Header() {
                 Comparer ({comparisonItems.length})
               </Link>
             )}
+
+            {/* Account button */}
+            <Link
+              href="/compte"
+              className={`transition-colors ${
+                isHomepage
+                  ? "text-white/90 hover:text-white drop-shadow"
+                  : "text-primary hover:text-accent"
+              }`}
+              aria-label="Mon compte"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </Link>
 
             <CartButton isHomepage={isHomepage} />
           </nav>
@@ -178,11 +224,11 @@ export function Header() {
 
       {/* Mobile Menu Overlay */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-200 ${
-          isMenuOpen ? "max-h-48" : "max-h-0"
+        className={`md:hidden overflow-hidden transition-all duration-300 ${
+          isMenuOpen ? "max-h-[500px]" : "max-h-0"
         }`}
       >
-        <nav className="bg-background border-b border-background-secondary">
+        <nav className="bg-background border-b border-background-secondary overflow-y-auto">
           <Container size="lg">
             <div className="py-4 flex flex-col gap-4">
               <Link
@@ -194,8 +240,48 @@ export function Header() {
                     : "text-primary hover:text-accent"
                 }`}
               >
-                Produits
+                Tous les Produits
               </Link>
+
+              {/* Categories */}
+              <div className="pl-4 flex flex-col gap-3 border-l-2 border-border">
+                <Link
+                  href="/produits?categorie=chicha"
+                  onClick={handleNavClick}
+                  className="text-sm font-light text-muted hover:text-primary transition-colors"
+                >
+                  {categoryLabels.chicha}
+                </Link>
+                <Link
+                  href="/produits?categorie=bol"
+                  onClick={handleNavClick}
+                  className="text-sm font-light text-muted hover:text-primary transition-colors"
+                >
+                  {categoryLabels.bol}
+                </Link>
+                <Link
+                  href="/produits?categorie=tuyau"
+                  onClick={handleNavClick}
+                  className="text-sm font-light text-muted hover:text-primary transition-colors"
+                >
+                  {categoryLabels.tuyau}
+                </Link>
+                <Link
+                  href="/produits?categorie=charbon"
+                  onClick={handleNavClick}
+                  className="text-sm font-light text-muted hover:text-primary transition-colors"
+                >
+                  {categoryLabels.charbon}
+                </Link>
+                <Link
+                  href="/produits?categorie=accessoire"
+                  onClick={handleNavClick}
+                  className="text-sm font-light text-muted hover:text-primary transition-colors"
+                >
+                  {categoryLabels.accessoire}
+                </Link>
+              </div>
+
               <Link
                 href="/favoris"
                 onClick={handleNavClick}
@@ -206,6 +292,17 @@ export function Header() {
                 }`}
               >
                 Favoris {wishlistItems.length > 0 && `(${wishlistItems.length})`}
+              </Link>
+              <Link
+                href="/compte"
+                onClick={handleNavClick}
+                className={`text-base font-medium transition-colors ${
+                  pathname === "/compte"
+                    ? "text-accent"
+                    : "text-primary hover:text-accent"
+                }`}
+              >
+                Mon Compte
               </Link>
               <Link
                 href="/panier"

@@ -1,6 +1,7 @@
 "use client";
 
-import { ShippingAddress } from "@/types/checkout";
+import { ShippingAddress, europeanCountries, EuropeanCountry } from "@/types/checkout";
+import { AddressAutocomplete } from "./AddressAutocomplete";
 
 interface ShippingFormProps {
   address: ShippingAddress;
@@ -14,7 +15,8 @@ interface ShippingFormProps {
  * Features:
  * - All fields in French
  * - Client-side validation feedback
- * - Controlled inputs
+ * - Address autocomplete with Google Places
+ * - Country-specific postal code validation
  */
 export function ShippingForm({ address, onChange, errors }: ShippingFormProps) {
   const handleChange = (
@@ -23,6 +25,13 @@ export function ShippingForm({ address, onChange, errors }: ShippingFormProps) {
   ) => {
     onChange({ ...address, [field]: value });
   };
+
+  const handleAddressSelect = (addressData: Partial<ShippingAddress>) => {
+    onChange({ ...address, ...addressData });
+  };
+
+  const countryData = europeanCountries[address.country as EuropeanCountry];
+  const postalCodePlaceholder = countryData?.placeholder || "Code postal";
 
   return (
     <div className="space-y-4">
@@ -132,30 +141,14 @@ export function ShippingForm({ address, onChange, errors }: ShippingFormProps) {
         </div>
       </div>
 
-      {/* Address */}
-      <div>
-        <label
-          htmlFor="address"
-          className="block text-sm font-medium text-primary mb-1"
-        >
-          Adresse *
-        </label>
-        <input
-          type="text"
-          id="address"
-          value={address.address}
-          onChange={(e) => handleChange("address", e.target.value)}
-          className={`w-full px-4 py-3 rounded-[--radius-button] border ${
-            errors.address
-              ? "border-red-500 focus:ring-red-500"
-              : "border-background-secondary focus:ring-accent"
-          } bg-background text-primary focus:outline-none focus:ring-2`}
-          placeholder="123 Rue de la Paix"
-        />
-        {errors.address && (
-          <p className="mt-1 text-sm text-red-500">{errors.address}</p>
-        )}
-      </div>
+      {/* Address with Autocomplete */}
+      <AddressAutocomplete
+        onAddressSelect={handleAddressSelect}
+        selectedCountry={address.country}
+        currentAddress={address.address}
+        onAddressChange={(value) => handleChange("address", value)}
+        error={errors.address}
+      />
 
       {/* Address line 2 */}
       <div>
@@ -213,13 +206,12 @@ export function ShippingForm({ address, onChange, errors }: ShippingFormProps) {
             id="postalCode"
             value={address.postalCode}
             onChange={(e) => handleChange("postalCode", e.target.value)}
-            maxLength={5}
             className={`w-full px-4 py-3 rounded-[--radius-button] border ${
               errors.postalCode
                 ? "border-red-500 focus:ring-red-500"
                 : "border-background-secondary focus:ring-accent"
             } bg-background text-primary focus:outline-none focus:ring-2`}
-            placeholder="75001"
+            placeholder={postalCodePlaceholder}
           />
           {errors.postalCode && (
             <p className="mt-1 text-sm text-red-500">{errors.postalCode}</p>
@@ -235,16 +227,27 @@ export function ShippingForm({ address, onChange, errors }: ShippingFormProps) {
         >
           Pays *
         </label>
-        <input
-          type="text"
+        <select
           id="country"
           value={address.country}
           onChange={(e) => handleChange("country", e.target.value)}
-          className="w-full px-4 py-3 rounded-[--radius-button] border border-background-secondary bg-background-secondary text-muted focus:outline-none cursor-not-allowed"
-          disabled
-        />
+          className={`w-full px-4 py-3 rounded-[--radius-button] border ${
+            errors.country
+              ? "border-red-500 focus:ring-red-500"
+              : "border-background-secondary focus:ring-accent"
+          } bg-background text-primary focus:outline-none focus:ring-2`}
+        >
+          {Object.keys(europeanCountries).map((country) => (
+            <option key={country} value={country}>
+              {country}
+            </option>
+          ))}
+        </select>
+        {errors.country && (
+          <p className="mt-1 text-sm text-red-500">{errors.country}</p>
+        )}
         <p className="mt-1 text-xs text-muted">
-          Livraison uniquement en France metropolitaine
+          Livraison disponible dans toute l&apos;Europe
         </p>
       </div>
     </div>

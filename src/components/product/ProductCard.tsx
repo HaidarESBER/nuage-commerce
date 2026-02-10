@@ -70,17 +70,16 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -8, boxShadow: "0 10px 30px rgba(0, 0, 0, 0.15)" }}
       viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      className="group bg-background-card rounded-[--radius-card] overflow-hidden shadow-sm"
+      transition={{ duration: 0.4, ease: [0.21, 0.47, 0.32, 0.98] }}
+      className="group bg-background-card rounded-xl overflow-hidden border border-border/50 hover:border-[#D4A5A5]/50 transition-all duration-500 hover:shadow-2xl hover:shadow-[#D4A5A5]/10"
     >
-      {/* Image container with 16:9 aspect ratio - links to product */}
+      {/* Image container - Premium display */}
       <Link href={`/produits/${product.slug}`} className="block">
-        <div className="relative aspect-video overflow-hidden bg-background-secondary">
+        <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-[#F7F5F3] to-[#E8E4DF] p-6">
           <motion.div
-            whileHover={{ scale: 1.1 }}
-            transition={{ duration: 0.3 }}
+            whileHover={{ scale: 1.08 }}
+            transition={{ duration: 0.5, ease: [0.21, 0.47, 0.32, 0.98] }}
             className="relative w-full h-full"
           >
             <OptimizedImage
@@ -88,37 +87,25 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
               alt={product.name}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              objectFit="cover"
+              objectFit="contain"
               priority={priority}
             />
           </motion.div>
 
-          {/* Wishlist button - top right corner */}
-          <div className="absolute top-3 right-3 z-10">
-            <WishlistButton productId={product.id} size="sm" className="bg-background/90 backdrop-blur-sm rounded-full p-2 text-primary hover:bg-background transition-colors" />
+          {/* Wishlist button - top right */}
+          <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <WishlistButton
+              productId={product.id}
+              size="sm"
+              className="bg-white/95 backdrop-blur-sm rounded-full p-2.5 text-primary hover:bg-[#D4A5A5] hover:text-white transition-all shadow-lg"
+            />
           </div>
 
-          {/* Compare button - top left corner, appears on hover */}
+          {/* Quick View Button - center on hover */}
           <motion.button
-            initial={{ opacity: 0 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             whileHover={{ scale: 1.05 }}
-            onClick={handleAddToComparison}
-            className="absolute top-3 left-3 z-10 bg-background/90 backdrop-blur-sm rounded-full p-2 text-primary hover:bg-background transition-all opacity-0 group-hover:opacity-100"
-            title={isInComparison(product.id) ? "Dans la comparaison" : "Comparer"}
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-            </svg>
-            {isInComparison(product.id) && (
-              <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-accent rounded-full" />
-            )}
-          </motion.button>
-
-          {/* Quick View Button - appears on hover */}
-          <motion.button
-            initial={{ opacity: 0, y: 10 }}
-            whileHover={{ scale: 1.05 }}
-            className="absolute inset-x-0 bottom-4 mx-auto w-fit px-4 py-2 bg-background/95 backdrop-blur-sm text-primary rounded-[--radius-button] text-sm font-medium shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 z-10"
+            className="absolute inset-0 m-auto w-fit h-fit px-6 py-3 bg-white/98 backdrop-blur-sm text-primary rounded-full text-sm font-medium shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center gap-2 z-10 border border-[#D4A5A5]/30"
             onClick={handleQuickView}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,47 +117,32 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
 
           {/* Out of stock overlay */}
           {!product.inStock && (
-            <div className="absolute inset-0 bg-primary/60 flex items-center justify-center">
-              <span className="text-background font-medium text-sm uppercase tracking-wide">
+            <div className="absolute inset-0 bg-primary/70 backdrop-blur-sm flex items-center justify-center">
+              <span className="text-background font-medium text-sm uppercase tracking-wider">
                 Rupture de stock
               </span>
             </div>
           )}
-          {/* Sale badge */}
+
+          {/* Sale badge - elegant design */}
           {hasDiscount && product.inStock && (
-            <div className="absolute top-3 left-3 bg-error text-background text-xs font-medium px-2 py-1 rounded">
-              Promo
+            <div className="absolute top-3 left-3 bg-error text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
+              -{Math.round(((product.compareAtPrice! - product.price) / product.compareAtPrice!) * 100)}%
             </div>
           )}
         </div>
       </Link>
 
-      {/* Content */}
-      <div className="p-4">
-        {/* Product name - links to product */}
+      {/* Content - Premium Layout */}
+      <div className="p-5">
+        {/* Product name */}
         <Link href={`/produits/${product.slug}`}>
-          <h3 className="font-heading text-lg text-primary line-clamp-1 mb-2 hover:text-accent transition-colors">
+          <h3 className="font-heading text-lg text-primary line-clamp-2 mb-3 hover:text-[#D4A5A5] transition-colors duration-300 min-h-[3.5rem] leading-tight">
             {product.name}
           </h3>
         </Link>
 
-        {/* Price with hover effect */}
-        <motion.div
-          whileHover={{ color: "var(--color-accent)" }}
-          transition={{ duration: 0.3 }}
-          className="flex items-baseline gap-2 mb-3"
-        >
-          <span className="text-lg font-medium text-primary">
-            {formatPrice(product.price)}
-          </span>
-          {hasDiscount && (
-            <span className="text-sm text-muted line-through">
-              {formatPrice(product.compareAtPrice!)}
-            </span>
-          )}
-        </motion.div>
-
-        {/* Star rating summary */}
+        {/* Star rating */}
         {ratingStats && (
           <div className="mb-3">
             <StarRatingDisplay
@@ -181,34 +153,38 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
           </div>
         )}
 
+        {/* Price - Prominent display */}
+        <div className="flex items-baseline gap-2 mb-4 pb-4 border-b border-border/50">
+          <span className="text-2xl font-bold text-primary">
+            {formatPrice(product.price)}
+          </span>
+          {hasDiscount && (
+            <span className="text-sm text-muted line-through">
+              {formatPrice(product.compareAtPrice!)}
+            </span>
+          )}
+        </div>
+
         {/* Stock indicator */}
-        <div className="mb-3">
+        <div className="mb-4">
           <StockIndicator
             inStock={product.inStock}
             stockLevel={product.stockLevel}
             size="sm"
-            showDot={false}
+            showDot={true}
           />
         </div>
 
-        {/* CTA Buttons */}
-        <div className="flex gap-2">
-          <button
-            onClick={handleAddToCart}
-            disabled={!product.inStock}
-            className="flex-1 inline-flex items-center justify-center px-4 py-2 text-sm font-medium bg-primary text-background rounded-[--radius-button] hover:bg-accent hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Ajouter au panier
-          </button>
-          <motion.a
-            href={`/produits/${product.slug}`}
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
-            className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-primary border border-primary rounded-[--radius-button] hover:bg-primary hover:text-background transition-colors"
-          >
-            Voir
-          </motion.a>
-        </div>
+        {/* CTA Button - Single, prominent */}
+        <motion.button
+          onClick={handleAddToCart}
+          disabled={!product.inStock}
+          whileHover={{ scale: product.inStock ? 1.02 : 1 }}
+          whileTap={{ scale: product.inStock ? 0.98 : 1 }}
+          className="w-full inline-flex items-center justify-center px-4 py-3 text-sm font-medium bg-primary text-background rounded-full hover:bg-[#D4A5A5] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
+        >
+          {product.inStock ? "Ajouter au panier" : "Rupture de stock"}
+        </motion.button>
       </div>
 
       {/* Quick View Modal */}

@@ -14,8 +14,8 @@ export const products: Product[] = [
     shortDescription: "Chicha en verre soufflé main, design cristallin élégant",
     price: 12999,
     images: [
-      "https://placehold.co/600x600/2D2D2D/F7F5F3?text=Chicha+Crystal",
-      "https://placehold.co/600x600/C4A98F/2D2D2D?text=Chicha+Crystal+2",
+      "/chicha.jpg",
+      "/chicha.jpg",
     ],
     category: "chicha",
     inStock: true,
@@ -32,7 +32,7 @@ export const products: Product[] = [
     price: 8999,
     compareAtPrice: 10999,
     images: [
-      "https://placehold.co/600x600/1A1A1A/F7F5F3?text=Classic+Noir",
+      "/chicha.jpg",
     ],
     category: "chicha",
     inStock: true,
@@ -48,7 +48,7 @@ export const products: Product[] = [
     shortDescription: "Bol silicone avec insert céramique, incassable",
     price: 2499,
     images: [
-      "https://placehold.co/600x600/C4A98F/2D2D2D?text=Bol+Silicone",
+      "/bowl.jpg",
     ],
     category: "bol",
     inStock: true,
@@ -64,7 +64,7 @@ export const products: Product[] = [
     shortDescription: "Bol céramique fait main, pièce unique",
     price: 3499,
     images: [
-      "https://placehold.co/600x600/9B9590/F7F5F3?text=Bol+Ceramique",
+      "/bowl.jpg",
     ],
     category: "bol",
     inStock: true,
@@ -80,7 +80,7 @@ export const products: Product[] = [
     shortDescription: "Tuyau silicone 1,8m, embout inox, lavable",
     price: 1999,
     images: [
-      "https://placehold.co/600x600/2D2D2D/C4A98F?text=Tuyau+Premium",
+      "/hose.webp",
     ],
     category: "tuyau",
     inStock: true,
@@ -96,7 +96,7 @@ export const products: Product[] = [
     shortDescription: "Charbon coco naturel, 72 pièces, 60+ min",
     price: 1499,
     images: [
-      "https://placehold.co/600x600/4A4A4A/F7F5F3?text=Charbon+Coco",
+      "/coal.webp",
     ],
     category: "charbon",
     inStock: true,
@@ -113,7 +113,7 @@ export const products: Product[] = [
     price: 999,
     compareAtPrice: 1299,
     images: [
-      "https://placehold.co/600x600/9B9590/2D2D2D?text=Pince+Pro",
+      "/accessories.jpg",
     ],
     category: "accessoire",
     inStock: true,
@@ -129,7 +129,7 @@ export const products: Product[] = [
     shortDescription: "Kit 5 pièces: brosses, goupillon, éponge",
     price: 1899,
     images: [
-      "https://placehold.co/600x600/E8E4DF/2D2D2D?text=Kit+Nettoyage",
+      "/accessories.jpg",
     ],
     category: "accessoire",
     inStock: false,

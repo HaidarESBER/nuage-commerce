@@ -129,14 +129,14 @@ export function ProductSort({ sortOption, onSortChange }: ProductSortProps) {
       {/* Dropdown Trigger */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-2 px-4 py-2 bg-background-card border border-primary/20 rounded-[--radius-button] text-sm text-primary hover:border-primary/40 transition-colors"
+        className="inline-flex items-center gap-2 px-3 py-1.5 border border-border rounded-lg text-xs md:text-sm font-light hover:bg-background-secondary transition-colors"
       >
-        <span className="text-muted">Trier par:</span>
-        <span className="font-medium">{currentOption.label}</span>
+        <span className="hidden sm:inline text-muted">Trier:</span>
+        <span>{currentOption.label}</span>
         <motion.svg
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}
-          className="w-4 h-4 text-muted"
+          className="w-3 h-3 md:w-4 md:h-4 text-muted"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

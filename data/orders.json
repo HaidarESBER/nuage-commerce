@@ -156,5 +156,95 @@
     },
     "createdAt": "2026-02-09T19:17:45.414Z",
     "updatedAt": "2026-02-09T19:17:45.414Z"
+  },
+  {
+    "id": "6ab6ccf8-1a6c-4ee1-9a69-9aff12ebe6ac",
+    "orderNumber": "NU-2026-0006",
+    "items": [
+      {
+        "productId": "1",
+        "productName": "Chicha Crystal Premium",
+        "productImage": "https://placehold.co/600x600/2D2D2D/F7F5F3?text=Chicha+Crystal",
+        "price": 12999,
+        "quantity": 1
+      }
+    ],
+    "subtotal": 12999,
+    "shipping": 0,
+    "total": 12999,
+    "status": "pending",
+    "shippingAddress": {
+      "firstName": "aa",
+      "lastName": "aa",
+      "email": "haidar@haidar.haidar",
+      "phone": "0707070707",
+      "address": "sdfsd",
+      "addressLine2": "",
+      "city": "Vannes",
+      "postalCode": "76000",
+      "country": "France"
+    },
+    "createdAt": "2026-02-09T21:13:52.972Z",
+    "updatedAt": "2026-02-09T21:13:52.972Z"
+  },
+  {
+    "id": "279fb6b7-1d50-4295-9148-c4db7994be69",
+    "orderNumber": "NU-2026-0007",
+    "items": [
+      {
+        "productId": "1",
+        "productName": "Chicha Crystal Premium",
+        "productImage": "https://placehold.co/600x600/2D2D2D/F7F5F3?text=Chicha+Crystal",
+        "price": 12999,
+        "quantity": 1
+      }
+    ],
+    "subtotal": 12999,
+    "shipping": 0,
+    "total": 12999,
+    "status": "pending",
+    "shippingAddress": {
+      "firstName": "aa",
+      "lastName": "aa",
+      "email": "haidar@haidar.haidar",
+      "phone": "0707070707",
+      "address": "3 square luli",
+      "addressLine2": "",
+      "city": "Vannes",
+      "postalCode": "76000",
+      "country": "France"
+    },
+    "createdAt": "2026-02-09T22:12:10.755Z",
+    "updatedAt": "2026-02-09T22:12:10.755Z"
+  },
+  {
+    "id": "e95825c4-d83f-4e6d-8a61-1b0dbd681caf",
+    "orderNumber": "NU-2026-0008",
+    "items": [
+      {
+        "productId": "7",
+        "productName": "Pince à Charbon Pro",
+        "productImage": "https://placehold.co/600x600/9B9590/2D2D2D?text=Pince+Pro",
+        "price": 999,
+        "quantity": 1
+      }
+    ],
+    "subtotal": 999,
+    "shipping": 0,
+    "total": 999,
+    "status": "pending",
+    "shippingAddress": {
+      "firstName": "aa",
+      "lastName": "aa",
+      "email": "haidar@haidar.haidar",
+      "phone": "0707070707",
+      "address": "3 square luli",
+      "addressLine2": "",
+      "city": "Vannes",
+      "postalCode": "76000",
+      "country": "France"
+    },
+    "createdAt": "2026-02-09T22:15:38.531Z",
+    "updatedAt": "2026-02-09T22:15:38.531Z"
   }
 ]
