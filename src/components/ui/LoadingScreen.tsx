@@ -22,11 +22,11 @@ export function LoadingScreen() {
     if (!hasShownLoading) {
       setShouldShow(true);
 
-      // Minimum display time for the loading screen (2 seconds)
+      // Minimum display time for the loading screen (3 seconds)
       const minDisplayTime = setTimeout(() => {
         setIsLoading(false);
         sessionStorage.setItem("hasShownLoading", "true");
-      }, 2000);
+      }, 3000);
 
       return () => clearTimeout(minDisplayTime);
     } else {
