@@ -17,6 +17,7 @@ export interface ShippingRate {
 
 /**
  * Shipping rates by region and method
+ * These are default rates - can be overridden by admin in shipping-rates.json
  */
 const SHIPPING_RATES: Record<
   CountryRegion,
@@ -26,7 +27,7 @@ const SHIPPING_RATES: Record<
     standard: {
       cost: 590, // €5.90
       currency: "EUR",
-      estimatedDays: "2-3 jours ouvres",
+      estimatedDays: "2-3 jours ouvrés",
       carrier: "Colissimo Suivi",
     },
     express: {
@@ -40,13 +41,13 @@ const SHIPPING_RATES: Record<
     standard: {
       cost: 890, // €8.90
       currency: "EUR",
-      estimatedDays: "3-5 jours ouvres",
+      estimatedDays: "3-5 jours ouvrés",
       carrier: "Colissimo International",
     },
     express: {
       cost: 1590, // €15.90
       currency: "EUR",
-      estimatedDays: "2-3 jours ouvres",
+      estimatedDays: "2-3 jours ouvrés",
       carrier: "Chronopost International",
     },
   },
@@ -54,13 +55,13 @@ const SHIPPING_RATES: Record<
     standard: {
       cost: 1190, // €11.90
       currency: "EUR",
-      estimatedDays: "5-7 jours ouvres",
+      estimatedDays: "5-7 jours ouvrés",
       carrier: "Colissimo International",
     },
     express: {
       cost: 1590, // €15.90
       currency: "EUR",
-      estimatedDays: "3-4 jours ouvres",
+      estimatedDays: "3-4 jours ouvrés",
       carrier: "Chronopost International",
     },
   },
@@ -68,13 +69,13 @@ const SHIPPING_RATES: Record<
     standard: {
       cost: 1490, // €14.90
       currency: "EUR",
-      estimatedDays: "7-10 jours ouvres",
+      estimatedDays: "7-10 jours ouvrés",
       carrier: "Colissimo International",
     },
     express: {
       cost: 1990, // €19.90
       currency: "EUR",
-      estimatedDays: "4-6 jours ouvres",
+      estimatedDays: "4-6 jours ouvrés",
       carrier: "Chronopost International",
     },
   },

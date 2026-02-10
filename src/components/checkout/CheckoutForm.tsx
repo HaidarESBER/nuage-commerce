@@ -117,6 +117,7 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
 
       await onSubmit({
         shippingAddress: updatedAddress,
+        shippingCost,
         notes: notes.trim() || undefined,
       });
 

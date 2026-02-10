@@ -1,0 +1,58 @@
+{
+  "france": {
+    "standard": {
+      "cost": 590,
+      "currency": "EUR",
+      "estimatedDays": "2-3 jours ouvrés",
+      "carrier": "Colissimo Suivi"
+    },
+    "express": {
+      "cost": 990,
+      "currency": "EUR",
+      "estimatedDays": "24h",
+      "carrier": "Chronopost"
+    }
+  },
+  "eu-schengen": {
+    "standard": {
+      "cost": 890,
+      "currency": "EUR",
+      "estimatedDays": "3-5 jours ouvrés",
+      "carrier": "Colissimo International"
+    },
+    "express": {
+      "cost": 1590,
+      "currency": "EUR",
+      "estimatedDays": "2-3 jours ouvrés",
+      "carrier": "Chronopost International"
+    }
+  },
+  "eu-non-schengen": {
+    "standard": {
+      "cost": 1190,
+      "currency": "EUR",
+      "estimatedDays": "5-7 jours ouvrés",
+      "carrier": "Colissimo International"
+    },
+    "express": {
+      "cost": 1590,
+      "currency": "EUR",
+      "estimatedDays": "3-4 jours ouvrés",
+      "carrier": "Chronopost International"
+    }
+  },
+  "non-eu": {
+    "standard": {
+      "cost": 1490,
+      "currency": "EUR",
+      "estimatedDays": "7-10 jours ouvrés",
+      "carrier": "Colissimo International"
+    },
+    "express": {
+      "cost": 1990,
+      "currency": "EUR",
+      "estimatedDays": "4-6 jours ouvrés",
+      "carrier": "Chronopost International"
+    }
+  }
+}

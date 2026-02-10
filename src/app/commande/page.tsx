@@ -45,7 +45,7 @@ export default function CheckoutPage() {
       }));
 
       const subtotal = calculateSubtotal(items);
-      const shipping = 0; // Free shipping for MVP
+      const shipping = formData.shippingCost; // Use actual shipping cost from form
       const total = subtotal + shipping;
 
       // Create order

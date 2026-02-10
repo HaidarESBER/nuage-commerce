@@ -37,6 +37,7 @@ export const defaultShippingAddress: ShippingAddress = {
  */
 export interface CheckoutFormData {
   shippingAddress: ShippingAddress;
+  shippingCost: number; // in cents
   notes?: string;
 }
 

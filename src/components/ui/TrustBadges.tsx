@@ -46,7 +46,7 @@ const badges: TrustBadge[] = [
         />
       </svg>
     ),
-    title: "Livraison gratuite",
+    title: "Livraison rapide",
     description: "Livraison suivie en Europe",
   },
   {
