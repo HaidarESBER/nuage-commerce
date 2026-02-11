@@ -3,6 +3,11 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { Order, CreateOrderData, generateOrderNumber, generateOrderId } from "@/types/order";
+import {
+  sendOrderConfirmationEmail,
+  sendShippingNotificationEmail,
+  sendOrderStatusUpdateEmail,
+} from "@/lib/email";
 
 const DATA_FILE_PATH = path.join(process.cwd(), "data", "orders.json");
 
@@ -59,7 +64,7 @@ export async function createOrder(data: CreateOrderData): Promise<Order> {
     subtotal: data.subtotal,
     shipping: data.shipping,
     total: data.total,
-    status: "pending",
+    status: data.status || "pending",
     shippingAddress: data.shippingAddress,
     notes: data.notes,
     createdAt: now,
@@ -68,6 +73,11 @@ export async function createOrder(data: CreateOrderData): Promise<Order> {
 
   orders.push(newOrder);
   await writeOrdersFile(orders);
+
+  // Send order confirmation email in background (fire-and-forget)
+  sendOrderConfirmationEmail(newOrder).catch((err) =>
+    console.error("Failed to send order confirmation email:", err)
+  );
 
   return newOrder;
 }
@@ -135,6 +145,7 @@ export async function updateOrderStatus(
     throw new Error(`Order with id ${id} not found`);
   }
 
+  const previousStatus = orders[index].status;
   const now = new Date().toISOString();
   const updates: Partial<Order> = {
     status,
@@ -158,16 +169,21 @@ export async function updateOrderStatus(
 
   await writeOrdersFile(orders);
 
-  // Send shipping notification email if status changed to shipped
+  // Send status-specific email notification in background (fire-and-forget)
   if (status === "shipped" && orders[index].trackingNumber) {
-    // Trigger email in background (don't await)
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/send-shipping-email`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ order: orders[index] }),
-    }).catch((error) => {
-      console.error("Failed to send shipping notification:", error);
-    });
+    sendShippingNotificationEmail(orders[index]).catch((err) =>
+      console.error("Failed to send shipping notification email:", err)
+    );
+  } else if (
+    status === "confirmed" ||
+    status === "processing" ||
+    status === "delivered" ||
+    status === "cancelled"
+  ) {
+    sendOrderStatusUpdateEmail(orders[index], status, previousStatus).catch(
+      (err) =>
+        console.error("Failed to send order status update email:", err)
+    );
   }
 
   return orders[index];
