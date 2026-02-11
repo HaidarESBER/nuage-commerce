@@ -55,10 +55,11 @@ Plans:
 **Depends on**: Phase 9 (orders in database)
 **Research**: Likely (external payment API, French market requirements)
 **Research topics**: Stripe Checkout with Next.js, webhook verification, EUR currency handling, French payment methods (Carte Bancaire), Stripe France compliance
-**Plans**: TBD
+**Plans**: 2 plans, 2 waves
 
 Plans:
-- [ ] 10-01: TBD (run /gsd:plan-phase 10 to break down)
+- [ ] 10-01: Stripe Setup & Checkout Integration (Wave 1)
+- [ ] 10-02: Webhook, Success & Admin (Wave 2)
 
 #### Phase 11: Email Notifications
 
