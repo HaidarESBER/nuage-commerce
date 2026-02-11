@@ -69,7 +69,7 @@ Plans:
 **Depends on**: Phase 10 (payment confirmation triggers emails)
 **Research**: Likely (external email service integration)
 **Research topics**: Resend or similar service with Next.js, email template design, transactional email best practices for French market
-**Plans**: TBD
+**Plans**: 2 plans, 2 waves
 
 Plans:
 - [x] 11-01: Email Service & Status Template (Wave 1)
