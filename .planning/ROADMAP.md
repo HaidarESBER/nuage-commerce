@@ -92,10 +92,11 @@ Plans:
 **Depends on**: Phase 12 (scraping engine provides raw data)
 **Research**: Likely (AI API integration, scheduled functions)
 **Research topics**: Claude/OpenAI API for product translation, prompt engineering for brand-consistent copy, Vercel Cron or Supabase Edge Functions for scheduling, admin review queue UX
-**Plans**: TBD
+**Plans**: 2 plans, 2 waves
 
 Plans:
-- [ ] 13-01: TBD (run /gsd:plan-phase 13 to break down)
+- [x] 13-01: AI Translation Engine & Curation Schema (Wave 1) -- 2026-02-11
+- [ ] 13-02: Admin Review Queue (Wave 2)
 
 ## Progress
 
@@ -116,4 +117,4 @@ Phases execute in numeric order: 9 → 10 → 11 → 12 → 13
 | 10. Stripe Checkout | v2.0 | 0/? | Not started | - |
 | 11. Email Notifications | v2.0 | 2/2 | Complete | 2026-02-11 |
 | 12. Product Sourcing Pipeline | v2.0 | 0/? | Not started | - |
-| 13. AI Curation & Automation | v2.0 | 0/? | Not started | - |
+| 13. AI Curation & Automation | v2.0 | 1/2 | In progress | - |
