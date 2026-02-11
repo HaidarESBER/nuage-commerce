@@ -70,7 +70,8 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 11-01: TBD (run /gsd:plan-phase 11 to break down)
+- [x] 11-01: Email Service & Status Template (Wave 1)
+- [ ] 11-02: TBD
 
 #### Phase 12: Product Sourcing Pipeline
 
@@ -111,6 +112,6 @@ Phases execute in numeric order: 9 → 10 → 11 → 12 → 13
 | 8. Character & Delight | v1.1 | 8/8 | Complete | 2026-02-09 |
 | 9. Supabase Migration & Auth | v2.0 | 0/? | Not started | - |
 | 10. Stripe Checkout | v2.0 | 0/? | Not started | - |
-| 11. Email Notifications | v2.0 | 0/? | Not started | - |
+| 11. Email Notifications | v2.0 | 1/2 | In progress | - |
 | 12. Product Sourcing Pipeline | v2.0 | 0/? | Not started | - |
 | 13. AI Curation & Automation | v2.0 | 0/? | Not started | - |
