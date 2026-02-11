@@ -5,10 +5,8 @@ import { useRouter } from "next/navigation";
 import { Container } from "@/components/ui";
 import { CheckoutForm } from "@/components/checkout";
 import { useCart } from "@/contexts/CartContext";
-import { createOrder } from "@/lib/orders";
 import { CheckoutFormData } from "@/types/checkout";
 import { OrderItem } from "@/types/order";
-import { calculateSubtotal } from "@/types/cart";
 
 /**
  * Checkout page for completing purchases
@@ -16,11 +14,11 @@ import { calculateSubtotal } from "@/types/cart";
  * Features:
  * - Redirects to cart if empty
  * - Collects shipping information
- * - Creates order on submission
- * - Clears cart and redirects to confirmation
+ * - Calls checkout API to create Stripe Checkout Session
+ * - Redirects to Stripe for payment
  */
 export default function CheckoutPage() {
-  const { items, clearCart } = useCart();
+  const { items } = useCart();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -44,38 +42,29 @@ export default function CheckoutPage() {
         quantity: item.quantity,
       }));
 
-      const subtotal = calculateSubtotal(items);
-      const shipping = formData.shippingCost; // Use actual shipping cost from form
-      const total = subtotal + shipping;
-
-      // Create order
-      const order = await createOrder({
-        items: orderItems,
-        subtotal,
-        shipping,
-        total,
-        shippingAddress: formData.shippingAddress,
-        notes: formData.notes,
-      });
-
-      // Send order confirmation email (non-blocking)
-      // Don't await - let email send in background
-      fetch("/api/send-order-email", {
+      // Call checkout API to create Stripe Checkout Session
+      const response = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ order }),
-      }).catch((error) => {
-        // Log error but don't block user experience
-        console.error("Failed to send confirmation email:", error);
+        body: JSON.stringify({
+          items: orderItems,
+          shippingAddress: formData.shippingAddress,
+          shippingCost: formData.shippingCost,
+          notes: formData.notes,
+        }),
       });
 
-      // Clear cart after successful order
-      clearCart();
+      const data = await response.json();
 
-      // Redirect to confirmation page
-      router.push(`/commande/confirmation/${order.orderNumber}`);
+      if (!response.ok) {
+        throw new Error(data.error || "Erreur lors du paiement");
+      }
+
+      // Redirect to Stripe Checkout
+      // Cart will be cleared on the confirmation page after successful payment
+      window.location.href = data.url;
     } catch (error) {
-      console.error("Order creation failed:", error);
+      console.error("Checkout failed:", error);
       setIsSubmitting(false);
       throw error;
     }
