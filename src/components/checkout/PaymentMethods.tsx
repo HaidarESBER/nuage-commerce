@@ -2,25 +2,16 @@
 
 import { motion } from "framer-motion";
 
-type PaymentGateway = "stripe" | "paypal" | "mock";
-
-interface PaymentMethodsProps {
-  paymentGateway?: PaymentGateway;
-}
-
 /**
  * PaymentMethods component for displaying payment options and secure messaging
  *
  * Features:
  * - Payment method icons (Visa, Mastercard, Amex, PayPal, Apple Pay, Google Pay)
  * - Secure payment messaging with trust badges
- * - Mock payment form (disabled) for MVP
- * - Future-ready for Stripe integration
+ * - Stripe redirect messaging
  * - 3D Secure branding
  */
-export function PaymentMethods({
-  paymentGateway = "mock",
-}: PaymentMethodsProps) {
+export function PaymentMethods() {
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -198,72 +189,17 @@ export function PaymentMethods({
         </div>
       </div>
 
-      {/* Payment form - MVP placeholder */}
-      <div className="p-4 bg-blue-50 border border-blue-200 rounded-[--radius-button]">
-        <p className="text-sm text-blue-800 mb-2">
-          Le paiement sera active prochainement
-        </p>
-        <p className="text-xs text-blue-700">
-          Votre commande sera créée en attente de paiement. Nous vous
-          contacterons pour finaliser le reglement.
+      {/* Stripe redirect message */}
+      <div className="p-4 bg-background-card border border-background-secondary rounded-[--radius-button]">
+        <p className="text-sm text-muted">
+          Vous serez redirige vers notre partenaire de paiement securise Stripe
+          pour finaliser votre achat.
         </p>
       </div>
 
-      {/* Mock payment form (disabled for visual reference) */}
-      <div className="space-y-3 opacity-50 pointer-events-none">
-        <div>
-          <label className="block text-sm font-medium text-primary mb-1">
-            Numéro de carte
-          </label>
-          <input
-            type="text"
-            placeholder="1234 5678 9012 3456"
-            disabled
-            className="w-full px-4 py-3 rounded-[--radius-button] border border-background-secondary bg-background-secondary text-muted cursor-not-allowed"
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="block text-sm font-medium text-primary mb-1">
-              Date d'expiration
-            </label>
-            <input
-              type="text"
-              placeholder="MM/YY"
-              disabled
-              className="w-full px-4 py-3 rounded-[--radius-button] border border-background-secondary bg-background-secondary text-muted cursor-not-allowed"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-primary mb-1">
-              CVV
-            </label>
-            <input
-              type="text"
-              placeholder="123"
-              disabled
-              className="w-full px-4 py-3 rounded-[--radius-button] border border-background-secondary bg-background-secondary text-muted cursor-not-allowed"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-primary mb-1">
-            Titulaire de la carte
-          </label>
-          <input
-            type="text"
-            placeholder="Jean Dupont"
-            disabled
-            className="w-full px-4 py-3 rounded-[--radius-button] border border-background-secondary bg-background-secondary text-muted cursor-not-allowed"
-          />
-        </div>
-      </div>
-
-      {/* Powered by Stripe (future) */}
+      {/* Powered by Stripe */}
       <div className="flex items-center justify-center gap-2 text-xs text-muted pt-2">
-        <span>Futur paiement securise par</span>
+        <span>Paiement securise par</span>
         <svg
           width="40"
           height="16"
@@ -280,46 +216,3 @@ export function PaymentMethods({
     </motion.div>
   );
 }
-
-/* Future Stripe integration hooks (commented out for MVP)
-
-import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
-
-export function PaymentMethods({ paymentGateway = 'stripe' }: PaymentMethodsProps) {
-  const stripe = useStripe();
-  const elements = useElements();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!stripe || !elements) {
-      return;
-    }
-
-    const cardElement = elements.getElement(CardElement);
-
-    if (!cardElement) {
-      return;
-    }
-
-    // Create payment intent
-    const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: {
-        card: cardElement,
-      }
-    });
-
-    if (error) {
-      // Handle error
-    } else if (paymentIntent.status === 'succeeded') {
-      // Payment successful
-    }
-  };
-
-  return (
-    // Use CardElement for actual Stripe integration
-    <CardElement options={{ style: { base: { fontSize: '16px' } } }} />
-  );
-}
-
-*/

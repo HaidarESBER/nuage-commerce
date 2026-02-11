@@ -284,7 +284,7 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
                       <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
                     </motion.svg>
                     <span>
-                      Traitement en cours
+                      Redirection vers le paiement
                       <motion.span
                         className="inline-flex gap-0.5 ml-0.5"
                         initial={{ opacity: 1 }}
@@ -326,7 +326,7 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
                     </span>
                   </>
                 ) : (
-                  "Commander"
+                  "Procéder au paiement"
                 )}
               </span>
             </Button>

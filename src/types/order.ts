@@ -86,6 +86,8 @@ export interface CreateOrderData {
   total: number;
   shippingAddress: ShippingAddress;
   notes?: string;
+  /** Optional initial status (defaults to "pending") */
+  status?: OrderStatus;
 }
 
 /**
