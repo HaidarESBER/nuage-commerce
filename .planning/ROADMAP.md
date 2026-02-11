@@ -44,10 +44,12 @@ See [v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md) for full details.
 **Depends on**: Previous milestone complete (v1.1)
 **Research**: Likely (new database integration + auth system)
 **Research topics**: Supabase setup with Next.js 15, database schema design, Supabase Auth with App Router, middleware for protected routes
-**Plans**: TBD
+**Plans**: 3 plans, 1 wave
 
 Plans:
-- [ ] 09-01: TBD (run /gsd:plan-phase 9 to break down)
+- [x] 09-01: Supabase Foundation (packages, client helpers, schema, seed data)
+- [ ] 09-02: Migrate data access layer to Supabase
+- [ ] 09-03: Supabase Auth & admin protection
 
 #### Phase 10: Stripe Checkout
 
@@ -71,7 +73,7 @@ Plans:
 
 Plans:
 - [x] 11-01: Email Service & Status Template (Wave 1)
-- [ ] 11-02: TBD
+- [x] 11-02: Wire Email Triggers into Order Lifecycle (Wave 2)
 
 #### Phase 12: Product Sourcing Pipeline
 
@@ -110,8 +112,8 @@ Phases execute in numeric order: 9 → 10 → 11 → 12 → 13
 | 6. Product Experience | v1.1 | 1/1 | Complete | 2026-02-09 |
 | 7. Cart & Checkout Polish | v1.1 | 1/1 | Complete | 2026-02-09 |
 | 8. Character & Delight | v1.1 | 8/8 | Complete | 2026-02-09 |
-| 9. Supabase Migration & Auth | v2.0 | 0/? | Not started | - |
+| 9. Supabase Migration & Auth | v2.0 | 1/3 | In progress | - |
 | 10. Stripe Checkout | v2.0 | 0/? | Not started | - |
-| 11. Email Notifications | v2.0 | 1/2 | In progress | - |
+| 11. Email Notifications | v2.0 | 2/2 | Complete | 2026-02-11 |
 | 12. Product Sourcing Pipeline | v2.0 | 0/? | Not started | - |
 | 13. AI Curation & Automation | v2.0 | 0/? | Not started | - |

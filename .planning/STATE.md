@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 ## Current Position
 
 Phase: 11 of 13 (Email Notifications)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-02-11 — Completed 11-01-PLAN.md
+Plan: 2 of 2 in current phase — Phase complete
+Status: Phase complete
+Last activity: 2026-02-11 — Completed 11-02-PLAN.md
 
-Progress: █████████░░░░ 67% (22/~33 plans estimated)
+Progress: ██████████░░░ 81% (25/31 plans defined)
 
 ## Milestone Summary
 
@@ -37,9 +37,9 @@ Progress: █████████░░░░ 67% (22/~33 plans estimated)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 22
-- Average duration: 9.7 min
-- Total execution time: 3.6 hours
+- Total plans completed: 25
+- Average duration: 9.4 min
+- Total execution time: 4.0 hours
 
 **By Phase:**
 
@@ -53,7 +53,8 @@ Progress: █████████░░░░ 67% (22/~33 plans estimated)
 | 06-product-experience | 1/1 | 8 min | 8 min |
 | 07-cart-checkout-polish | 1/1 | 8 min | 8 min |
 | 08-character-delight | 8/8 | 92 min | 11.5 min |
-| 11-email-notifications | 1/2 | 4 min | 4 min |
+| 09-supabase-migration-auth | 1/3 | 15 min | 15 min |
+| 11-email-notifications | 2/2 | 7 min | 3.5 min |
 
 ## Accumulated Context
 
@@ -68,7 +69,11 @@ Progress: █████████░░░░ 67% (22/~33 plans estimated)
 
 **v1.1:** 300ms transitions, scroll-once animations, hybrid SSG, spring animations, mobile gestures, guest checkout, shipping tiers, SEO structured data.
 
+**v2.0 (09-01):** @supabase/ssr for cookie-based sessions in Next.js 15, snake_case DB columns, RLS-first security (public product reads, admin writes via profiles.is_admin), service role key for server admin ops.
+
 **v2.0 (11-01):** Server-only email service wrapping Resend SDK (never throws), status-based email content switching via getStatusContent helper.
+
+**v2.0 (11-02):** Fire-and-forget email pattern for all order lifecycle triggers, previousStatus captured before update for status email context.
 
 ### Deferred Issues
 
@@ -85,5 +90,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 11-01-PLAN.md
+Stopped at: Completed 11-02-PLAN.md — Phase 11 complete
 Resume file: None
