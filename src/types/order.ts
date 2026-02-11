@@ -8,6 +8,7 @@ import { ShippingAddress } from "./checkout";
  * Order status values
  */
 export type OrderStatus =
+  | "pending_payment"
   | "pending"
   | "confirmed"
   | "processing"
@@ -19,6 +20,7 @@ export type OrderStatus =
  * Order status labels in French
  */
 export const orderStatusLabels: Record<OrderStatus, string> = {
+  pending_payment: "En attente de paiement",
   pending: "En attente",
   confirmed: "Confirmee",
   processing: "En preparation",
@@ -66,6 +68,10 @@ export interface Order {
   shippedAt?: string;
   /** Date when order was delivered */
   deliveredAt?: string;
+  /** Stripe Checkout Session ID */
+  stripeSessionId?: string;
+  /** Stripe Payment Intent ID */
+  stripePaymentIntentId?: string;
   createdAt: string;
   updatedAt: string;
 }

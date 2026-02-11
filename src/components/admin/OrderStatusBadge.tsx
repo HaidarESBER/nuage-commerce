@@ -14,6 +14,7 @@ interface OrderStatusBadgeProps {
  * - cancelled: red
  */
 const statusStyles: Record<OrderStatus, string> = {
+  pending_payment: "bg-orange-100 text-orange-800",
   pending: "bg-amber-100 text-amber-800",
   confirmed: "bg-blue-100 text-blue-800",
   processing: "bg-purple-100 text-purple-800",

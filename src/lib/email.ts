@@ -118,6 +118,7 @@ export async function sendOrderStatusUpdateEmail(
     }
 
     const statusLabels: Record<OrderStatus, string> = {
+      pending_payment: "En attente de paiement",
       pending: "En attente",
       confirmed: "Confirmée",
       processing: "En préparation",

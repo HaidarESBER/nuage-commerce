@@ -12,6 +12,7 @@ interface OrderStatusSelectProps {
 }
 
 const statusOptions: OrderStatus[] = [
+  "pending_payment",
   "pending",
   "confirmed",
   "processing",
