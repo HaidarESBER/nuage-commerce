@@ -325,97 +325,6 @@ export default function ProfilePage() {
           <div className="p-8">
             {/* Orders Tab */}
             {activeTab === "orders" && (
-              <motion.form
-                key="info"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                onSubmit={handleSaveInfo}
-                className="space-y-6 max-w-lg"
-              >
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-primary mb-2"
-                  >
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    value={user?.email || ""}
-                    disabled
-                    className="w-full px-4 py-3 rounded-lg border border-border bg-background-secondary text-muted cursor-not-allowed"
-                  />
-                  <p className="mt-1 text-xs text-muted">
-                    L&apos;email ne peut pas être modifié
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor="firstName"
-                      className="block text-sm font-medium text-primary mb-2"
-                    >
-                      Prénom
-                    </label>
-                    <input
-                      type="text"
-                      id="firstName"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      className="w-full px-4 py-3 rounded-lg border border-border bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="lastName"
-                      className="block text-sm font-medium text-primary mb-2"
-                    >
-                      Nom
-                    </label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      className="w-full px-4 py-3 rounded-lg border border-border bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="phone"
-                    className="block text-sm font-medium text-primary mb-2"
-                  >
-                    Téléphone
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
-                    placeholder="+33 6 12 34 56 78"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isSaving}
-                  className="w-full bg-accent text-background font-medium py-3 rounded-lg hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSaving ? "Enregistrement..." : "Enregistrer"}
-                </button>
-              </motion.form>
-            )}
-
-            {/* Informations Tab */}
-            {activeTab === "info" && (
               <motion.div
                 key="orders"
                 initial={{ opacity: 0, y: 20 }}
@@ -530,6 +439,97 @@ export default function ProfilePage() {
                   </div>
                 )}
               </motion.div>
+            )}
+
+            {/* Informations Tab */}
+            {activeTab === "info" && (
+              <motion.form
+                key="info"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                onSubmit={handleSaveInfo}
+                className="space-y-6 max-w-lg"
+              >
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-primary mb-2"
+                  >
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={user?.email || ""}
+                    disabled
+                    className="w-full px-4 py-3 rounded-lg border border-border bg-background-secondary text-muted cursor-not-allowed"
+                  />
+                  <p className="mt-1 text-xs text-muted">
+                    L&apos;email ne peut pas être modifié
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      htmlFor="firstName"
+                      className="block text-sm font-medium text-primary mb-2"
+                    >
+                      Prénom
+                    </label>
+                    <input
+                      type="text"
+                      id="firstName"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      className="w-full px-4 py-3 rounded-lg border border-border bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="lastName"
+                      className="block text-sm font-medium text-primary mb-2"
+                    >
+                      Nom
+                    </label>
+                    <input
+                      type="text"
+                      id="lastName"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      className="w-full px-4 py-3 rounded-lg border border-border bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="phone"
+                    className="block text-sm font-medium text-primary mb-2"
+                  >
+                    Téléphone
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                    placeholder="+33 6 12 34 56 78"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSaving}
+                  className="w-full bg-accent text-background font-medium py-3 rounded-lg hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSaving ? "Enregistrement..." : "Enregistrer"}
+                </button>
+              </motion.form>
             )}
 
             {/* Security Tab */}
