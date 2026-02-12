@@ -4,6 +4,11 @@ import { updateSession } from "@/lib/supabase/middleware";
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
+  // Stripe webhooks must bypass auth — called directly by Stripe without cookies
+  if (pathname.startsWith("/api/webhooks/")) {
+    return NextResponse.next();
+  }
+
   // Refresh Supabase auth session on every matched request
   const { supabaseResponse, supabase, user } = await updateSession(request);
 
