@@ -85,7 +85,24 @@ function sendToServer(eventType: string, eventData: any) {
 
   try {
     const sessionId = getOrCreateSessionId();
-    if (!sessionId) return;
+    if (!sessionId) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Analytics: No session ID, skipping server tracking');
+      }
+      return;
+    }
+
+    const payload = {
+      eventType,
+      eventData,
+      sessionId,
+      url: window.location.href,
+      referrer: document.referrer || undefined,
+    };
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log('📤 Sending analytics event to server:', payload);
+    }
 
     // Fire-and-forget POST request
     fetch('/api/analytics/track', {
@@ -93,18 +110,22 @@ function sendToServer(eventType: string, eventData: any) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        eventType,
-        eventData,
-        sessionId,
-        url: window.location.href,
-        referrer: document.referrer || undefined,
-      }),
+      body: JSON.stringify(payload),
       keepalive: true, // Ensures event sent even on page unload
-    }).catch(() => {
+    }).then(response => {
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ Analytics event sent, status:', response.status);
+      }
+    }).catch((error) => {
+      if (process.env.NODE_ENV === 'development') {
+        console.error('❌ Analytics event failed:', error);
+      }
       // Silent failure - tracking should never break UX
     });
   } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('❌ Analytics sendToServer error:', error);
+    }
     // Silent failure - tracking should never break UX
   }
 }

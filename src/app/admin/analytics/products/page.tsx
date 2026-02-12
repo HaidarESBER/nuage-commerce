@@ -3,7 +3,7 @@
  * Admin dashboard for product performance and search insights
  */
 
-import { getTopEvents, TopEvent } from "@/lib/analytics-server";
+import { getTopEvents, getTopWishlistedProducts, TopEvent } from "@/lib/analytics-server";
 import TopProducts from "@/components/admin/TopProducts";
 import SearchAnalytics from "@/components/admin/SearchAnalytics";
 import Link from "next/link";
@@ -19,6 +19,7 @@ export default async function ProductAnalyticsPage() {
   // Fetch top events with error handling
   let viewedProducts: TopEvent[] = [];
   let cartProducts: TopEvent[] = [];
+  let wishlistedProducts: TopEvent[] = [];
   let topSearches: TopEvent[] = [];
 
   try {
@@ -31,6 +32,12 @@ export default async function ProductAnalyticsPage() {
     cartProducts = await getTopEvents("add_to_cart", 10);
   } catch (error) {
     console.error("Failed to fetch cart products:", error);
+  }
+
+  try {
+    wishlistedProducts = await getTopWishlistedProducts(10);
+  } catch (error) {
+    console.error("Failed to fetch wishlisted products:", error);
   }
 
   try {
@@ -63,6 +70,45 @@ export default async function ProductAnalyticsPage() {
           viewedProducts={viewedProducts}
           cartProducts={cartProducts}
         />
+      </section>
+
+      {/* Wishlist Analytics */}
+      <section className="bg-white rounded-lg border border-primary/10 p-6">
+        <h3 className="text-lg font-heading font-semibold text-primary mb-4">
+          Produits Favoris
+        </h3>
+        <p className="text-sm text-primary/70 mb-6">
+          Produits les plus ajoutés aux favoris
+        </p>
+        {wishlistedProducts.length === 0 ? (
+          <p className="text-primary/60 text-center py-8">
+            Aucun produit favori pour le moment
+          </p>
+        ) : (
+          <div className="space-y-3">
+            {wishlistedProducts.map((product, index) => (
+              <div
+                key={product.key}
+                className="flex items-center justify-between p-3 bg-secondary rounded-lg"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-xl font-heading font-semibold text-primary/40 w-6">
+                    {index + 1}
+                  </span>
+                  <span className="text-primary font-medium">
+                    {product.key}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">💗</span>
+                  <span className="text-lg font-semibold text-accent">
+                    {product.count}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Search Analytics */}

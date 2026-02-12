@@ -226,3 +226,72 @@ export async function triggerDailyAggregation(date?: Date): Promise<void> {
     throw new Error(`Failed to trigger aggregation: ${error.message}`);
   }
 }
+
+/**
+ * Get product wishlist counts (how many times each product was favorited)
+ * @param limit - Maximum number of products to return (default: 10)
+ * @returns Array of products with wishlist counts
+ */
+export async function getTopWishlistedProducts(limit: number = 10): Promise<TopEvent[]> {
+  const supabase = createAdminClient();
+
+  // Count wishlist_add events per product
+  const { data, error } = await supabase
+    .from('analytics_events')
+    .select('event_data')
+    .eq('event_type', 'wishlist_add')
+    .limit(10000); // Limit to prevent memory issues
+
+  if (error) {
+    console.error('getTopWishlistedProducts error:', error.message);
+    throw new Error(`Failed to fetch wishlist data: ${error.message}`);
+  }
+
+  if (!data || data.length === 0) {
+    return [];
+  }
+
+  // Aggregate counts by productId
+  const counts = new Map<string, number>();
+  for (const row of data) {
+    const productId = row.event_data?.productId;
+    if (productId) {
+      counts.set(productId, (counts.get(productId) || 0) + 1);
+    }
+  }
+
+  // Convert to array and sort by count descending
+  const topProducts = Array.from(counts.entries())
+    .map(([key, count]) => ({ key, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, limit);
+
+  return topProducts;
+}
+
+/**
+ * Get total unique visitors across all time
+ * Note: A "unique visitor" is tracked by unique session_id values
+ * @returns Number of unique visitor sessions
+ */
+export async function getUniqueVisitorsCount(): Promise<number> {
+  const supabase = createAdminClient();
+
+  // Count distinct session_ids
+  const { data, error } = await supabase
+    .from('analytics_events')
+    .select('session_id', { count: 'exact', head: false });
+
+  if (error) {
+    console.error('getUniqueVisitorsCount error:', error.message);
+    return 0;
+  }
+
+  if (!data) {
+    return 0;
+  }
+
+  // Count unique session IDs
+  const uniqueSessions = new Set(data.map(row => row.session_id));
+  return uniqueSessions.size;
+}
