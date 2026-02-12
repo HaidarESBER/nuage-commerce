@@ -205,11 +205,12 @@ Plans:
 **Depends on**: Phase 22
 **Research**: Likely (customer analytics algorithms)
 **Research topics**: Segmentation strategies, cohort analysis methods, LTV calculation approaches, RFM analysis
-**Plans**: TBD
+**Plans**: 2 plans, 2 waves
 
 Plans:
-- [ ] 23-01: TBD (run /gsd:plan-phase 23 to break down)
+- [ ] 23-01: Customer Segmentation & RFM Analysis (Wave 1)
+- [ ] 23-02: Cohort Analysis & LTV Tracking (Wave 2)
 | 20. Analytics Foundation | v5.0 | 2/2 | Complete | 2026-02-12 |
 | 21. Admin Dashboard | v5.0 | 3/3 | Complete | 2026-02-12 |
 | 22. Sales Analytics | v5.0 | 3/3 | Complete | 2026-02-12 |
-| 23. Customer Intelligence | v5.0 | 0/? | Not started | - |
+| 23. Customer Intelligence | v5.0 | 0/2 | Planned | - |
