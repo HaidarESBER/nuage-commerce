@@ -13,7 +13,7 @@ import { StockIndicator } from "@/components/product/StockIndicator";
 import { ImageZoom } from "@/components/product/ImageZoom";
 import { WishlistButton } from "@/components/product/WishlistButton";
 import { Product, formatPrice, categoryLabels } from "@/types/product";
-import { getProductReviews, getProductRatingStats } from "@/data/reviews";
+import { Review, ProductRatingStats } from "@/data/reviews";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
 import { getRelatedProducts } from "@/lib/recommendations";
 import { UrgencyIndicators } from "@/components/product/UrgencyIndicators";
@@ -21,11 +21,13 @@ import { UrgencyIndicators } from "@/components/product/UrgencyIndicators";
 interface ProductDetailClientProps {
   product: Product;
   allProducts: Product[];
+  reviews: Review[];
+  stats: ProductRatingStats | null;
 }
 
 type TabType = "description" | "reviews" | "shipping";
 
-export function ProductDetailClient({ product, allProducts }: ProductDetailClientProps) {
+export function ProductDetailClient({ product, allProducts, reviews, stats }: ProductDetailClientProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isZoomOpen, setIsZoomOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabType>("description");
@@ -36,10 +38,6 @@ export function ProductDetailClient({ product, allProducts }: ProductDetailClien
   const discountPercentage = hasDiscount
     ? Math.round(((product.compareAtPrice! - product.price) / product.compareAtPrice!) * 100)
     : 0;
-
-  // Get reviews data
-  const reviews = getProductReviews(product.id);
-  const stats = getProductRatingStats(product.id);
 
   // Get related products
   const relatedProducts = getRelatedProducts(product, allProducts);

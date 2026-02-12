@@ -4,7 +4,7 @@ import {
   getProductBySlug,
   getAllProductSlugs,
 } from "@/lib/products";
-import { getProductRatingStats } from "@/data/reviews";
+import { getProductReviews, getProductRatingStats } from "@/lib/reviews";
 import {
   generateProductSchema,
   generateBreadcrumbSchema,
@@ -92,9 +92,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const { getAllProducts } = await import("@/lib/products");
   const allProducts = await getAllProducts();
 
+  // Fetch reviews data from database
+  const reviews = await getProductReviews(product.id);
+  const stats = await getProductRatingStats(product.id);
+
   // Generate structured data
-  const ratingStats = getProductRatingStats(product.id);
-  const productSchema = generateProductSchema(product, ratingStats || undefined);
+  const productSchema = generateProductSchema(product, stats || undefined);
 
   // Generate breadcrumb schema
   const breadcrumbSchema = generateBreadcrumbSchema([
@@ -115,7 +118,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
-      <ProductDetailClient product={product} allProducts={allProducts} />
+      <ProductDetailClient
+        product={product}
+        allProducts={allProducts}
+        reviews={reviews}
+        stats={stats}
+      />
     </>
   );
 }

@@ -1,10 +1,7 @@
 export { ProductCard } from "./ProductCard";
 export { ProductGrid } from "./ProductGrid";
 export { AddToCartButton } from "./AddToCartButton";
-export { ProductSearch, useProductSearch } from "./ProductSearch";
-export { ProductFilters, useProductFilters } from "./ProductFilters";
-export { ProductSort, useProductSort } from "./ProductSort";
+export { ProductSearch } from "./ProductSearch";
+export { ProductFilters } from "./ProductFilters";
 export { QuickViewModal } from "./QuickViewModal";
 export { ProductHero } from "./ProductHero";
-export { ViewToggle } from "./ViewToggle";
-export { FilterChips } from "./FilterChips";
