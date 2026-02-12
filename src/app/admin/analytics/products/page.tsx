@@ -3,7 +3,7 @@
  * Admin dashboard for product performance and search insights
  */
 
-import { getTopEvents } from "@/lib/analytics-server";
+import { getTopEvents, TopEvent } from "@/lib/analytics-server";
 import TopProducts from "@/components/admin/TopProducts";
 import SearchAnalytics from "@/components/admin/SearchAnalytics";
 import Link from "next/link";
@@ -17,9 +17,9 @@ export const metadata = {
 
 export default async function ProductAnalyticsPage() {
   // Fetch top events with error handling
-  let viewedProducts = [];
-  let cartProducts = [];
-  let topSearches = [];
+  let viewedProducts: TopEvent[] = [];
+  let cartProducts: TopEvent[] = [];
+  let topSearches: TopEvent[] = [];
 
   try {
     viewedProducts = await getTopEvents("product_view", 10);
