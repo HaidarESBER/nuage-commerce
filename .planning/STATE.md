@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 ## Current Position
 
 Phase: 18 of 19 (Wishlist & Recommendations)
-Plan: 2 of 3 in current phase (COMPLETE)
-Status: Complete
-Last activity: 2026-02-12 — Completed 18-02-PLAN.md (Browse History Tracking)
+Plan: 1 of 3 in current phase (COMPLETE)
+Status: In progress
+Last activity: 2026-02-12 — Completed 18-01-PLAN.md (Wishlist Feature)
 
-Progress: ███░░░░░░░ 12% (4/34 plans in v4.0)
+Progress: ███░░░░░░░ 15% (5/34 plans in v4.0)
 
 ## Milestone Summary
 
@@ -49,9 +49,9 @@ Progress: ███░░░░░░░ 12% (4/34 plans in v4.0)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 37
-- Average duration: 9.7 min
-- Total execution time: 6.0 hours
+- Total plans completed: 40
+- Average duration: 10.3 min
+- Total execution time: 6.9 hours
 
 **By Phase:**
 
@@ -74,7 +74,7 @@ Progress: ███░░░░░░░ 12% (4/34 plans in v4.0)
 | 15-smart-search-filtering | 2/3 | 40 min | 20 min |
 | 16-social-proof-reviews | 2/2 | 20 min | 10 min |
 | 17-customer-accounts-profiles | 1/1 | 45 min | 45 min |
-| 18-wishlist-recommendations | 2/3 | 25 min | 12.5 min |
+| 18-wishlist-recommendations | 1/3 | 25 min | 25 min |
 
 ## Accumulated Context
 
@@ -127,6 +127,8 @@ Progress: ███░░░░░░░ 12% (4/34 plans in v4.0)
 
 **v4.0 (17-01):** JSONB columns for profiles (saved_addresses array, preferences object), UUID for address IDs via crypto.randomUUID(), server-side default address enforcement (only one default), password validation with 12+ chars + complexity requirements, modal-based address CRUD UI, French postal code validation (5 digits).
 
+**v4.0 (18-01):** Dual-mode wishlist (API sync for authenticated users, localStorage fallback for guests), optimistic UI updates with automatic error rollback, RLS policies enforce user-only access to wishlist items, admins can view all wishlists for analytics.
+
 **v4.0 (18-02):** browse_history table with auto-cleanup trigger (90-day retention), RLS policies for user privacy and admin analytics, fire-and-forget tracking pattern via ProductViewTracker component, 30-minute deduplication window, opt-out privacy model with track_browsing preference, authenticated-users-only tracking.
 
 ### Deferred Issues
@@ -143,6 +145,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-12
-Stopped at: Completed 18-02-PLAN.md (Browse History Tracking)
+Last session: 2026-02-12T13:18:40Z
+Stopped at: Completed 18-01-PLAN.md (Wishlist Feature)
 Resume file: None
