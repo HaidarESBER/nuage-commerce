@@ -42,7 +42,7 @@ export async function getRecommendations(
 
   // For product-specific recommendations (related products)
   if (productId) {
-    return getRelatedProducts(productId, userId, limit);
+    return getRelatedProductsFromDB(productId, userId, limit);
   }
 
   // For personalized recommendations
@@ -50,9 +50,73 @@ export async function getRecommendations(
 }
 
 /**
- * Get related products based on same category
+ * Get related products based on intelligent recommendation logic (client-side)
+ *
+ * Priority:
+ * 1. Same category products (exclude current)
+ * 2. Similar price range (±30%)
+ * 3. Featured products as fallback
+ *
+ * Returns randomized recommendations
  */
-async function getRelatedProducts(
+export function getRelatedProducts(
+  currentProduct: Product,
+  allProducts: Product[],
+  count: number = 6
+): Product[] {
+  // Filter out current product and out-of-stock items
+  const availableProducts = allProducts.filter(
+    (p) => p.id !== currentProduct.id && p.inStock
+  );
+
+  // Primary: Same category
+  const sameCategory = availableProducts.filter(
+    (p) => p.category === currentProduct.category
+  );
+
+  // Secondary: Similar price range (±30%)
+  const priceMin = currentProduct.price * 0.7;
+  const priceMax = currentProduct.price * 1.3;
+  const similarPrice = availableProducts.filter(
+    (p) => p.price >= priceMin && p.price <= priceMax
+  );
+
+  // Tertiary: Featured products
+  const featured = availableProducts.filter((p) => p.featured);
+
+  // Build recommendation pool with priority
+  let recommendations: Product[] = [];
+
+  // Add same category first
+  if (sameCategory.length > 0) {
+    recommendations = [...sameCategory];
+  }
+
+  // Add similar price if we need more
+  if (recommendations.length < count) {
+    const uniqueSimilarPrice = similarPrice.filter(
+      (p) => !recommendations.find((r) => r.id === p.id)
+    );
+    recommendations = [...recommendations, ...uniqueSimilarPrice];
+  }
+
+  // Add featured as fallback
+  if (recommendations.length < count) {
+    const uniqueFeatured = featured.filter(
+      (p) => !recommendations.find((r) => r.id === p.id)
+    );
+    recommendations = [...recommendations, ...uniqueFeatured];
+  }
+
+  // Shuffle and return requested count
+  const shuffled = recommendations.sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, count);
+}
+
+/**
+ * Get related products based on same category (server-side with database)
+ */
+export async function getRelatedProductsFromDB(
   productId: string,
   userId: string,
   limit: number

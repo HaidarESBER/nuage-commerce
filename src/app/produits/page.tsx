@@ -4,6 +4,7 @@ import { Container } from "@/components/ui";
 import { getAllProducts } from "@/lib/products";
 import { indexProducts } from "@/lib/search/flexsearch";
 import { buildSearchQuery } from "@/lib/search";
+import { CategoryTabs } from "@/components/product/CategoryTabs";
 import { ProductSearch } from "@/components/product/ProductSearch";
 import { ProductFilters } from "@/components/product/ProductFilters";
 import { ProductGrid } from "@/components/product/ProductGrid";
@@ -53,6 +54,9 @@ export default async function ProduitsPage(props: ProduitsPageProps) {
     <main className="py-12 lg:py-16">
       <Container size="lg">
         <div className="space-y-8">
+          {/* Category Tabs */}
+          <CategoryTabs activeCategory={category} />
+
           {/* Search */}
           <Suspense fallback={<SearchSkeleton />}>
             <ProductSearch defaultValue={query} />
