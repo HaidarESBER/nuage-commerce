@@ -1,12 +1,35 @@
 import Link from "next/link";
-import { getProductStats } from "@/lib/products";
-import { getOrderStats } from "@/lib/orders";
+import { getMetricsSummary, getRealtimeEvents } from "@/lib/analytics-server";
+import DashboardKPIs from "@/components/admin/DashboardKPIs";
+import RealtimeActivity from "@/components/admin/RealtimeActivity";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-  const productStats = await getProductStats();
-  const orderStats = await getOrderStats();
+  // Fetch analytics data with error handling
+  let metricsSummary;
+  let realtimeEvents;
+
+  try {
+    metricsSummary = await getMetricsSummary(30); // last 30 days
+  } catch (error) {
+    console.error("Failed to fetch metrics summary:", error);
+    metricsSummary = {
+      totalSessions: 0,
+      totalUsers: 0,
+      totalRevenue: 0,
+      totalPurchases: 0,
+      avgRevenuePerUser: 0,
+      conversionRate: 0,
+    };
+  }
+
+  try {
+    realtimeEvents = await getRealtimeEvents(10); // last 10 events
+  } catch (error) {
+    console.error("Failed to fetch realtime events:", error);
+    realtimeEvents = [];
+  }
 
   return (
     <div className="space-y-8">
@@ -20,44 +43,20 @@ export default async function AdminDashboard() {
         </p>
       </div>
 
-      {/* Product Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard
-          title="Total Produits"
-          value={productStats.total}
-          description="Produits dans le catalogue"
-        />
-        <StatCard
-          title="Produits Vedettes"
-          value={productStats.featured}
-          description="Mis en avant sur le site"
-        />
-        <StatCard
-          title="Rupture de Stock"
-          value={productStats.outOfStock}
-          description={productStats.outOfStock > 0 ? "A reapprovisionner" : "Tout est en stock"}
-          highlight={productStats.outOfStock > 0}
-        />
+      {/* KPIs */}
+      <div>
+        <h3 className="text-lg font-heading font-semibold text-primary mb-4">
+          Métriques Clés (30 derniers jours)
+        </h3>
+        <DashboardKPIs metricsSummary={metricsSummary} />
       </div>
 
-      {/* Order Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard
-          title="Total Commandes"
-          value={orderStats.total}
-          description="Commandes recues"
-        />
-        <StatCard
-          title="En attente"
-          value={orderStats.pending}
-          description={orderStats.pending > 0 ? "A traiter" : "Aucune en attente"}
-          highlight={orderStats.pending > 0}
-        />
-        <StatCard
-          title="En cours"
-          value={orderStats.processing}
-          description="En preparation"
-        />
+      {/* Real-time Activity */}
+      <div>
+        <h3 className="text-lg font-heading font-semibold text-primary mb-4">
+          Activité en Temps Réel
+        </h3>
+        <RealtimeActivity events={realtimeEvents} />
       </div>
 
       {/* Quick Actions */}
@@ -86,32 +85,6 @@ export default async function AdminDashboard() {
           </Link>
         </div>
       </div>
-    </div>
-  );
-}
-
-function StatCard({
-  title,
-  value,
-  description,
-  highlight = false,
-}: {
-  title: string;
-  value: number;
-  description: string;
-  highlight?: boolean;
-}) {
-  return (
-    <div className="bg-secondary rounded-lg p-6 border border-primary/10">
-      <h3 className="text-sm font-medium text-primary/70">{title}</h3>
-      <p
-        className={`mt-2 text-3xl font-heading font-semibold ${
-          highlight ? "text-accent" : "text-primary"
-        }`}
-      >
-        {value}
-      </p>
-      <p className="mt-1 text-sm text-primary/60">{description}</p>
     </div>
   );
 }
