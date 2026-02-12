@@ -10,6 +10,7 @@ import { ProductSort, useProductSort } from "@/components/product/ProductSort";
 import { ViewToggle } from "@/components/product/ViewToggle";
 import { FilterChips } from "@/components/product/FilterChips";
 import { BottomSheet } from "@/components/mobile/BottomSheet";
+import { PullToRefresh } from "@/components/mobile/PullToRefresh";
 import { Product, ProductCategory, categoryLabels } from "@/types/product";
 import { FracturedCategories } from "@/components/home/FracturedCategories";
 
@@ -168,8 +169,13 @@ export function ProduitsClientEnhanced({
     (filters.inStockOnly ? 1 : 0) +
     (filters.priceRange[0] !== priceRangeLimits.min || filters.priceRange[1] !== priceRangeLimits.max ? 1 : 0);
 
+  const handleRefresh = async () => {
+    router.refresh();
+  };
+
   return (
-    <div className="space-y-6">
+    <PullToRefresh onRefresh={handleRefresh}>
+      <div className="space-y-6">
       {/* Mobile Category Navigation */}
       <motion.nav
         initial={{ opacity: 0 }}
@@ -453,6 +459,7 @@ export function ProduitsClientEnhanced({
           />
         </BottomSheet>
       </div>
-    </div>
+      </div>
+    </PullToRefresh>
   );
 }
