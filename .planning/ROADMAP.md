@@ -160,10 +160,12 @@ Plans:
 **Depends on**: Phase 17 (user accounts for personalization)
 **Research**: Likely (recommendation algorithms and approaches)
 **Research topics**: Recommendation engines (collaborative filtering vs content-based), AI/ML for recommendations, personalization strategies, privacy considerations
-**Plans**: TBD
+**Plans**: 3 plans, 2 waves
 
 Plans:
-- [ ] 18-01: TBD (run /gsd:plan-phase 18 to break down)
+- [x] 18-01: Wishlist Feature (Wave 1) -- 2026-02-12
+- [x] 18-02: Browse Tracking Foundation (Wave 1) -- 2026-02-12
+- [x] 18-03: Recommendation Engine & UI (Wave 2) -- 2026-02-12
 
 #### Phase 19: Mobile UX Excellence
 
@@ -200,5 +202,5 @@ Phases execute in numeric order: 9 → 10 → 11 → 12 → 13 → 14 → 15 →
 | 15. Smart Search & Filtering | v4.0 | 3/3 | Complete | 2026-02-12 |
 | 16. Social Proof & Reviews | v4.0 | 3/3 | Complete | 2026-02-12 |
 | 17. Customer Accounts & Profiles | v4.0 | 1/1 | Complete | 2026-02-12 |
-| 18. Wishlist & Recommendations | v4.0 | 0/? | Not started | - |
+| 18. Wishlist & Recommendations | v4.0 | 3/3 | Complete | 2026-02-12 |
 | 19. Mobile UX Excellence | v4.0 | 0/? | Not started | - |
