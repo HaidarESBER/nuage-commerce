@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Container } from "@/components/ui";
 import { TrustBadges } from "@/components/ui/TrustBadges";
 import { ProductCard } from "@/components/product";
 import { FracturedCategories } from "@/components/home/FracturedCategories";
+import { RecommendationsSection } from "@/components/product/RecommendationsSection";
 import { Product } from "@/types/product";
 
 interface HomeClientProps {
@@ -14,122 +15,50 @@ interface HomeClientProps {
 }
 
 export function HomeClient({ featuredProducts }: HomeClientProps) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [videoEnded, setVideoEnded] = useState(false);
-  const heroVideoRef = useRef<HTMLVideoElement>(null);
+  const [showcaseVideoFade, setShowcaseVideoFade] = useState(1);
+  const showcaseVideoRef = useRef<HTMLVideoElement>(null);
 
+  // Handle showcase video fade effect on loop
   useEffect(() => {
-    // Hide overflow on body to prevent scrolling and content visibility during loading
-    document.body.style.overflow = 'hidden';
+    const video = showcaseVideoRef.current;
+    if (!video) return;
 
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, []);
+    const handleTimeUpdate = () => {
+      const duration = video.duration;
+      const currentTime = video.currentTime;
 
-  useEffect(() => {
-    // Fade loading video to black at 2.5 seconds
-    const fadeTimer = setTimeout(() => {
-      setVideoEnded(true);
-    }, 2500);
-
-    // Remove loading screen and start hero video at 3 seconds
-    const endTimer = setTimeout(() => {
-      setIsLoading(false);
-      // Restore body overflow
-      document.body.style.overflow = '';
-
-      // On mobile, scroll down a bit after loading completes
-      if (window.innerWidth < 768) {
-        setTimeout(() => {
-          window.scrollTo({
-            top: 50,
-            behavior: 'smooth'
-          });
-        }, 500);
+      // Fade out in the last 0.3 seconds
+      if (duration - currentTime < 0.3) {
+        const fadeProgress = (duration - currentTime) / 0.3;
+        setShowcaseVideoFade(fadeProgress);
       }
-
-      // Start playing the hero video after loading screen ends
-      if (heroVideoRef.current) {
-        heroVideoRef.current.play().catch(err => {
-          console.log("Hero video autoplay prevented:", err);
-        });
+      // Fade in during first 0.3 seconds
+      else if (currentTime < 0.3) {
+        const fadeProgress = currentTime / 0.3;
+        setShowcaseVideoFade(fadeProgress);
       }
-    }, 3000);
-
-    return () => {
-      clearTimeout(fadeTimer);
-      clearTimeout(endTimer);
+      // Full opacity in the middle
+      else {
+        setShowcaseVideoFade(1);
+      }
     };
+
+    video.addEventListener('timeupdate', handleTimeUpdate);
+    return () => video.removeEventListener('timeupdate', handleTimeUpdate);
   }, []);
 
   return (
     <div className="relative">
-      {/* Loading Scréén - Shows every time homepage is visited */}
-      <AnimatePresence>
-        {isLoading && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className="fixed inset-0 z-[9999] bg-white md:bg-black flex items-center justify-center"
-          >
-            <motion.video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="w-[85%] h-[50vh] md:w-full md:h-full object-cover scale-[1.2] md:scale-[0.9]"
-              animate={{ opacity: videoEnded ? 0 : 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <source src="/nuage-loading-video (1).mp4" type="video/mp4" />
-            </motion.video>
-
-            {/* Loading text overlay */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-              className="absolute bottom-12 left-1/2 -translate-x-1/2"
-            >
-              <div className="flex flex-col items-center gap-4">
-                <div className="flex gap-1">
-                  <motion.div
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 1, repeat: Infinity, delay: 0 }}
-                    className="w-2 h-2 bg-primary md:bg-white rounded-full"
-                  />
-                  <motion.div
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
-                    className="w-2 h-2 bg-primary md:bg-white rounded-full"
-                  />
-                  <motion.div
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
-                    className="w-2 h-2 bg-primary md:bg-white rounded-full"
-                  />
-                </div>
-                <p className="text-primary md:text-white/80 text-sm tracking-wider">CHARGEMENT...</p>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Main Content - Hidden during loading */}
-      <div className={`transition-opacity duration-300 ${isLoading ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
         {/* Hero Section - Cinematic Video Background */}
         <section className="relative h-screen overflow-hidden -mt-16">
         {/* Video Background */}
         <div className="absolute inset-0 w-full h-full">
           <video
-            ref={heroVideoRef}
+            autoPlay
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
             className="absolute inset-0 w-full h-full object-cover"
           >
             <source src="/nuage.mp4" type="video/mp4" />
@@ -142,13 +71,13 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
         {/* Content Container */}
         <Container size="lg" className="relative h-full">
           <div className="flex flex-col items-center justify-center text-center h-full px-4">
-            {/* Brand tagline - synced with smoke clearing */}
+            {/* Brand tagline */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
                 duration: 1.4,
-                delay: 3.2,
+                delay: 0.5,
                 ease: [0.16, 1, 0.3, 1]
               }}
               className="font-heading text-4xl md:text-5xl lg:text-6xl text-white mb-6"
@@ -174,7 +103,7 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 4, ease: "easeOut" }}
+              transition={{ duration: 1, delay: 1, ease: "easeOut" }}
               className="text-base md:text-lg text-white/90 max-w-xl mb-8"
               style={{
                 textShadow: '0 2px 20px rgba(0,0,0,0.8), 0 1px 5px rgba(0,0,0,0.6)'
@@ -187,7 +116,7 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 4.5, ease: "easeOut" }}
+              transition={{ duration: 0.8, delay: 1.5, ease: "easeOut" }}
             >
               <Link
                 href="/produits"
@@ -214,7 +143,7 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 5.5 }}
+              transition={{ duration: 1, delay: 2.5 }}
               className="absolute bottom-8 left-1/2 -translate-x-1/2"
             >
               <motion.div
@@ -280,13 +209,15 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
             <div className="flex justify-center">
               <div className="relative">
                 <video
+                  ref={showcaseVideoRef}
                   autoPlay
                   muted
                   loop
                   playsInline
                   className="h-28 md:h-36 w-auto rounded-xl shadow-2xl ring-2 ring-primary/20 group-hover:ring-accent/40 transition-all"
+                  style={{ opacity: showcaseVideoFade, transition: 'opacity 0.3s ease-in-out' }}
                 >
-                  <source src="/nuage-loading-video (1).mp4" type="video/mp4" />
+                  <source src="/showcase.mp4" type="video/mp4" />
                 </video>
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent rounded-xl pointer-events-none" />
               </div>
@@ -348,6 +279,13 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
         </Container>
       </section>
 
+      {/* Recommendations Section */}
+      <RecommendationsSection
+        title="Recommandé pour vous"
+        subtitle="Sélection personnalisée selon vos goûts"
+        limit={6}
+      />
+
       {/* Fractured Glass Categories Section */}
       <FracturedCategories />
 
@@ -357,7 +295,6 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
           <TrustBadges />
         </Container>
       </section>
-      </div>
     </div>
   );
 }

@@ -15,7 +15,7 @@ import { WishlistButton } from "@/components/product/WishlistButton";
 import { Product, formatPrice, categoryLabels } from "@/types/product";
 import { Review, ProductRatingStats } from "@/data/reviews";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
-import { getRelatedProducts } from "@/lib/recommendations";
+import { RecommendationsSection } from "@/components/product/RecommendationsSection";
 import { UrgencyIndicators } from "@/components/product/UrgencyIndicators";
 import { addToRecentlyViewed } from "@/lib/social-proof";
 import { RecentlyViewed } from "@/components/product/RecentlyViewed";
@@ -40,9 +40,6 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
   const discountPercentage = hasDiscount
     ? Math.round(((product.compareAtPrice! - product.price) / product.compareAtPrice!) * 100)
     : 0;
-
-  // Get related products
-  const relatedProducts = getRelatedProducts(product, allProducts);
 
   // Track product view
   useEffect(() => {
@@ -452,8 +449,12 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
         </div>
       </Container>
 
-      {/* Related Products Section */}
-      <RelatedProducts products={relatedProducts} />
+      {/* Related Products Section - Powered by recommendations API */}
+      <RecommendationsSection
+        title="Vous aimerez aussi"
+        productId={product.id}
+        limit={4}
+      />
 
       {/* Recently viewed products */}
       <RecentlyViewed
