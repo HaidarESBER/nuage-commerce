@@ -416,7 +416,7 @@ export async function getRevenueByCategory(): Promise<CategoryRevenue[]> {
   const categoryMap = new Map<string, { revenue: number; orderCount: number }>();
 
   for (const item of orderItems) {
-    const category = item.product?.category;
+    const category = (item as any).product?.category;
     if (!category) continue;
 
     const itemRevenue = item.price * item.quantity;
@@ -476,7 +476,7 @@ export async function getTopSellingProducts(limit: number = 10): Promise<TopSell
 
   for (const item of orderItems) {
     const productId = item.product_id;
-    const product = item.product;
+    const product = (item as any).product;
     if (!product || !productId) continue;
 
     const itemRevenue = item.price * item.quantity;
@@ -762,4 +762,311 @@ export async function getRestockRecommendations(targetDays: number = 60): Promis
     .sort((a, b) => a.daysRemaining - b.daysRemaining); // Most urgent first
 
   return recommendations;
+}
+
+// =============================================================================
+// Order Intelligence Analytics (Phase 22-03)
+// =============================================================================
+
+export interface TimePattern {
+  dayOfWeek: number; // 0-6, Sunday = 0
+  hour: number; // 0-23
+  orderCount: number;
+}
+
+export interface PeakTimes {
+  peakDay: string; // French day name
+  peakHour: number;
+  peakDayCount: number;
+  peakHourCount: number;
+}
+
+export interface ShippingDistribution {
+  shippingTier: string;
+  label: string;
+  orderCount: number;
+  percentage: number;
+  totalRevenue: number; // in cents
+}
+
+export interface StatusFunnelStep {
+  status: string;
+  label: string;
+  orderCount: number;
+  percentage: number;
+  dropOffRate?: number;
+}
+
+/**
+ * Convert day of week number to French day name
+ */
+function getDayNameFr(dayOfWeek: number): string {
+  const days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+  return days[dayOfWeek] || 'Inconnu';
+}
+
+/**
+ * Get order volume by day of week and hour (time heatmap)
+ * @param days - Number of days to analyze (default: 30)
+ * @returns Object with patterns array and peak times
+ */
+export async function getOrdersByTimePattern(days: number = 30): Promise<{
+  patterns: TimePattern[];
+  peakTimes: PeakTimes;
+}> {
+  const supabase = createAdminClient();
+
+  // Calculate date range
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - days);
+
+  // Fetch orders from last N days
+  const { data: orders, error } = await supabase
+    .from('orders')
+    .select('created_at')
+    .gte('created_at', startDate.toISOString())
+    .lte('created_at', endDate.toISOString());
+
+  if (error) {
+    console.error('getOrdersByTimePattern error:', error.message);
+    throw new Error(`Failed to fetch orders: ${error.message}`);
+  }
+
+  if (!orders || orders.length === 0) {
+    // Return empty structure with all zero counts
+    const patterns: TimePattern[] = [];
+    for (let day = 0; day < 7; day++) {
+      for (let hour = 0; hour < 24; hour++) {
+        patterns.push({ dayOfWeek: day, hour, orderCount: 0 });
+      }
+    }
+    return {
+      patterns,
+      peakTimes: {
+        peakDay: 'Aucun',
+        peakHour: 0,
+        peakDayCount: 0,
+        peakHourCount: 0,
+      },
+    };
+  }
+
+  // Group by dayOfWeek and hour
+  const countMap = new Map<string, number>();
+  const dayCountMap = new Map<number, number>();
+  const hourCountMap = new Map<number, number>();
+
+  for (const order of orders) {
+    const date = new Date(order.created_at);
+    const dayOfWeek = date.getDay(); // 0-6
+    const hour = date.getHours(); // 0-23
+
+    // Count for heatmap
+    const key = `${dayOfWeek}-${hour}`;
+    countMap.set(key, (countMap.get(key) || 0) + 1);
+
+    // Count by day
+    dayCountMap.set(dayOfWeek, (dayCountMap.get(dayOfWeek) || 0) + 1);
+
+    // Count by hour
+    hourCountMap.set(hour, (hourCountMap.get(hour) || 0) + 1);
+  }
+
+  // Build complete patterns array (all day/hour combinations)
+  const patterns: TimePattern[] = [];
+  for (let day = 0; day < 7; day++) {
+    for (let hour = 0; hour < 24; hour++) {
+      const key = `${day}-${hour}`;
+      patterns.push({
+        dayOfWeek: day,
+        hour,
+        orderCount: countMap.get(key) || 0,
+      });
+    }
+  }
+
+  // Find peak times
+  let peakDay = 0;
+  let peakDayCount = 0;
+  dayCountMap.forEach((count, day) => {
+    if (count > peakDayCount) {
+      peakDayCount = count;
+      peakDay = day;
+    }
+  });
+
+  let peakHour = 0;
+  let peakHourCount = 0;
+  hourCountMap.forEach((count, hour) => {
+    if (count > peakHourCount) {
+      peakHourCount = count;
+      peakHour = hour;
+    }
+  });
+
+  return {
+    patterns,
+    peakTimes: {
+      peakDay: getDayNameFr(peakDay),
+      peakHour,
+      peakDayCount,
+      peakHourCount,
+    },
+  };
+}
+
+/**
+ * Get shipping method distribution
+ * @returns Array of shipping tiers with counts and percentages
+ */
+export async function getShippingDistribution(): Promise<ShippingDistribution[]> {
+  const supabase = createAdminClient();
+
+  // Fetch all orders with shipping info
+  const { data: orders, error } = await supabase
+    .from('orders')
+    .select('shipping');
+
+  if (error) {
+    console.error('getShippingDistribution error:', error.message);
+    throw new Error(`Failed to fetch orders: ${error.message}`);
+  }
+
+  if (!orders || orders.length === 0) {
+    return [];
+  }
+
+  // Group by shipping tier
+  const tiers = {
+    free: { count: 0, revenue: 0 },
+    standard: { count: 0, revenue: 0 },
+    express: { count: 0, revenue: 0 },
+  };
+
+  for (const order of orders) {
+    const shipping = order.shipping || 0;
+
+    if (shipping === 0) {
+      tiers.free.count++;
+      tiers.free.revenue += 0;
+    } else if (shipping < 1000) {
+      tiers.standard.count++;
+      tiers.standard.revenue += shipping;
+    } else {
+      tiers.express.count++;
+      tiers.express.revenue += shipping;
+    }
+  }
+
+  const totalOrders = orders.length;
+
+  const distribution: ShippingDistribution[] = [
+    {
+      shippingTier: 'free',
+      label: 'Livraison Gratuite',
+      orderCount: tiers.free.count,
+      percentage: totalOrders > 0 ? (tiers.free.count / totalOrders) * 100 : 0,
+      totalRevenue: tiers.free.revenue,
+    },
+    {
+      shippingTier: 'standard',
+      label: 'Livraison Standard',
+      orderCount: tiers.standard.count,
+      percentage: totalOrders > 0 ? (tiers.standard.count / totalOrders) * 100 : 0,
+      totalRevenue: tiers.standard.revenue,
+    },
+    {
+      shippingTier: 'express',
+      label: 'Livraison Express',
+      orderCount: tiers.express.count,
+      percentage: totalOrders > 0 ? (tiers.express.count / totalOrders) * 100 : 0,
+      totalRevenue: tiers.express.revenue,
+    },
+  ];
+
+  // Sort by orderCount descending
+  return distribution.sort((a, b) => b.orderCount - a.orderCount);
+}
+
+/**
+ * Get order status funnel with conversion rates
+ * @returns Array of funnel steps with counts and drop-off rates
+ */
+export async function getOrderStatusFunnel(): Promise<StatusFunnelStep[]> {
+  const supabase = createAdminClient();
+
+  // Fetch all orders grouped by status
+  const { data: orders, error } = await supabase
+    .from('orders')
+    .select('status');
+
+  if (error) {
+    console.error('getOrderStatusFunnel error:', error.message);
+    throw new Error(`Failed to fetch orders: ${error.message}`);
+  }
+
+  if (!orders || orders.length === 0) {
+    return [];
+  }
+
+  // Count by status
+  const statusCounts = new Map<string, number>();
+  for (const order of orders) {
+    const status = order.status;
+    statusCounts.set(status, (statusCounts.get(status) || 0) + 1);
+  }
+
+  const totalOrders = orders.length;
+
+  // French status labels
+  const statusLabels: Record<string, string> = {
+    pending_payment: 'En attente de paiement',
+    pending: 'En attente',
+    confirmed: 'Confirmée',
+    processing: 'En préparation',
+    shipped: 'Expédiée',
+    delivered: 'Livrée',
+    cancelled: 'Annulée',
+  };
+
+  // Define funnel in lifecycle order
+  const funnelOrder = [
+    'pending_payment',
+    'pending',
+    'confirmed',
+    'processing',
+    'shipped',
+    'delivered',
+    'cancelled',
+  ];
+
+  const funnel: StatusFunnelStep[] = [];
+  let previousCount = totalOrders;
+
+  for (const status of funnelOrder) {
+    const count = statusCounts.get(status) || 0;
+    const percentage = totalOrders > 0 ? (count / totalOrders) * 100 : 0;
+
+    // Calculate drop-off rate from previous step
+    let dropOffRate: number | undefined;
+    if (status !== 'pending_payment' && status !== 'cancelled') {
+      dropOffRate = previousCount > 0 ? ((previousCount - count) / previousCount) * 100 : 0;
+    }
+
+    funnel.push({
+      status,
+      label: statusLabels[status] || status,
+      orderCount: count,
+      percentage,
+      dropOffRate,
+    });
+
+    // Update previous count for next iteration (skip cancelled)
+    if (status !== 'cancelled') {
+      previousCount = count;
+    }
+  }
+
+  return funnel;
 }
