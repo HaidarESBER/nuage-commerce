@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { OptimizedImage } from "@/components/ui/OptimizedImage";
 import { motion } from "framer-motion";
@@ -12,7 +12,8 @@ import { StockIndicator } from "@/components/product/StockIndicator";
 import { WishlistButton } from "@/components/product/WishlistButton";
 import { getProductRatingStats } from "@/data/reviews";
 import { QuickViewModal } from "./QuickViewModal";
-import { useState as useReactState } from "react";
+import { isTrending } from "@/lib/social-proof";
+import { TrendingBadge } from "./TrendingBadge";
 
 interface ProductCardProps {
   product: Product;
@@ -36,10 +37,10 @@ interface ProductCardProps {
 export function ProductCard({ product, priority = false }: ProductCardProps) {
   const { addItem } = useCart();
   const { addToComparison, isInComparison } = useComparison();
-  const [isQuickViewOpen, setIsQuickViewOpen] = useReactState(false);
-  const [showCompareToast, setShowCompareToast] = useReactState(false);
+  const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
+  const [showCompareToast, setShowCompareToast] = useState(false);
   const hasDiscount = product.compareAtPrice && product.compareAtPrice > product.price;
-  const ratingStats = getProductRatingStats(product.id);
+  const ratingStats = useMemo(() => getProductRatingStats(product.id), [product.id]);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -77,6 +78,9 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
       {/* Image container - Premium display */}
       <Link href={`/produits/${product.slug}`} className="block">
         <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-[#F7F5F3] to-[#E8E4DF] p-6">
+          {/* Trending badge */}
+          {isTrending(product) && <TrendingBadge />}
+
           <motion.div
             whileHover={{ scale: 1.08 }}
             transition={{ duration: 0.5, ease: [0.21, 0.47, 0.32, 0.98] }}

@@ -17,6 +17,8 @@ import { Review, ProductRatingStats } from "@/data/reviews";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
 import { getRelatedProducts } from "@/lib/recommendations";
 import { UrgencyIndicators } from "@/components/product/UrgencyIndicators";
+import { addToRecentlyViewed } from "@/lib/social-proof";
+import { RecentlyViewed } from "@/components/product/RecentlyViewed";
 
 interface ProductDetailClientProps {
   product: Product;
@@ -41,6 +43,11 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
 
   // Get related products
   const relatedProducts = getRelatedProducts(product, allProducts);
+
+  // Track product view
+  useEffect(() => {
+    addToRecentlyViewed(product);
+  }, [product]);
 
   // Consolidated effects for better performance
   useEffect(() => {
@@ -447,6 +454,12 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
 
       {/* Related Products Section */}
       <RelatedProducts products={relatedProducts} />
+
+      {/* Recently viewed products */}
+      <RecentlyViewed
+        allProducts={allProducts}
+        currentProductId={product.id}
+      />
 
       {/* Image Zoom Modal */}
       <AnimatePresence>
