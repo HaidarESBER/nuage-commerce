@@ -9,6 +9,7 @@ import {
   ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
+import { trackWishlistAdd, trackWishlistRemove } from "@/lib/analytics";
 
 const WISHLIST_STORAGE_KEY = "nuage-wishlist";
 
@@ -164,6 +165,9 @@ export function WishlistProvider({ children }: WishlistProviderProps) {
       return [...current, productId];
     });
 
+    // Track wishlist add event
+    trackWishlistAdd(productId);
+
     // If authenticated, sync with API
     if (isAuthenticated) {
       try {
@@ -192,6 +196,9 @@ export function WishlistProvider({ children }: WishlistProviderProps) {
     // Optimistic update
     const previousItems = wishlistItems;
     setWishlistItems((current) => current.filter((id) => id !== productId));
+
+    // Track wishlist remove event
+    trackWishlistRemove(productId);
 
     // If authenticated, sync with API
     if (isAuthenticated) {
