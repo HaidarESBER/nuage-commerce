@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 ## Current Position
 
 Phase: 23 of 23 (Customer Intelligence)
-Plan: 1 of 1 in current phase
+Plan: 2 of 2 in current phase
 Status: Phase complete
-Last activity: 2026-02-12 — Completed 23-01-PLAN.md
+Last activity: 2026-02-12 — Completed 23-02-PLAN.md
 
 Progress: █████░░░░░ 38% (v5.0: 4/4 phases complete)
 
@@ -85,7 +85,7 @@ Progress: █████░░░░░ 38% (v5.0: 4/4 phases complete)
 | 20-analytics-foundation | 2/2 | 10 min | 5 min |
 | 21-admin-dashboard | 3/3 | 30 min | 10 min |
 | 22-sales-analytics | 2/2 | 33 min | 16.5 min |
-| 23-customer-intelligence | 1/1 | 13 min | 13 min |
+| 23-customer-intelligence | 2/2 | 19 min | 9.5 min |
 
 ## Accumulated Context
 
@@ -167,6 +167,8 @@ Progress: █████░░░░░ 38% (v5.0: 4/4 phases complete)
 
 **v5.0 (23-01):** Customer intelligence library in customer-analytics.ts (getRFMSegments, getCustomerSegmentStats, getTopCustomers) with quintile-based RFM scoring (1-5 scale) for Recency/Frequency/Monetary dimensions, 5-tier customer segmentation (VIP, Champions, Fidèles, À Risque, Inactifs) based on RFM score combinations, application-level Map aggregation for customer metrics calculation, recency score inversion (lower days = higher score), /admin/analytics/customers dashboard with 5 KPIs (Total, VIP, Active, At Risk, Inactive), RFMDistribution horizontal bar chart with segment-specific colors (VIP=blush, Champions=green, Fidèles=blue, À Risque=orange, Inactifs=gray), CustomerSegments stats table with VIP/Champions highlighting, TopCustomers ranking table with top 3 accent highlighting, French labels throughout.
 
+**v5.0 (23-02):** Cohort analysis and LTV tracking in customer-analytics.ts (getCohorts, getCustomerLTV, getBehavioralMetrics) with monthly cohort grouping by first purchase (YYYY-MM), cumulative retention calculation (% ordering by month N), 90-day purchase frequency projection for LTV forecasting (currentLTV + expectedFutureOrders × avgOrderValue), French month labels via Intl.DateTimeFormat (Janvier 2026), behavioral metrics combining browse_history/wishlist/orders for conversion funnel, CohortRetention heatmap component with 20-100% opacity gradient on accent color, LTVMetrics component with summary cards and top 20 customers table (top 5 highlighted), CustomerBehavior funnel with decreasing width bars showing browse→wishlist→purchase progression, all sections integrated into /admin/analytics/customers dashboard with section dividers and graceful error handling.
+
 ### Deferred Issues
 
 - Legal pages content (already in place per user)
@@ -182,5 +184,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 23-01 (Customer Segmentation & RFM Analysis)
+Stopped at: Completed 23-02 (Cohort Analysis & Lifetime Value Tracking)
 Resume file: None
