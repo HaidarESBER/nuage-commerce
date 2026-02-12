@@ -10,6 +10,7 @@ import { WebVitalsReporter } from "@/components/analytics/WebVitalsReporter";
 import { AnalyticsScripts } from "@/components/analytics/AnalyticsScripts";
 import { HealthWarning } from "@/components/legal/HealthWarning";
 import { CookieConsent } from "@/components/legal/CookieConsent";
+import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
 import { generateOrganizationSchema } from "@/lib/seo";
 import "./globals.css";
 
@@ -60,6 +61,7 @@ export default function RootLayout({
       <body className={`${fontVariables} font-sans antialiased`}>
         <WebVitalsReporter />
         <AnalyticsScripts />
+        <ServiceWorkerRegister />
 
         {/* Legal Components - MANDATORY for compliance */}
         <CookieConsent />

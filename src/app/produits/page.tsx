@@ -13,12 +13,13 @@ export const metadata: Metadata = {
 };
 
 interface ProduitsPageProps {
-  searchParams: Promise<{ categorie?: string }>;
+  searchParams: Promise<{ categorie?: string; q?: string }>;
 }
 
 export default async function ProduitsPage({ searchParams }: ProduitsPageProps) {
   const params = await searchParams;
   const categoryParam = params.categorie as ProductCategory | undefined;
+  const searchQuery = params.q || '';
 
   // Validate category parameter
   const validCategories: ProductCategory[] = [
@@ -38,7 +39,11 @@ export default async function ProduitsPage({ searchParams }: ProduitsPageProps) 
   return (
     <main className="py-12 lg:py-16">
       <Container size="lg">
-        <ProduitsClientEnhanced products={products} activeCategory={activeCategory} />
+        <ProduitsClientEnhanced
+          products={products}
+          activeCategory={activeCategory}
+          searchQuery={searchQuery}
+        />
       </Container>
     </main>
   );

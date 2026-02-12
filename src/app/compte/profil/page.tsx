@@ -15,7 +15,7 @@ type TabType = "info" | "security" | "preferences" | "orders";
 
 export default function ProfilePage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<TabType>("info");
+  const [activeTab, setActiveTab] = useState<TabType>("orders");
   const [user, setUser] = useState<UserSession | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);

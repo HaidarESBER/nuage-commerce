@@ -16,6 +16,7 @@ import { FracturedCategories } from "@/components/home/FracturedCategories";
 interface ProduitsClientEnhancedProps {
   products: Product[];
   activeCategory: ProductCategory | null;
+  searchQuery?: string;
 }
 
 function CategoryButton({
@@ -53,6 +54,7 @@ function CategoryButton({
 export function ProduitsClientEnhanced({
   products,
   activeCategory,
+  searchQuery = '',
 }: ProduitsClientEnhancedProps) {
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [view, setView] = useState<"grid" | "list">("grid");
@@ -78,6 +80,19 @@ export function ProduitsClientEnhanced({
   // Combine filters and sort
   const displayProducts = useMemo(() => {
     let result = products;
+
+    // Apply search filter first if query exists
+    if (searchQuery && searchQuery.trim().length > 0) {
+      const query = searchQuery.toLowerCase().trim();
+      result = result.filter((product) => {
+        return (
+          product.name.toLowerCase().includes(query) ||
+          product.description.toLowerCase().includes(query) ||
+          product.shortDescription.toLowerCase().includes(query) ||
+          product.category.toLowerCase().includes(query)
+        );
+      });
+    }
 
     // Combine activeCategory with sidebar categories
     const allActiveCategories = new Set<ProductCategory>();
@@ -123,7 +138,7 @@ export function ProduitsClientEnhanced({
           return 0;
         });
     }
-  }, [products, filters, sortOption, activeCategory]);
+  }, [products, filters, sortOption, activeCategory, searchQuery]);
 
   // Sync sort to URL without scrolling
   useEffect(() => {
