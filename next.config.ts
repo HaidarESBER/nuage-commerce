@@ -81,7 +81,7 @@ const nextConfig: NextConfig = {
 // Use string-based plugin names for Turbopack compatibility (Next.js 16)
 const withMDX = createMDX({
   options: {
-    remarkPlugins: ['remark-gfm'],
+    remarkPlugins: ['remark-gfm', 'remark-frontmatter'],
     rehypePlugins: ['rehype-slug'],
   },
 });
