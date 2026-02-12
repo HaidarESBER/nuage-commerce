@@ -63,7 +63,7 @@ export default function WishlistPage() {
         <div className="text-center">
           <p className="text-destructive">{error}</p>
           <button
-            onClick={fetchWishlist}
+            onClick={() => router.refresh()}
             className="mt-4 px-6 py-2 bg-accent-blush text-white rounded-full hover:bg-accent-blush/90 transition-colors"
           >
             Réessayer

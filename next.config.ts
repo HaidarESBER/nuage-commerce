@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import createMDX from '@next/mdx';
+import withSerwistInit from '@serwist/next';
 
 const nextConfig: NextConfig = {
   // Add MDX page extensions
@@ -86,4 +87,12 @@ const withMDX = createMDX({
   },
 });
 
-export default withMDX(nextConfig);
+// Configure Serwist for PWA
+const withSerwist = withSerwistInit({
+  swSrc: "src/app/sw.ts",
+  swDest: "public/sw.js",
+  cacheOnNavigation: true,
+  reloadOnOnline: true,
+});
+
+export default withSerwist(withMDX(nextConfig));

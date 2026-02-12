@@ -288,7 +288,12 @@ export function ProduitsClientEnhanced({
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
-              <ProductGrid products={displayProducts} columns={view === "grid" ? 3 : 1} />
+              <ProductGrid
+                products={displayProducts}
+                total={displayProducts.length}
+                currentPage={Number(searchParams.get("page")) || 1}
+                columns={3}
+              />
             </motion.div>
           ) : (
             <motion.div
@@ -330,7 +335,12 @@ export function ProduitsClientEnhanced({
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <ProductGrid products={displayProducts} columns={2} />
+            <ProductGrid
+              products={displayProducts}
+              total={displayProducts.length}
+              currentPage={Number(searchParams.get("page")) || 1}
+              columns={2}
+            />
           </motion.div>
         ) : (
           <motion.div

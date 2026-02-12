@@ -18,6 +18,7 @@
     "@next/mdx": "^16.1.6",
     "@react-email/components": "^1.0.7",
     "@react-email/render": "^2.0.4",
+    "@serwist/next": "^9.5.5",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.95.3",
     "@types/bcryptjs": "^2.4.6",
@@ -40,6 +41,7 @@
     "remark-gfm": "^4.0.1",
     "resend": "^6.9.1",
     "schema-dts": "^1.1.5",
+    "serwist": "^9.5.5",
     "stripe": "^20.3.1",
     "use-debounce": "^10.1.0"
   },
