@@ -36,7 +36,10 @@ export default function TopProducts({
                     Produit
                   </th>
                   <th className="text-right py-2 px-3 text-sm font-semibold text-primary/70">
-                    Vues
+                    Vues Totales
+                  </th>
+                  <th className="text-right py-2 px-3 text-sm font-semibold text-primary/70">
+                    Visiteurs Uniques
                   </th>
                 </tr>
               </thead>
@@ -64,6 +67,11 @@ export default function TopProducts({
                     </td>
                     <td className="py-2.5 px-3 text-sm text-right font-medium text-primary">
                       {product.count.toLocaleString("fr-FR")}
+                    </td>
+                    <td className="py-2.5 px-3 text-sm text-right">
+                      <span className="font-semibold text-accent">
+                        {product.uniqueCount?.toLocaleString("fr-FR") || "-"}
+                      </span>
                     </td>
                   </tr>
                 ))}

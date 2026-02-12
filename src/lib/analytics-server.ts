@@ -46,6 +46,7 @@ export interface TopEvent {
   key: string; // productId, query, etc.
   count: number;
   label?: string; // Optional human-readable label
+  uniqueCount?: number; // Optional unique visitors count
 }
 
 // =============================================================================
@@ -228,6 +229,64 @@ export async function triggerDailyAggregation(date?: Date): Promise<void> {
 }
 
 /**
+ * Get product views with UNIQUE visitor counts
+ * @param limit - Maximum number of products to return (default: 10)
+ * @returns Array of products with total views and unique visitor counts
+ */
+export async function getProductViewsWithUniqueVisitors(limit: number = 10): Promise<TopEvent[]> {
+  const supabase = createAdminClient();
+
+  // Get all product_view events with session_id
+  const { data, error } = await supabase
+    .from('analytics_events')
+    .select('event_data, session_id')
+    .eq('event_type', 'product_view')
+    .limit(10000); // Limit to prevent memory issues
+
+  if (error) {
+    console.error('getProductViewsWithUniqueVisitors error:', error.message);
+    throw new Error(`Failed to fetch product views: ${error.message}`);
+  }
+
+  if (!data || data.length === 0) {
+    return [];
+  }
+
+  // Aggregate total views and unique sessions per product
+  const productStats = new Map<string, { count: number; sessions: Set<string> }>();
+
+  for (const row of data) {
+    const productId = row.event_data?.productId;
+    const sessionId = row.session_id;
+
+    if (productId && sessionId) {
+      const existing = productStats.get(productId);
+      if (existing) {
+        existing.count++;
+        existing.sessions.add(sessionId);
+      } else {
+        productStats.set(productId, {
+          count: 1,
+          sessions: new Set([sessionId])
+        });
+      }
+    }
+  }
+
+  // Convert to array with uniqueCount
+  const results = Array.from(productStats.entries())
+    .map(([key, stats]) => ({
+      key,
+      count: stats.count,
+      uniqueCount: stats.sessions.size
+    }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, limit);
+
+  return results;
+}
+
+/**
  * Get product wishlist counts (how many times each product was favorited)
  * @param limit - Maximum number of products to return (default: 10)
  * @returns Array of products with wishlist counts
@@ -294,4 +353,413 @@ export async function getUniqueVisitorsCount(): Promise<number> {
   // Count unique session IDs
   const uniqueSessions = new Set(data.map(row => row.session_id));
   return uniqueSessions.size;
+}
+
+// =============================================================================
+// Sales Analytics Helpers (Phase 22)
+// =============================================================================
+
+/**
+ * Category revenue data
+ */
+export interface CategoryRevenue {
+  category: string;
+  revenue: number; // in cents
+  orderCount: number;
+  avgOrderValue: number; // in cents
+}
+
+/**
+ * Top selling product data
+ */
+export interface TopSellingProduct {
+  productId: string;
+  name: string;
+  category: string;
+  revenue: number; // in cents
+  unitsSold: number;
+  avgPrice: number; // in cents
+}
+
+/**
+ * Average order value trend data
+ */
+export interface AOVTrend {
+  date: string; // ISO date string (YYYY-MM-DD)
+  avgOrderValue: number; // in cents
+  orderCount: number;
+}
+
+/**
+ * Get revenue breakdown by product category
+ * @returns Array of category revenue data
+ */
+export async function getRevenueByCategory(): Promise<CategoryRevenue[]> {
+  const supabase = createAdminClient();
+
+  // Query orders joined with order_items and products
+  const { data: orderItems, error } = await supabase
+    .from('order_items')
+    .select('quantity, price, product:products(category)')
+    .not('product', 'is', null);
+
+  if (error) {
+    console.error('getRevenueByCategory error:', error.message);
+    return [];
+  }
+
+  if (!orderItems || orderItems.length === 0) {
+    return [];
+  }
+
+  // Aggregate by category
+  const categoryMap = new Map<string, { revenue: number; orderCount: number }>();
+
+  for (const item of orderItems) {
+    const category = item.product?.category;
+    if (!category) continue;
+
+    const itemRevenue = item.price * item.quantity;
+    const existing = categoryMap.get(category) || { revenue: 0, orderCount: 0 };
+
+    categoryMap.set(category, {
+      revenue: existing.revenue + itemRevenue,
+      orderCount: existing.orderCount + 1,
+    });
+  }
+
+  // Convert to array and calculate averages
+  const results: CategoryRevenue[] = Array.from(categoryMap.entries()).map(
+    ([category, data]) => ({
+      category,
+      revenue: data.revenue,
+      orderCount: data.orderCount,
+      avgOrderValue: Math.round(data.revenue / data.orderCount),
+    })
+  );
+
+  // Sort by revenue descending
+  return results.sort((a, b) => b.revenue - a.revenue);
+}
+
+/**
+ * Get top selling products by total revenue
+ * @param limit - Maximum number of products to return (default: 10)
+ * @returns Array of top selling products
+ */
+export async function getTopSellingProducts(limit: number = 10): Promise<TopSellingProduct[]> {
+  const supabase = createAdminClient();
+
+  // Query order_items joined with products
+  const { data: orderItems, error } = await supabase
+    .from('order_items')
+    .select('product_id, quantity, price, product:products(name, category)')
+    .not('product', 'is', null);
+
+  if (error) {
+    console.error('getTopSellingProducts error:', error.message);
+    return [];
+  }
+
+  if (!orderItems || orderItems.length === 0) {
+    return [];
+  }
+
+  // Aggregate by product_id
+  const productMap = new Map<string, {
+    name: string;
+    category: string;
+    revenue: number;
+    unitsSold: number;
+    totalPrice: number;
+  }>();
+
+  for (const item of orderItems) {
+    const productId = item.product_id;
+    const product = item.product;
+    if (!product || !productId) continue;
+
+    const itemRevenue = item.price * item.quantity;
+    const existing = productMap.get(productId);
+
+    if (existing) {
+      productMap.set(productId, {
+        ...existing,
+        revenue: existing.revenue + itemRevenue,
+        unitsSold: existing.unitsSold + item.quantity,
+        totalPrice: existing.totalPrice + (item.price * item.quantity),
+      });
+    } else {
+      productMap.set(productId, {
+        name: product.name,
+        category: product.category,
+        revenue: itemRevenue,
+        unitsSold: item.quantity,
+        totalPrice: item.price * item.quantity,
+      });
+    }
+  }
+
+  // Convert to array and calculate averages
+  const results: TopSellingProduct[] = Array.from(productMap.entries()).map(
+    ([productId, data]) => ({
+      productId,
+      name: data.name,
+      category: data.category,
+      revenue: data.revenue,
+      unitsSold: data.unitsSold,
+      avgPrice: Math.round(data.revenue / data.unitsSold),
+    })
+  );
+
+  // Sort by revenue descending and limit
+  return results.sort((a, b) => b.revenue - a.revenue).slice(0, limit);
+}
+
+/**
+ * Get average order value trends over time
+ * @param days - Number of days to include (default: 30)
+ * @returns Array of daily AOV data
+ */
+export async function getAOVTrends(days: number = 30): Promise<AOVTrend[]> {
+  const supabase = createAdminClient();
+
+  // Calculate start date
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - days);
+
+  // Query orders for the date range
+  const { data: orders, error } = await supabase
+    .from('orders')
+    .select('total, created_at')
+    .gte('created_at', startDate.toISOString())
+    .lte('created_at', endDate.toISOString())
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    console.error('getAOVTrends error:', error.message);
+    return [];
+  }
+
+  if (!orders || orders.length === 0) {
+    return [];
+  }
+
+  // Group by date
+  const dateMap = new Map<string, { total: number; count: number }>();
+
+  for (const order of orders) {
+    const date = order.created_at.split('T')[0]; // Extract YYYY-MM-DD
+    const existing = dateMap.get(date) || { total: 0, count: 0 };
+
+    dateMap.set(date, {
+      total: existing.total + order.total,
+      count: existing.count + 1,
+    });
+  }
+
+  // Convert to array and calculate averages
+  const results: AOVTrend[] = Array.from(dateMap.entries()).map(
+    ([date, data]) => ({
+      date,
+      avgOrderValue: Math.round(data.total / data.count),
+      orderCount: data.count,
+    })
+  );
+
+  // Sort by date ascending
+  return results.sort((a, b) => a.date.localeCompare(b.date));
+}
+
+// =============================================================================
+// Inventory Management Analytics (Phase 22-02)
+// =============================================================================
+
+export interface StockAlert {
+  productId: string;
+  name: string;
+  category: string;
+  stockLevel: number;
+  urgency: 'critical' | 'urgent' | 'limited';
+}
+
+export interface InventoryVelocity {
+  productId: string;
+  name: string;
+  stockLevel: number;
+  unitsSold: number;
+  dailyVelocity: number;
+  daysRemaining: number;
+}
+
+export interface RestockRecommendation {
+  productId: string;
+  name: string;
+  currentStock: number;
+  dailyVelocity: number;
+  daysRemaining: number;
+  recommendedRestock: number;
+  estimatedStockoutDate: string; // ISO date string
+}
+
+/**
+ * Get products with low stock levels
+ * @returns Array of products with urgency indicators
+ */
+export async function getStockAlerts(): Promise<StockAlert[]> {
+  const supabase = createAdminClient();
+
+  // Query products where inStock = true and stockLevel <= 10
+  const { data, error } = await supabase
+    .from('products')
+    .select('id, name, category, stock_level, in_stock')
+    .eq('in_stock', true)
+    .not('stock_level', 'is', null)
+    .lte('stock_level', 10)
+    .order('stock_level', { ascending: true });
+
+  if (error) {
+    console.error('getStockAlerts error:', error.message);
+    throw new Error(`Failed to fetch stock alerts: ${error.message}`);
+  }
+
+  if (!data || data.length === 0) {
+    return [];
+  }
+
+  // Map to StockAlert with urgency calculation
+  const alerts: StockAlert[] = data.map(product => {
+    let urgency: 'critical' | 'urgent' | 'limited';
+    if (product.stock_level === 0) {
+      urgency = 'critical';
+    } else if (product.stock_level <= 5) {
+      urgency = 'urgent';
+    } else {
+      urgency = 'limited';
+    }
+
+    return {
+      productId: product.id,
+      name: product.name,
+      category: product.category,
+      stockLevel: product.stock_level,
+      urgency,
+    };
+  });
+
+  return alerts;
+}
+
+/**
+ * Get sales velocity per product
+ * @param days - Number of days to analyze (default: 30)
+ * @returns Array of products with velocity and days remaining
+ */
+export async function getInventoryVelocity(days: number = 30): Promise<InventoryVelocity[]> {
+  const supabase = createAdminClient();
+
+  // Calculate date range
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - days);
+
+  // Query order_items for last N days
+  const { data: orderItems, error: orderItemsError } = await supabase
+    .from('order_items')
+    .select('product_id, quantity, orders!inner(created_at)')
+    .gte('orders.created_at', startDate.toISOString());
+
+  if (orderItemsError) {
+    console.error('getInventoryVelocity error:', orderItemsError.message);
+    throw new Error(`Failed to fetch order items: ${orderItemsError.message}`);
+  }
+
+  // Aggregate units sold per product
+  const salesByProduct = new Map<string, number>();
+  if (orderItems && orderItems.length > 0) {
+    for (const item of orderItems) {
+      const productId = item.product_id;
+      const quantity = item.quantity;
+      salesByProduct.set(productId, (salesByProduct.get(productId) || 0) + quantity);
+    }
+  }
+
+  // Get products with stock levels
+  const { data: products, error: productsError } = await supabase
+    .from('products')
+    .select('id, name, stock_level')
+    .not('stock_level', 'is', null)
+    .gt('stock_level', 0);
+
+  if (productsError) {
+    console.error('getInventoryVelocity products error:', productsError.message);
+    throw new Error(`Failed to fetch products: ${productsError.message}`);
+  }
+
+  if (!products || products.length === 0) {
+    return [];
+  }
+
+  // Calculate velocity and days remaining
+  const velocities: InventoryVelocity[] = products
+    .map(product => {
+      const unitsSold = salesByProduct.get(product.id) || 0;
+      const dailyVelocity = unitsSold / days;
+      const daysRemaining = dailyVelocity > 0
+        ? Math.floor(product.stock_level / dailyVelocity)
+        : Infinity;
+
+      return {
+        productId: product.id,
+        name: product.name,
+        stockLevel: product.stock_level,
+        unitsSold,
+        dailyVelocity,
+        daysRemaining,
+      };
+    })
+    .filter(v => v.daysRemaining !== Infinity) // Only include products with sales
+    .sort((a, b) => a.daysRemaining - b.daysRemaining); // Soonest first
+
+  return velocities;
+}
+
+/**
+ * Get restock recommendations based on sales velocity
+ * @param targetDays - Target days of inventory to maintain (default: 60)
+ * @returns Array of products needing restock with recommended quantities
+ */
+export async function getRestockRecommendations(targetDays: number = 60): Promise<RestockRecommendation[]> {
+  // Get inventory velocity data
+  const velocities = await getInventoryVelocity(30);
+
+  // Filter products needing restock (< targetDays remaining)
+  const recommendations: RestockRecommendation[] = velocities
+    .filter(v => v.daysRemaining < targetDays)
+    .map(v => {
+      // Calculate recommended restock quantity
+      const targetStock = v.dailyVelocity * targetDays;
+      const neededStock = targetStock - v.stockLevel;
+
+      // Round up to nearest 5 for practical ordering
+      const recommendedRestock = Math.ceil(neededStock / 5) * 5;
+
+      // Estimate when stockout will occur
+      const stockoutDate = new Date();
+      stockoutDate.setDate(stockoutDate.getDate() + v.daysRemaining);
+
+      return {
+        productId: v.productId,
+        name: v.name,
+        currentStock: v.stockLevel,
+        dailyVelocity: v.dailyVelocity,
+        daysRemaining: v.daysRemaining,
+        recommendedRestock: Math.max(0, recommendedRestock),
+        estimatedStockoutDate: stockoutDate.toISOString(),
+      };
+    })
+    .sort((a, b) => a.daysRemaining - b.daysRemaining); // Most urgent first
+
+  return recommendations;
 }

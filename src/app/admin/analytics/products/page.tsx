@@ -3,7 +3,7 @@
  * Admin dashboard for product performance and search insights
  */
 
-import { getTopEvents, getTopWishlistedProducts, TopEvent } from "@/lib/analytics-server";
+import { getTopEvents, getTopWishlistedProducts, getProductViewsWithUniqueVisitors, TopEvent } from "@/lib/analytics-server";
 import TopProducts from "@/components/admin/TopProducts";
 import SearchAnalytics from "@/components/admin/SearchAnalytics";
 import Link from "next/link";
@@ -23,7 +23,7 @@ export default async function ProductAnalyticsPage() {
   let topSearches: TopEvent[] = [];
 
   try {
-    viewedProducts = await getTopEvents("product_view", 10);
+    viewedProducts = await getProductViewsWithUniqueVisitors(10);
   } catch (error) {
     console.error("Failed to fetch viewed products:", error);
   }
