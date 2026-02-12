@@ -192,10 +192,12 @@ Plans:
 **Goal**: Implement detailed sales analytics with product performance, revenue breakdowns, order trends, and inventory insights
 **Depends on**: Phase 21
 **Research**: Unlikely (data visualization with existing stack)
-**Plans**: TBD
+**Plans**: 3 plans, 1 wave
 
 Plans:
-- [ ] 22-01: TBD (run /gsd:plan-phase 22 to break down)
+- [x] 22-01: Sales Performance Dashboard (revenue by category, top sellers, AOV) -- 2026-02-12
+- [x] 22-02: Inventory Management Dashboard (stock alerts, velocity, restock) -- 2026-02-12
+- [x] 22-03: Order Intelligence Dashboard (time patterns, shipping, funnel) -- 2026-02-12
 
 #### Phase 23: Customer Intelligence
 
@@ -209,5 +211,5 @@ Plans:
 - [ ] 23-01: TBD (run /gsd:plan-phase 23 to break down)
 | 20. Analytics Foundation | v5.0 | 2/2 | Complete | 2026-02-12 |
 | 21. Admin Dashboard | v5.0 | 3/3 | Complete | 2026-02-12 |
-| 22. Sales Analytics | v5.0 | 0/? | Not started | - |
+| 22. Sales Analytics | v5.0 | 3/3 | Complete | 2026-02-12 |
 | 23. Customer Intelligence | v5.0 | 0/? | Not started | - |
