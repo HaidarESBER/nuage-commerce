@@ -3,11 +3,13 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { Container } from "@/components/ui";
 import { TrustBadges } from "@/components/ui/TrustBadges";
 import { ProductCard } from "@/components/product";
 import { FracturedCategories } from "@/components/home/FracturedCategories";
 import { RecommendationsSection } from "@/components/product/RecommendationsSection";
+import { PullToRefresh } from "@/components/mobile/PullToRefresh";
 import { Product } from "@/types/product";
 
 interface HomeClientProps {
@@ -15,6 +17,7 @@ interface HomeClientProps {
 }
 
 export function HomeClient({ featuredProducts }: HomeClientProps) {
+  const router = useRouter();
   const [showcaseVideoFade, setShowcaseVideoFade] = useState(1);
   const showcaseVideoRef = useRef<HTMLVideoElement>(null);
 
@@ -47,8 +50,13 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
     return () => video.removeEventListener('timeupdate', handleTimeUpdate);
   }, []);
 
+  const handleRefresh = async () => {
+    router.refresh();
+  };
+
   return (
-    <div className="relative">
+    <PullToRefresh onRefresh={handleRefresh}>
+      <div className="relative">
         {/* Hero Section - Cinematic Video Background */}
         <section className="relative h-screen overflow-hidden -mt-16">
         {/* Video Background */}
@@ -295,6 +303,7 @@ export function HomeClient({ featuredProducts }: HomeClientProps) {
           <TrustBadges />
         </Container>
       </section>
-    </div>
+      </div>
+    </PullToRefresh>
   );
 }

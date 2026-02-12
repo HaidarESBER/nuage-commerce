@@ -278,16 +278,6 @@ export default function ProfilePage() {
         <div className="bg-background-secondary/30 border border-border rounded-xl overflow-hidden">
           <div className="flex border-b border-border overflow-x-auto">
             <button
-              onClick={() => setActiveTab("info")}
-              className={`flex-1 py-4 px-6 font-medium transition-colors whitespace-nowrap ${
-                activeTab === "info"
-                  ? "bg-background text-primary border-b-2 border-accent"
-                  : "text-muted hover:text-primary"
-              }`}
-            >
-              Informations
-            </button>
-            <button
               onClick={() => setActiveTab("orders")}
               className={`flex-1 py-4 px-6 font-medium transition-colors whitespace-nowrap ${
                 activeTab === "orders"
@@ -299,6 +289,16 @@ export default function ProfilePage() {
               {orders.length > 0 && (
                 <span className="ml-2 text-xs text-muted">({orders.length})</span>
               )}
+            </button>
+            <button
+              onClick={() => setActiveTab("info")}
+              className={`flex-1 py-4 px-6 font-medium transition-colors whitespace-nowrap ${
+                activeTab === "info"
+                  ? "bg-background text-primary border-b-2 border-accent"
+                  : "text-muted hover:text-primary"
+              }`}
+            >
+              Informations
             </button>
             <button
               onClick={() => setActiveTab("security")}
@@ -323,8 +323,8 @@ export default function ProfilePage() {
           </div>
 
           <div className="p-8">
-            {/* Informations Tab */}
-            {activeTab === "info" && (
+            {/* Orders Tab */}
+            {activeTab === "orders" && (
               <motion.form
                 key="info"
                 initial={{ opacity: 0, y: 20 }}
@@ -411,11 +411,11 @@ export default function ProfilePage() {
                 >
                   {isSaving ? "Enregistrement..." : "Enregistrer"}
                 </button>
-              </motion.form>
+              </motion.div>
             )}
 
-            {/* Orders Tab */}
-            {activeTab === "orders" && (
+            {/* Informations Tab */}
+            {activeTab === "info" && (
               <motion.div
                 key="orders"
                 initial={{ opacity: 0, y: 20 }}
@@ -529,7 +529,7 @@ export default function ProfilePage() {
                     </AnimatePresence>
                   </div>
                 )}
-              </motion.div>
+              </motion.form>
             )}
 
             {/* Security Tab */}
