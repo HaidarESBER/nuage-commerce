@@ -120,7 +120,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       />
 
       {/* Track product view for browse history */}
-      <ProductViewTracker productId={product.id} />
+      <ProductViewTracker productId={product.id} productName={product.name} />
 
       <ProductDetailClient
         product={product}
