@@ -5,6 +5,7 @@ import { WishlistProvider } from "@/contexts/WishlistContext";
 import { ComparisonProvider } from "@/contexts/ComparisonContext";
 import { Header, Footer } from "@/components/layout";
 import { FloatingCartButton } from "@/components/mobile/FloatingCartButton";
+import { InstallPrompt } from "@/components/mobile/InstallPrompt";
 import { ExitIntentModal } from "@/components/marketing/ExitIntentModal";
 import { WebVitalsReporter } from "@/components/analytics/WebVitalsReporter";
 import { AnalyticsScripts } from "@/components/analytics/AnalyticsScripts";
@@ -78,6 +79,7 @@ export default function RootLayout({
                 <Footer />
               </div>
               <FloatingCartButton />
+              <InstallPrompt />
               <ExitIntentModal />
             </ComparisonProvider>
           </WishlistProvider>

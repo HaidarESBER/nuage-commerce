@@ -411,7 +411,7 @@ export default function ProfilePage() {
                 >
                   {isSaving ? "Enregistrement..." : "Enregistrer"}
                 </button>
-              </motion.div>
+              </motion.form>
             )}
 
             {/* Informations Tab */}
@@ -529,7 +529,7 @@ export default function ProfilePage() {
                     </AnimatePresence>
                   </div>
                 )}
-              </motion.form>
+              </motion.div>
             )}
 
             {/* Security Tab */}
