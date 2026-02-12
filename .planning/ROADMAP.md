@@ -147,10 +147,10 @@ Plans:
 **Goal**: Build user profiles with order history, saved addresses, communication preferences, and account management
 **Depends on**: Phase 16
 **Research**: Unlikely (Supabase Auth already integrated, extending existing patterns)
-**Plans**: TBD
+**Plans**: 1 plan, 1 wave
 
 Plans:
-- [ ] 17-01: TBD (run /gsd:plan-phase 17 to break down)
+- [x] 17-01: Profile Management & Saved Addresses (Wave 1) -- 2026-02-12
 
 #### Phase 18: Wishlist & Recommendations
 
@@ -195,8 +195,8 @@ Phases execute in numeric order: 9 → 10 → 11 → 12 → 13 → 14 → 15 →
 | 12. Product Sourcing Pipeline | v2.0 | 2/2 | Complete | 2026-02-12 |
 | 13. AI Curation & Automation | v2.0 | 2/2 | Complete | 2026-02-11 |
 | 14. Blog & Content Marketing | v3.0 | 2/2 | Complete | 2026-02-12 |
-| 15. Smart Search & Filtering | v4.0 | 0/? | Not started | - |
-| 16. Social Proof & Reviews | v4.0 | 0/? | Not started | - |
-| 17. Customer Accounts & Profiles | v4.0 | 0/? | Not started | - |
+| 15. Smart Search & Filtering | v4.0 | 3/3 | Complete | 2026-02-12 |
+| 16. Social Proof & Reviews | v4.0 | 3/3 | Complete | 2026-02-12 |
+| 17. Customer Accounts & Profiles | v4.0 | 1/1 | Complete | 2026-02-12 |
 | 18. Wishlist & Recommendations | v4.0 | 0/? | Not started | - |
 | 19. Mobile UX Excellence | v4.0 | 0/? | Not started | - |
