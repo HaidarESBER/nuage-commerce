@@ -3,32 +3,49 @@
 import Link from "next/link";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { Order } from "@/types/order";
+import { Order, OrderStatus } from "@/types/order";
 import { Button } from "@/components/ui";
 import { OrderDetails } from "./OrderDetails";
+import { useCart } from "@/contexts/CartContext";
 
 interface OrderConfirmationProps {
   order: Order;
+  paymentVerified?: boolean;
+  orderStatus?: OrderStatus;
 }
 
 /**
  * OrderConfirmation component
  *
  * Displays order confirmation with:
- * - Success message with checkmark icon
- * - Confetti celebration on mount (brand colors)
+ * - Success message with checkmark icon (or processing message for pending payments)
+ * - Confetti celebration on mount for confirmed/verified payments
  * - "Merci pour votre commande!" heading
  * - Order number prominently displayed
  * - OrderDetails component with full order information
- * - Email confirmation notice (informational, no actual email for MVP)
+ * - Email confirmation notice
  * - "Continuer mes achats" button linking to /produits
  * - "Retour a l'accueil" secondary action
  *
+ * Clears cart on mount (after successful payment redirect).
+ *
  * @example
- * <OrderConfirmation order={order} />
+ * <OrderConfirmation order={order} paymentVerified={true} orderStatus="confirmed" />
  */
-export function OrderConfirmation({ order }: OrderConfirmationProps) {
+export function OrderConfirmation({ order, paymentVerified, orderStatus }: OrderConfirmationProps) {
+  const { clearCart } = useCart();
+
+  // Clear cart on mount — user has completed payment
   useEffect(() => {
+    clearCart();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const isConfirmed = paymentVerified || orderStatus === 'confirmed' || orderStatus === 'processing' || orderStatus === 'shipped' || orderStatus === 'delivered';
+  const isPendingPayment = orderStatus === 'pending_payment';
+
+  useEffect(() => {
+    if (!isConfirmed) return;
+
     // Dynamic import for confetti to reduce bundle size
     const triggerConfetti = async () => {
       try {
@@ -52,61 +69,145 @@ export function OrderConfirmation({ order }: OrderConfirmationProps) {
     };
 
     triggerConfetti();
-  }, []);
+  }, [isConfirmed]);
 
   return (
     <div className="space-y-8">
       {/* Success header */}
       <div className="text-center">
-        <motion.div
-          className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4"
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{
-            type: "spring",
-            stiffness: 400,
-            damping: 15,
-          }}
-        >
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 400,
-              damping: 15,
-              delay: 0.1,
-            }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-green-600"
+        {isConfirmed ? (
+          <>
+            <motion.div
+              className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 15,
+              }}
             >
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-              <polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
-          </motion.div>
-        </motion.div>
-        <h1 className="font-heading text-3xl text-primary mb-2">
-          Merci pour votre commande !
-        </h1>
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 15,
+                  delay: 0.1,
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-green-600"
+                >
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+              </motion.div>
+            </motion.div>
+            <h1 className="font-heading text-3xl text-primary mb-2">
+              Merci pour votre commande !
+            </h1>
+          </>
+        ) : isPendingPayment ? (
+          <>
+            <motion.div
+              className="mx-auto w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mb-4"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 15,
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-amber-600"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </motion.div>
+            <h1 className="font-heading text-3xl text-primary mb-2">
+              Votre paiement est en cours de verification
+            </h1>
+            <p className="text-muted mb-2">
+              Vous recevrez un email de confirmation sous quelques minutes.
+            </p>
+          </>
+        ) : (
+          <>
+            <motion.div
+              className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 15,
+              }}
+            >
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 15,
+                  delay: 0.1,
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-green-600"
+                >
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+              </motion.div>
+            </motion.div>
+            <h1 className="font-heading text-3xl text-primary mb-2">
+              Merci pour votre commande !
+            </h1>
+          </>
+        )}
         <p className="text-lg text-primary font-medium mb-2">
           Commande {order.orderNumber}
         </p>
-        <p className="text-muted">
-          Un email de confirmation a ete envoye a{" "}
-          <span className="font-medium text-primary">
-            {order.shippingAddress.email}
-          </span>
-        </p>
+        {isConfirmed && (
+          <p className="text-muted">
+            Un email de confirmation a ete envoye a{" "}
+            <span className="font-medium text-primary">
+              {order.shippingAddress.email}
+            </span>
+          </p>
+        )}
       </div>
 
       {/* Order details */}

@@ -3,9 +3,11 @@ import Link from "next/link";
 import { Container, Button } from "@/components/ui";
 import { OrderConfirmation } from "@/components/order";
 import { getOrderByNumber } from "@/lib/orders";
+import { stripe } from "@/lib/stripe";
 
 interface ConfirmationPageProps {
   params: Promise<{ orderNumber: string }>;
+  searchParams: Promise<{ session_id?: string }>;
 }
 
 /**
@@ -29,10 +31,16 @@ export async function generateMetadata({ params }: ConfirmationPageProps): Promi
  * - Totals
  * - Next steps and navigation
  *
+ * Handles Stripe return flow:
+ * - Verifies session_id from Stripe redirect
+ * - Passes paymentVerified prop to OrderConfirmation
+ * - Handles edge case where webhook hasn't fired yet
+ *
  * Handles order not found with friendly message.
  */
-export default async function ConfirmationPage({ params }: ConfirmationPageProps) {
+export default async function ConfirmationPage({ params, searchParams }: ConfirmationPageProps) {
   const { orderNumber } = await params;
+  const { session_id: sessionId } = await searchParams;
   const order = await getOrderByNumber(orderNumber);
 
   // Handle order not found
@@ -84,9 +92,34 @@ export default async function ConfirmationPage({ params }: ConfirmationPageProps
     );
   }
 
+  // Verify Stripe session if session_id is present (Stripe redirect flow)
+  let paymentVerified = false;
+
+  if (sessionId) {
+    try {
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+      // Verify session belongs to this order
+      if (session.client_reference_id === order.id && session.payment_status === 'paid') {
+        paymentVerified = true;
+      }
+    } catch (error) {
+      // If session retrieval fails, show order without verification
+      console.error('Failed to verify Stripe session:', error);
+    }
+  }
+
+  // If order is already confirmed (webhook fired), consider it verified
+  if (order.status === 'confirmed' || order.status === 'processing' || order.status === 'shipped' || order.status === 'delivered') {
+    paymentVerified = true;
+  }
+
   return (
     <Container as="main" size="lg" className="py-12">
-      <OrderConfirmation order={order} />
+      <OrderConfirmation
+        order={order}
+        paymentVerified={paymentVerified}
+        orderStatus={order.status}
+      />
     </Container>
   );
 }

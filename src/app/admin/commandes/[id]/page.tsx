@@ -137,6 +137,37 @@ export default async function AdminOrderDetailPage({
             </div>
           </div>
 
+          {/* Payment Information */}
+          {(order.stripeSessionId || order.stripePaymentIntentId) && (
+            <div className="bg-secondary rounded-lg border border-primary/10 overflow-hidden">
+              <div className="px-4 py-3 bg-primary/5 border-b border-primary/10">
+                <h3 className="font-medium text-primary">Paiement</h3>
+              </div>
+              <div className="p-4 text-sm text-primary/80 space-y-2">
+                {order.stripePaymentIntentId && (
+                  <div>
+                    <p className="text-primary/60 text-xs uppercase tracking-wide mb-1">
+                      Reference de paiement
+                    </p>
+                    <p className="font-mono text-primary text-xs">
+                      {order.stripePaymentIntentId.length > 20
+                        ? `${order.stripePaymentIntentId.slice(0, 10)}...${order.stripePaymentIntentId.slice(-8)}`
+                        : order.stripePaymentIntentId}
+                    </p>
+                    <a
+                      href={`https://dashboard.stripe.com/test/payments/${order.stripePaymentIntentId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block mt-2 text-xs text-blue-600 hover:text-blue-800 underline transition-colors"
+                    >
+                      Voir sur Stripe Dashboard
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Order Notes */}
           {order.notes && (
             <div className="bg-secondary rounded-lg border border-primary/10 overflow-hidden">
