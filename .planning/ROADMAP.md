@@ -4,7 +4,7 @@
 
 - ✅ [v1.0 MVP](milestones/v1.0-ROADMAP.md) (Phases 1-4) — SHIPPED 2026-02-09
 - ✅ **v1.1 - Enhanced Experience** (Phases 5-8) — COMPLETE 2026-02-09
-- 🚧 **v2.0 - Production Launch** (Phases 9-13) — In progress
+- ✅ **v2.0 - Production Launch** (Phases 9-13) — COMPLETE 2026-02-12
 - ✅ **v3.0 - Content & Growth** (Phase 14) — COMPLETE 2026-02-12
 
 ## Completed Milestones
@@ -35,7 +35,7 @@ See [v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md) for full details.
 
 </details>
 
-### 🚧 v2.0 - Production Launch (In Progress)
+### ✅ v2.0 - Production Launch (COMPLETE 2026-02-12)
 
 **Milestone Goal:** Transform the MVP into a production-ready store with real payments, proper database, and an automated product sourcing pipeline.
 
@@ -82,10 +82,11 @@ Plans:
 **Depends on**: Phase 9 (products in database)
 **Research**: Likely (web scraping tools, source-specific strategies)
 **Research topics**: Web scraping libraries (Puppeteer, Playwright, Cheerio), AliExpress product API/scraping, rate limiting, anti-bot considerations, data extraction patterns
-**Plans**: TBD
+**Plans**: 2 plans, 2 waves
 
 Plans:
-- [ ] 12-01: TBD (run /gsd:plan-phase 12 to break down)
+- [x] 12-01: Scraping Infrastructure (Wave 1) -- 2026-02-12
+- [x] 12-02: Admin UI & Pipeline Bridge (Wave 2) -- 2026-02-12
 
 #### Phase 13: AI Curation & Automation
 
@@ -133,6 +134,6 @@ Phases execute in numeric order: 9 → 10 → 11 → 12 → 13 → 14
 | 9. Supabase Migration & Auth | v2.0 | 3/3 | Complete | 2026-02-11 |
 | 10. Stripe Checkout | v2.0 | 2/2 | Complete | 2026-02-11 |
 | 11. Email Notifications | v2.0 | 2/2 | Complete | 2026-02-11 |
-| 12. Product Sourcing Pipeline | v2.0 | 0/? | Not started | - |
+| 12. Product Sourcing Pipeline | v2.0 | 2/2 | Complete | 2026-02-12 |
 | 13. AI Curation & Automation | v2.0 | 2/2 | Complete | 2026-02-11 |
 | 14. Blog & Content Marketing | v3.0 | 2/2 | Complete | 2026-02-12 |
