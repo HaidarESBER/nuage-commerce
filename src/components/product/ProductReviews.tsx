@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { StarRating } from "./StarRating";
+import { ReviewForm } from "./ReviewForm";
 import {
   Review,
   ProductRatingStats,
@@ -29,6 +31,8 @@ const REVIEWS_PER_PAGE = 5;
  */
 export function ProductReviews({ reviews, stats }: ProductReviewsProps) {
   const [displayCount, setDisplayCount] = useState(REVIEWS_PER_PAGE);
+  const [showForm, setShowForm] = useState(false);
+  const router = useRouter();
 
   if (!stats || reviews.length === 0) {
     return (
@@ -36,11 +40,27 @@ export function ProductReviews({ reviews, stats }: ProductReviewsProps) {
         <h2 className="text-2xl text-primary mb-4">Avis clients</h2>
         <p className="text-muted">Aucun avis pour le moment. Soyez le premier à donner votre avis !</p>
         <button
+          onClick={() => setShowForm(true)}
           className="mt-4 px-6 py-3 bg-primary text-background rounded-[--radius-button] hover:bg-accent hover:text-primary transition-colors"
-          disabled
         >
           Écrire un avis
         </button>
+
+        {/* Review form */}
+        <AnimatePresence>
+          {showForm && stats && (
+            <div className="mt-6">
+              <ReviewForm
+                productId={stats.productId}
+                onSuccess={() => {
+                  setShowForm(false);
+                  router.refresh(); // Re-fetch reviews from server
+                }}
+                onCancel={() => setShowForm(false)}
+              />
+            </div>
+          )}
+        </AnimatePresence>
       </div>
     );
   }
@@ -99,12 +119,26 @@ export function ProductReviews({ reviews, stats }: ProductReviewsProps) {
       {/* Write review button */}
       <div className="mb-6">
         <button
+          onClick={() => setShowForm(true)}
           className="px-6 py-3 bg-primary text-background rounded-[--radius-button] hover:bg-accent hover:text-primary transition-colors"
-          disabled
         >
           Écrire un avis
         </button>
       </div>
+
+      {/* Review form */}
+      <AnimatePresence>
+        {showForm && (
+          <ReviewForm
+            productId={stats.productId}
+            onSuccess={() => {
+              setShowForm(false);
+              router.refresh(); // Re-fetch reviews from server
+            }}
+            onCancel={() => setShowForm(false)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Reviews list */}
       <div className="space-y-6">
