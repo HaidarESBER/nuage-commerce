@@ -274,6 +274,7 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                 <AddToCartButton product={product} />
                 <WishlistButton
                   productId={product.id}
+                  productName={product.name}
                   size="md"
                   showLabel={true}
                   className="w-full justify-center text-primary hover:text-[#D4A5A5] transition-colors border border-border rounded-lg py-2.5 hover:bg-background-secondary/50"

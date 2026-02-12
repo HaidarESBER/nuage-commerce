@@ -100,6 +100,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
           <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <WishlistButton
               productId={product.id}
+              productName={product.name}
               size="sm"
               className="bg-white/95 backdrop-blur-sm rounded-full p-2.5 text-primary hover:bg-[#D4A5A5] hover:text-white transition-all shadow-lg"
             />

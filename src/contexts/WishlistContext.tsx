@@ -15,8 +15,8 @@ const WISHLIST_STORAGE_KEY = "nuage-wishlist";
 
 interface WishlistContextValue {
   wishlistItems: string[]; // Array of product IDs
-  addToWishlist: (productId: string) => void;
-  removeFromWishlist: (productId: string) => void;
+  addToWishlist: (productId: string, productName?: string) => void;
+  removeFromWishlist: (productId: string, productName?: string) => void;
   isInWishlist: (productId: string) => boolean;
   clearWishlist: () => void;
   isLoading: boolean;
@@ -156,7 +156,7 @@ export function WishlistProvider({ children }: WishlistProviderProps) {
     }
   }, [wishlistItems, isHydrated, isAuthenticated]);
 
-  const addToWishlist = useCallback(async (productId: string) => {
+  const addToWishlist = useCallback(async (productId: string, productName?: string) => {
     // Optimistic update
     setWishlistItems((current) => {
       if (current.includes(productId)) {
@@ -166,7 +166,7 @@ export function WishlistProvider({ children }: WishlistProviderProps) {
     });
 
     // Track wishlist add event
-    trackWishlistAdd(productId);
+    trackWishlistAdd(productId, productName);
 
     // If authenticated, sync with API
     if (isAuthenticated) {
@@ -192,13 +192,13 @@ export function WishlistProvider({ children }: WishlistProviderProps) {
     }
   }, [isAuthenticated]);
 
-  const removeFromWishlist = useCallback(async (productId: string) => {
+  const removeFromWishlist = useCallback(async (productId: string, productName?: string) => {
     // Optimistic update
     const previousItems = wishlistItems;
     setWishlistItems((current) => current.filter((id) => id !== productId));
 
     // Track wishlist remove event
-    trackWishlistRemove(productId);
+    trackWishlistRemove(productId, productName);
 
     // If authenticated, sync with API
     if (isAuthenticated) {

@@ -5,6 +5,7 @@ import { useWishlist } from "@/contexts/WishlistContext";
 
 interface WishlistButtonProps {
   productId: string;
+  productName?: string;
   size?: "sm" | "md" | "lg";
   className?: string;
   showLabel?: boolean;
@@ -21,6 +22,7 @@ interface WishlistButtonProps {
  */
 export function WishlistButton({
   productId,
+  productName,
   size = "md",
   className = "",
   showLabel = false,
@@ -33,9 +35,9 @@ export function WishlistButton({
     e.stopPropagation();
 
     if (inWishlist) {
-      removeFromWishlist(productId);
+      removeFromWishlist(productId, productName);
     } else {
-      addToWishlist(productId);
+      addToWishlist(productId, productName);
     }
   };
 

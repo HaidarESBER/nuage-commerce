@@ -414,15 +414,17 @@ export function trackFilterApplied(filterType: string, filterValue: string) {
   });
 }
 
-export function trackWishlistAdd(productId: string) {
+export function trackWishlistAdd(productId: string, productName?: string) {
   trackEvent('wishlist_add', {
     productId,
+    productName: productName || productId,
   });
 }
 
-export function trackWishlistRemove(productId: string) {
+export function trackWishlistRemove(productId: string, productName?: string) {
   trackEvent('wishlist_remove', {
     productId,
+    productName: productName || productId,
   });
 }
 
