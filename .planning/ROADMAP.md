@@ -96,7 +96,7 @@ Plans:
 
 Plans:
 - [x] 13-01: AI Translation Engine & Curation Schema (Wave 1) -- 2026-02-11
-- [ ] 13-02: Admin Review Queue (Wave 2)
+- [x] 13-02: Admin Review Queue & Automation (Wave 2) -- 2026-02-11
 
 ## Progress
 
@@ -117,4 +117,4 @@ Phases execute in numeric order: 9 → 10 → 11 → 12 → 13
 | 10. Stripe Checkout | v2.0 | 0/? | Not started | - |
 | 11. Email Notifications | v2.0 | 2/2 | Complete | 2026-02-11 |
 | 12. Product Sourcing Pipeline | v2.0 | 0/? | Not started | - |
-| 13. AI Curation & Automation | v2.0 | 1/2 | In progress | - |
+| 13. AI Curation & Automation | v2.0 | 2/2 | Complete | 2026-02-11 |
