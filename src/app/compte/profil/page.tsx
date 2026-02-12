@@ -630,10 +630,10 @@ export default function ProfilePage() {
                   </button>
                 </form>
 
-                {/* Danger Zone - Logout */}
-                <div className="pt-6 border-t border-red-200">
-                  <h3 className="text-lg font-semibold text-red-600 mb-2">
-                    Zone de danger
+                {/* Logout Section */}
+                <div className="pt-6 border-t border-border">
+                  <h3 className="text-lg font-semibold text-primary mb-2">
+                    Déconnexion
                   </h3>
                   <p className="text-sm text-muted mb-4">
                     Déconnectez-vous de votre compte sur cet appareil.
@@ -641,7 +641,7 @@ export default function ProfilePage() {
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="w-full bg-red-50 text-red-600 font-medium py-3 rounded-lg hover:bg-red-100 transition-colors border border-red-200 flex items-center justify-center gap-2"
+                    className="w-full bg-background-secondary text-primary font-medium py-3 rounded-lg hover:bg-border transition-colors border border-border flex items-center justify-center gap-2"
                   >
                     <LogOut className="w-5 h-5" />
                     Se déconnecter
