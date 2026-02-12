@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
+import createMDX from '@next/mdx';
 
 const nextConfig: NextConfig = {
+  // Add MDX page extensions
+  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+
   images: {
     // Enable Image Optimization API
     remotePatterns: [
@@ -74,4 +78,12 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Use string-based plugin names for Turbopack compatibility (Next.js 16)
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: ['remark-gfm'],
+    rehypePlugins: ['rehype-slug'],
+  },
+});
+
+export default withMDX(nextConfig);
