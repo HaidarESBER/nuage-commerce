@@ -132,13 +132,13 @@ export function Header() {
 
             {/* Account button */}
             <Link
-              href="/compte"
+              href="/compte/profil"
               className={`transition-colors ${
                 isHomepage
                   ? "text-white/90 hover:text-white drop-shadow"
                   : "text-primary hover:text-accent"
               }`}
-              aria-label="Mon compte"
+              aria-label="Mon profil"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -296,15 +296,15 @@ export function Header() {
                 Favoris {wishlistItems.length > 0 && `(${wishlistItems.length})`}
               </Link>
               <Link
-                href="/compte"
+                href="/compte/profil"
                 onClick={handleNavClick}
                 className={`text-base font-medium transition-colors ${
-                  pathname === "/compte"
+                  pathname.startsWith("/compte")
                     ? "text-accent"
                     : "text-primary hover:text-accent"
                 }`}
               >
-                Mon Compte
+                Mon Profil
               </Link>
               <Link
                 href="/panier"

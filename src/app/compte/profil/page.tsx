@@ -2,16 +2,22 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "@/components/ui";
 import { UserSession, EmailPreferences } from "@/types/user";
+import { Order, orderStatusLabels } from "@/types/order";
+import { formatPrice } from "@/types/product";
+import { formatDateLong } from "@/lib/date-utils";
 
-type TabType = "info" | "security" | "preferences";
+type TabType = "info" | "security" | "preferences" | "orders";
 
 export default function ProfilePage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("info");
   const [user, setUser] = useState<UserSession | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<{
@@ -40,6 +46,13 @@ export default function ProfilePage() {
   useEffect(() => {
     fetchProfile();
   }, []);
+
+  // Fetch orders when user is set
+  useEffect(() => {
+    if (user) {
+      fetchOrders();
+    }
+  }, [user]);
 
   const fetchProfile = async () => {
     try {
@@ -72,6 +85,40 @@ export default function ProfilePage() {
       showMessage("error", "Erreur lors du chargement du profil");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchOrders = async () => {
+    if (!user) return;
+
+    try {
+      const response = await fetch(`/api/orders/by-email?email=${encodeURIComponent(user.email)}`);
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de la récupération des commandes");
+      }
+
+      const data = await response.json();
+      setOrders(data.orders);
+    } catch (err) {
+      console.error("Error fetching orders:", err);
+    }
+  };
+
+  const getStatusColor = (status: Order["status"]) => {
+    switch (status) {
+      case "delivered":
+        return "text-green-600 bg-green-50 border-green-200";
+      case "shipped":
+        return "text-blue-600 bg-blue-50 border-blue-200";
+      case "processing":
+        return "text-yellow-600 bg-yellow-50 border-yellow-200";
+      case "confirmed":
+        return "text-purple-600 bg-purple-50 border-purple-200";
+      case "cancelled":
+        return "text-red-600 bg-red-50 border-red-200";
+      default:
+        return "text-muted bg-background-secondary border-border";
     }
   };
 
@@ -229,10 +276,10 @@ export default function ProfilePage() {
 
         {/* Tabs */}
         <div className="bg-background-secondary/30 border border-border rounded-xl overflow-hidden">
-          <div className="flex border-b border-border">
+          <div className="flex border-b border-border overflow-x-auto">
             <button
               onClick={() => setActiveTab("info")}
-              className={`flex-1 py-4 px-6 font-medium transition-colors ${
+              className={`flex-1 py-4 px-6 font-medium transition-colors whitespace-nowrap ${
                 activeTab === "info"
                   ? "bg-background text-primary border-b-2 border-accent"
                   : "text-muted hover:text-primary"
@@ -241,8 +288,21 @@ export default function ProfilePage() {
               Informations
             </button>
             <button
+              onClick={() => setActiveTab("orders")}
+              className={`flex-1 py-4 px-6 font-medium transition-colors whitespace-nowrap ${
+                activeTab === "orders"
+                  ? "bg-background text-primary border-b-2 border-accent"
+                  : "text-muted hover:text-primary"
+              }`}
+            >
+              Commandes
+              {orders.length > 0 && (
+                <span className="ml-2 text-xs text-muted">({orders.length})</span>
+              )}
+            </button>
+            <button
               onClick={() => setActiveTab("security")}
-              className={`flex-1 py-4 px-6 font-medium transition-colors ${
+              className={`flex-1 py-4 px-6 font-medium transition-colors whitespace-nowrap ${
                 activeTab === "security"
                   ? "bg-background text-primary border-b-2 border-accent"
                   : "text-muted hover:text-primary"
@@ -252,7 +312,7 @@ export default function ProfilePage() {
             </button>
             <button
               onClick={() => setActiveTab("preferences")}
-              className={`flex-1 py-4 px-6 font-medium transition-colors ${
+              className={`flex-1 py-4 px-6 font-medium transition-colors whitespace-nowrap ${
                 activeTab === "preferences"
                   ? "bg-background text-primary border-b-2 border-accent"
                   : "text-muted hover:text-primary"
@@ -352,6 +412,124 @@ export default function ProfilePage() {
                   {isSaving ? "Enregistrement..." : "Enregistrer"}
                 </button>
               </motion.form>
+            )}
+
+            {/* Orders Tab */}
+            {activeTab === "orders" && (
+              <motion.div
+                key="orders"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                {orders.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="w-16 h-16 bg-muted/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-8 h-8 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-semibold text-primary mb-2">
+                      Aucune commande
+                    </h3>
+                    <p className="text-muted mb-6">
+                      Vous n&apos;avez pas encore passé de commande
+                    </p>
+                    <Link
+                      href="/produits"
+                      className="inline-block bg-accent text-background font-medium px-6 py-3 rounded-lg hover:bg-accent/90 transition-colors"
+                    >
+                      Découvrir nos produits
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <AnimatePresence>
+                      {orders.map((order, index) => (
+                        <motion.div
+                          key={order.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          className="bg-background-secondary/30 border border-border rounded-xl p-6 hover:border-accent/50 transition-colors"
+                        >
+                          {/* Order Header */}
+                          <div className="flex flex-wrap items-start justify-between gap-4 mb-4 pb-4 border-b border-border">
+                            <div>
+                              <h3 className="font-semibold text-primary mb-1">
+                                Commande {order.orderNumber}
+                              </h3>
+                              <p className="text-sm text-muted">
+                                {formatDateLong(order.createdAt)}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <span
+                                className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(
+                                  order.status
+                                )}`}
+                              >
+                                {orderStatusLabels[order.status]}
+                              </span>
+                              <Link
+                                href={`/suivi/${order.orderNumber}`}
+                                className="text-sm text-accent hover:underline font-medium"
+                              >
+                                Suivre
+                              </Link>
+                            </div>
+                          </div>
+
+                          {/* Order Items */}
+                          <div className="space-y-3 mb-4">
+                            {order.items.map((item, idx) => (
+                              <div key={idx} className="flex items-center gap-4">
+                                <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-background-secondary flex-shrink-0">
+                                  <Image
+                                    src={item.productImage}
+                                    alt={item.productName}
+                                    fill
+                                    sizes="64px"
+                                    className="object-cover"
+                                  />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="font-medium text-primary truncate">
+                                    {item.productName}
+                                  </p>
+                                  <p className="text-sm text-muted">
+                                    Quantité: {item.quantity}
+                                  </p>
+                                </div>
+                                <p className="font-medium text-primary">
+                                  {formatPrice(item.price * item.quantity)}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Order Total */}
+                          <div className="pt-4 border-t border-border">
+                            <div className="flex justify-between items-center text-sm mb-1">
+                              <span className="text-muted">Sous-total</span>
+                              <span className="text-primary">{formatPrice(order.subtotal)}</span>
+                            </div>
+                            <div className="flex justify-between items-center text-sm mb-2">
+                              <span className="text-muted">Livraison</span>
+                              <span className="text-primary">
+                                {formatPrice(order.shipping)}
+                              </span>
+                            </div>
+                            <div className="flex justify-between items-center font-semibold text-lg">
+                              <span className="text-primary">Total</span>
+                              <span className="text-accent">{formatPrice(order.total)}</span>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                )}
+              </motion.div>
             )}
 
             {/* Security Tab */}
