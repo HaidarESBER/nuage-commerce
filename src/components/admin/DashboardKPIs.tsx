@@ -6,7 +6,7 @@ interface DashboardKPIsProps {
 
 export default function DashboardKPIs({ metricsSummary }: DashboardKPIsProps) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 md:gap-6">
       <StatCard
         title="Visites Uniques"
         value={metricsSummary.totalSessions.toLocaleString('fr-FR')}

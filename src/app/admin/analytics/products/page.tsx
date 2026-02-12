@@ -47,25 +47,25 @@ export default async function ProductAnalyticsPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       {/* Header */}
       <div>
         <Link
           href="/admin"
-          className="text-accent hover:underline transition-colors"
+          className="text-sm md:text-base text-accent hover:underline transition-colors"
         >
           ← Retour au tableau de bord
         </Link>
-        <h2 className="mt-4 text-2xl font-heading font-semibold text-primary">
+        <h2 className="mt-4 text-xl md:text-2xl font-heading font-semibold text-primary">
           Analyse des Produits
         </h2>
-        <p className="mt-2 text-primary/70">
+        <p className="mt-2 text-sm md:text-base text-primary/70">
           Performance des produits et insights de recherche
         </p>
       </div>
 
       {/* Top Products */}
-      <section className="bg-white rounded-lg border border-primary/10 p-6">
+      <section className="bg-white rounded-lg border border-primary/10 p-4 md:p-6">
         <TopProducts
           viewedProducts={viewedProducts}
           cartProducts={cartProducts}
@@ -73,11 +73,11 @@ export default async function ProductAnalyticsPage() {
       </section>
 
       {/* Wishlist Analytics */}
-      <section className="bg-white rounded-lg border border-primary/10 p-6">
-        <h3 className="text-lg font-heading font-semibold text-primary mb-4">
+      <section className="bg-white rounded-lg border border-primary/10 p-4 md:p-6">
+        <h3 className="text-base md:text-lg font-heading font-semibold text-primary mb-3 md:mb-4">
           Produits Favoris
         </h3>
-        <p className="text-sm text-primary/70 mb-6">
+        <p className="text-xs md:text-sm text-primary/70 mb-4 md:mb-6">
           Produits les plus ajoutés aux favoris
         </p>
         {wishlistedProducts.length === 0 ? (
@@ -112,7 +112,7 @@ export default async function ProductAnalyticsPage() {
       </section>
 
       {/* Search Analytics */}
-      <section className="bg-white rounded-lg border border-primary/10 p-6">
+      <section className="bg-white rounded-lg border border-primary/10 p-4 md:p-6">
         <SearchAnalytics topSearches={topSearches} />
       </section>
     </div>

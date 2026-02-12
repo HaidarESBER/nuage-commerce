@@ -16,16 +16,16 @@ export default function TopProducts({
   cartProducts,
 }: TopProductsProps) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-8">
       {/* Most Viewed Products */}
       <div>
-        <h4 className="text-md font-heading font-semibold text-primary mb-3">
+        <h4 className="text-sm md:text-md font-heading font-semibold text-primary mb-3">
           Produits Les Plus Vus
         </h4>
         {viewedProducts.length === 0 ? (
-          <p className="text-primary/70">Aucune donnée disponible</p>
+          <p className="text-primary/70 text-sm">Aucune donnée disponible</p>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto -mx-2 px-2">
             <table className="w-full border-collapse">
               <thead>
                 <tr className="border-b-2 border-primary/20">
@@ -83,13 +83,13 @@ export default function TopProducts({
 
       {/* Most Added to Cart */}
       <div>
-        <h4 className="text-md font-heading font-semibold text-primary mb-3">
+        <h4 className="text-sm md:text-md font-heading font-semibold text-primary mb-3">
           Produits Les Plus Ajoutés au Panier
         </h4>
         {cartProducts.length === 0 ? (
-          <p className="text-primary/70">Aucune donnée disponible</p>
+          <p className="text-primary/70 text-sm">Aucune donnée disponible</p>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto -mx-2 px-2">
             <table className="w-full border-collapse">
               <thead>
                 <tr className="border-b-2 border-primary/20">
