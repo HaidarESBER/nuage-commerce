@@ -57,6 +57,8 @@ export function ProduitsClientEnhanced({
   activeCategory,
   searchQuery = '',
 }: ProduitsClientEnhancedProps) {
+  console.log('🎯 ProduitsClientEnhanced received searchQuery:', searchQuery);
+
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [view, setView] = useState<"grid" | "list">("grid");
   const router = useRouter();
