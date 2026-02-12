@@ -4,7 +4,7 @@ import { Container } from "@/components/ui";
 import { getAllProducts } from "@/lib/products";
 import { indexProducts } from "@/lib/search/flexsearch";
 import { buildSearchQuery } from "@/lib/search";
-import { CategoryTabs } from "@/components/product/CategoryTabs";
+import { FracturedCategories } from "@/components/home/FracturedCategories";
 import { ProductSearch } from "@/components/product/ProductSearch";
 import { ProductFilters } from "@/components/product/ProductFilters";
 import { ProductGrid } from "@/components/product/ProductGrid";
@@ -53,9 +53,16 @@ export default async function ProduitsPage(props: ProduitsPageProps) {
   return (
     <main className="py-12 lg:py-16">
       <Container size="lg">
-        <div className="space-y-8">
-          {/* Category Tabs */}
-          <CategoryTabs activeCategory={category} />
+        <div className="space-y-6">
+          {/* Desktop: Title + Fractured Categories */}
+          <div className="hidden md:block">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-light text-primary tracking-wide text-center mb-6">
+              Découvrez notre collection
+            </h1>
+            <div className="h-[25vh] overflow-hidden mb-8">
+              <FracturedCategories textPosition="top" />
+            </div>
+          </div>
 
           {/* Search */}
           <Suspense fallback={<SearchSkeleton />}>
