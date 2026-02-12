@@ -323,18 +323,25 @@ export async function getTopWishlistedProducts(limit: number = 10): Promise<TopE
     return [];
   }
 
-  // Aggregate counts by productId
-  const counts = new Map<string, number>();
+  // Aggregate counts by productId with names
+  const stats = new Map<string, { count: number; name: string }>();
   for (const row of data) {
     const productId = row.event_data?.productId;
+    const productName = row.event_data?.productName || productId;
+
     if (productId) {
-      counts.set(productId, (counts.get(productId) || 0) + 1);
+      const existing = stats.get(productId);
+      if (existing) {
+        existing.count++;
+      } else {
+        stats.set(productId, { count: 1, name: productName });
+      }
     }
   }
 
   // Convert to array and sort by count descending
-  const topProducts = Array.from(counts.entries())
-    .map(([key, count]) => ({ key, count }))
+  const topProducts = Array.from(stats.entries())
+    .map(([key, data]) => ({ key, label: data.name, count: data.count }))
     .sort((a, b) => b.count - a.count)
     .slice(0, limit);
 
