@@ -111,7 +111,10 @@ export async function getAllScrapedProducts(): Promise<ScrapedProduct[]> {
     .select("*")
     .order("created_at", { ascending: false });
 
-  if (error) throw new Error(`Failed to get all scraped products: ${error.message}`);
+  if (error) {
+    console.error('Failed to get scraped products:', error.message);
+    return []; // Return empty array if table doesn't exist yet
+  }
   return (data || []).map(toScrapedProduct);
 }
 
@@ -129,7 +132,10 @@ export async function getScrapedProductsBySource(
     .eq("source_name", sourceName)
     .order("created_at", { ascending: false });
 
-  if (error) throw new Error(`Failed to get scraped products by source: ${error.message}`);
+  if (error) {
+    console.error('Failed to get scraped products by source:', error.message);
+    return []; // Return empty array if table doesn't exist yet
+  }
   return (data || []).map(toScrapedProduct);
 }
 
@@ -146,7 +152,10 @@ export async function getUnsentProducts(): Promise<ScrapedProduct[]> {
     .eq("scrape_status", "success")
     .order("created_at", { ascending: false });
 
-  if (error) throw new Error(`Failed to get unsent products: ${error.message}`);
+  if (error) {
+    console.error('Failed to get unsent products:', error.message);
+    return []; // Return empty array if table doesn't exist yet
+  }
   return (data || []).map(toScrapedProduct);
 }
 
@@ -220,7 +229,10 @@ export async function getScraperStats(): Promise<{
     .from("scraped_products")
     .select("*", { count: "exact", head: true });
 
-  if (totalError) throw new Error(`Failed to get total count: ${totalError.message}`);
+  if (totalError) {
+    console.error('Failed to get scraper stats:', totalError.message);
+    return stats; // Return zero stats if table doesn't exist yet
+  }
   stats.total = totalCount || 0;
 
   // Get counts by status
@@ -230,7 +242,10 @@ export async function getScraperStats(): Promise<{
       .select("*", { count: "exact", head: true })
       .eq("scrape_status", status);
 
-    if (error) throw new Error(`Failed to get stats for ${status}: ${error.message}`);
+    if (error) {
+      console.error(`Failed to get stats for ${status}:`, error.message);
+      continue; // Skip this status if error
+    }
 
     if (status === 'success') {
       stats.success = count || 0;
@@ -245,7 +260,10 @@ export async function getScraperStats(): Promise<{
     .select("*", { count: "exact", head: true })
     .eq("sent_to_curation", true);
 
-  if (sentError) throw new Error(`Failed to get sent count: ${sentError.message}`);
+  if (sentError) {
+    console.error('Failed to get sent count:', sentError.message);
+    return stats; // Return stats so far if error
+  }
   stats.sent = sentCount || 0;
 
   const { count: unsentCount, error: unsentError } = await supabase
