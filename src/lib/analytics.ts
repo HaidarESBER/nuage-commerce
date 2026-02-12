@@ -12,6 +12,19 @@ import { Product } from "@/types/product";
  * - Respect Do Not Track header
  */
 
+// Type declarations for analytics providers on window
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void;
+    ttq?: {
+      track: (eventName: string, data?: any) => void;
+      page: () => void;
+    };
+    fbq?: (command: string, eventName: string, data?: any) => void;
+    clarity?: (command: string, key: string, value: string) => void;
+  }
+}
+
 interface AnalyticsEvent {
   type: string;
   timestamp: string;
