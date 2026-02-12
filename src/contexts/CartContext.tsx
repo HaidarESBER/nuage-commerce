@@ -10,6 +10,7 @@ import {
 } from "react";
 import { Product } from "@/types/product";
 import { CartItem } from "@/types/cart";
+import { trackAddToCart, trackRemoveFromCart } from "@/lib/analytics";
 
 const CART_STORAGE_KEY = "nuage-cart";
 
@@ -110,12 +111,27 @@ export function CartProvider({ children }: CartProviderProps) {
       // Add new item
       return [...currentItems, { product, quantity }];
     });
+
+    // Track add to cart event
+    trackAddToCart(product, quantity);
   }, []);
 
   const removeItem = useCallback((productId: string) => {
-    setItems((currentItems) =>
-      currentItems.filter((item) => item.product.id !== productId)
-    );
+    setItems((currentItems) => {
+      // Find the item being removed for tracking
+      const itemToRemove = currentItems.find((item) => item.product.id === productId);
+
+      if (itemToRemove) {
+        // Track remove from cart event
+        trackRemoveFromCart(
+          itemToRemove.product.id,
+          itemToRemove.product.name,
+          itemToRemove.quantity
+        );
+      }
+
+      return currentItems.filter((item) => item.product.id !== productId);
+    });
   }, []);
 
   const updateQuantity = useCallback((productId: string, quantity: number) => {
