@@ -4,7 +4,7 @@
  * Path: /admin/analytics/revenue
  */
 
-import { getDailyMetrics } from '@/lib/analytics-server';
+import { getDailyMetrics, DailyMetrics } from '@/lib/analytics-server';
 import RevenueChart from '@/components/admin/RevenueChart';
 import OrderTrends from '@/components/admin/OrderTrends';
 import Link from 'next/link';
@@ -22,8 +22,8 @@ export default async function RevenueAnalyticsPage() {
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - 30);
 
-  let dailyMetrics;
-  let error = null;
+  let dailyMetrics: DailyMetrics[] = [];
+  let error: string | null = null;
 
   try {
     dailyMetrics = await getDailyMetrics(startDate, endDate);

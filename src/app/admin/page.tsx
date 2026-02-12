@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getMetricsSummary, getRealtimeEvents } from "@/lib/analytics-server";
+import { getMetricsSummary, getRealtimeEvents, MetricsSummary } from "@/lib/analytics-server";
+import { ServerAnalyticsEvent } from "@/types/analytics";
 import DashboardKPIs from "@/components/admin/DashboardKPIs";
 import RealtimeActivity from "@/components/admin/RealtimeActivity";
 
@@ -7,8 +8,8 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
   // Fetch analytics data with error handling
-  let metricsSummary;
-  let realtimeEvents;
+  let metricsSummary: MetricsSummary;
+  let realtimeEvents: ServerAnalyticsEvent[] = [];
 
   try {
     metricsSummary = await getMetricsSummary(30); // last 30 days
