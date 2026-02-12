@@ -155,6 +155,54 @@ export function generateTwitterCardTags(config: {
 }
 
 /**
+ * Generate Article schema (Schema.org Article) for blog posts
+ * Returns a JSON-LD object with XSS-safe serialization
+ */
+export function generateArticleSchema(config: {
+  title: string;
+  description: string;
+  date: string;
+  author?: string;
+  image?: string;
+  slug: string;
+}) {
+  const schema: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": config.title,
+    "description": config.description,
+    "author": {
+      "@type": "Organization",
+      "name": config.author || "Nuage",
+    },
+    "datePublished": config.date,
+    "publisher": {
+      "@type": "Organization",
+      "name": "Nuage",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://nuage.fr/logo.png",
+      },
+    },
+    "url": `https://nuage.fr/blog/${config.slug}`,
+  };
+
+  if (config.image) {
+    schema["image"] = config.image;
+  }
+
+  return schema;
+}
+
+/**
+ * Safely serialize a JSON-LD schema object to a string.
+ * Replaces < with unicode escape to prevent XSS via script injection.
+ */
+export function safeJsonLd(schema: Record<string, unknown>): string {
+  return JSON.stringify(schema).replace(/</g, '\\u003c');
+}
+
+/**
  * Helper to inject JSON-LD script tag
  * Usage in Next.js metadata API:
  *   <script type="application/ld+json">{JSON.stringify(schema)}</script>
