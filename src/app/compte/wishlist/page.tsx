@@ -7,41 +7,44 @@ import { Container } from "@/components/ui";
 import { ProductCard } from "@/components/product/ProductCard";
 import { RecommendationsSection } from "@/components/product/RecommendationsSection";
 import { Product } from "@/types/product";
-import { WishlistResponse } from "@/types/wishlist";
+import { useWishlist } from "@/contexts/WishlistContext";
 
 export default function WishlistPage() {
   const router = useRouter();
-  const [wishlistItems, setWishlistItems] = useState<Product[]>([]);
+  const { wishlistItems: wishlistIds } = useWishlist();
+  const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Fetch product details for wishlist items
   useEffect(() => {
-    fetchWishlist();
-  }, []);
-
-  const fetchWishlist = async () => {
-    try {
-      const response = await fetch("/api/wishlist");
-
-      if (response.status === 401) {
-        // Not authenticated - redirect to login
-        router.push("/compte/connexion");
+    async function fetchProducts() {
+      if (wishlistIds.length === 0) {
+        setProducts([]);
+        setIsLoading(false);
         return;
       }
 
-      if (!response.ok) {
-        throw new Error("Erreur lors du chargement de la liste de souhaits");
-      }
+      try {
+        setIsLoading(true);
+        // Fetch all products and filter by wishlist IDs
+        const response = await fetch('/api/products');
+        if (!response.ok) throw new Error('Failed to fetch products');
 
-      const data: WishlistResponse = await response.json();
-      setWishlistItems(data.items.map(item => item.product));
-    } catch (error) {
-      console.error("Error fetching wishlist:", error);
-      setError("Impossible de charger votre liste de souhaits");
-    } finally {
-      setIsLoading(false);
+        const allProducts: Product[] = await response.json();
+        const wishlistProducts = allProducts.filter(p => wishlistIds.includes(p.id));
+        setProducts(wishlistProducts);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching wishlist products:', err);
+        setError('Impossible de charger vos produits favoris');
+      } finally {
+        setIsLoading(false);
+      }
     }
-  };
+
+    fetchProducts();
+  }, [wishlistIds]);
 
   if (isLoading) {
     return (
@@ -83,14 +86,14 @@ export default function WishlistPage() {
           Ma Liste de Souhaits
         </h1>
         <p className="text-muted text-lg">
-          {wishlistItems.length > 0
-            ? `${wishlistItems.length} ${wishlistItems.length === 1 ? "produit" : "produits"} dans votre liste`
+          {products.length > 0
+            ? `${products.length} ${products.length === 1 ? "produit" : "produits"} dans votre liste`
             : "Votre liste de souhaits est vide"}
         </p>
       </motion.div>
 
       {/* Empty State */}
-      {wishlistItems.length === 0 && (
+      {products.length === 0 && !isLoading && (
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -126,7 +129,7 @@ export default function WishlistPage() {
       )}
 
       {/* Products Grid */}
-      {wishlistItems.length > 0 && (
+      {products.length > 0 && (
         <>
           <motion.div
             variants={{
@@ -143,7 +146,7 @@ export default function WishlistPage() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
           >
             <AnimatePresence mode="popLayout">
-              {wishlistItems.map((product) => (
+              {products.map((product) => (
                 <motion.div
                   key={product.id}
                   layout
