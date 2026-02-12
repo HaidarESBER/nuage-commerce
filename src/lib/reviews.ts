@@ -25,7 +25,10 @@ export async function getProductReviews(productId: string): Promise<Review[]> {
     .eq('product_id', productId)
     .order('created_at', { ascending: false });
 
-  if (error) throw error;
+  if (error) {
+    console.error('Reviews query error:', error.message);
+    return []; // Return empty array if table doesn't exist yet
+  }
 
   // Transform to Review format
   return data.map((row: any) => ({
