@@ -2,6 +2,42 @@
  * User type definitions for authentication
  */
 
+/**
+ * Saved address structure
+ */
+export interface SavedAddress {
+  id: string;
+  label: string; // e.g., "Domicile", "Bureau", "Autre"
+  firstName: string;
+  lastName: string;
+  address: string;
+  address2?: string;
+  city: string;
+  postalCode: string;
+  country: string;
+  phone: string;
+  isDefault: boolean;
+}
+
+/**
+ * Email communication preferences
+ */
+export interface EmailPreferences {
+  email_marketing: boolean;
+  email_order_updates: boolean;
+  email_promotions: boolean;
+}
+
+/**
+ * Profile update data (subset of fields user can edit)
+ */
+export interface ProfileUpdateData {
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  preferences?: EmailPreferences;
+}
+
 export interface User {
   id: string;
   email: string;
@@ -43,6 +79,9 @@ export interface UserSession {
   lastName: string;
   /** Admin role flag */
   isAdmin?: boolean;
+  phone?: string;
+  savedAddresses?: SavedAddress[];
+  preferences?: EmailPreferences;
 }
 
 /**

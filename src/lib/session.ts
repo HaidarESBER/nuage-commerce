@@ -32,6 +32,9 @@ export async function getSession(): Promise<UserSession | null> {
       firstName: profile?.first_name || "",
       lastName: profile?.last_name || "",
       isAdmin: profile?.is_admin || false,
+      phone: profile?.phone || undefined,
+      savedAddresses: profile?.saved_addresses || undefined,
+      preferences: profile?.preferences || undefined,
     };
   } catch (error) {
     console.error("Failed to get session:", error);
