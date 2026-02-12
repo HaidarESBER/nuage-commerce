@@ -80,8 +80,41 @@ export function WishlistProvider({ children }: WishlistProviderProps) {
           // User is authenticated - load from API
           setIsAuthenticated(true);
           const data = await response.json();
-          const productIds = data.items.map((item: any) => item.productId);
-          setWishlistItems(productIds);
+          const apiProductIds = data.items.map((item: any) => item.productId);
+
+          // MIGRATION: Sync localStorage wishlist to database
+          const localStorageItems = loadWishlistFromStorage();
+          const itemsToMigrate = localStorageItems.filter(
+            (id) => !apiProductIds.includes(id)
+          );
+
+          if (itemsToMigrate.length > 0) {
+            console.log(`Migrating ${itemsToMigrate.length} items from localStorage to database`);
+
+            // Add each localStorage item to database
+            await Promise.allSettled(
+              itemsToMigrate.map((productId) =>
+                fetch('/api/wishlist', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ productId }),
+                })
+              )
+            );
+
+            // Reload wishlist after migration
+            const refreshResponse = await fetch('/api/wishlist');
+            if (refreshResponse.ok) {
+              const refreshData = await refreshResponse.json();
+              const mergedIds = refreshData.items.map((item: any) => item.productId);
+              setWishlistItems(mergedIds);
+            }
+
+            // Clear localStorage after successful migration
+            localStorage.removeItem(WISHLIST_STORAGE_KEY);
+          } else {
+            setWishlistItems(apiProductIds);
+          }
         } else if (response.status === 401) {
           // User is not authenticated - load from localStorage
           setIsAuthenticated(false);
