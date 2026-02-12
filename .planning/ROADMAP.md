@@ -158,3 +158,53 @@ Phases execute in numeric order: 9 → 10 → 11 → 12 → 13 → 14 → 15 →
 | 17. Customer Accounts & Profiles | v4.0 | 1/1 | Complete | 2026-02-12 |
 | 18. Wishlist & Recommendations | v4.0 | 3/3 | Complete | 2026-02-12 |
 | 19. Mobile UX Excellence | v4.0 | 2/2 | Complete | 2026-02-12 |
+
+### 🚧 v5.0 - Analytics & Insights (In Progress)
+
+**Milestone Goal:** Provide comprehensive analytics and insights into business performance, customer behavior, and sales trends through admin dashboards and intelligence tools.
+
+#### Phase 20: Analytics Foundation
+
+**Goal**: Set up analytics infrastructure with event tracking, data collection pipeline, and core metrics database
+**Depends on**: Previous milestones complete (v4.0)
+**Research**: Likely (analytics platforms and architectures)
+**Research topics**: Analytics libraries (Plausible, PostHog, custom), event tracking patterns, time-series data in Supabase, real-time vs batch processing
+**Plans**: TBD
+
+Plans:
+- [ ] 20-01: TBD (run /gsd:plan-phase 20 to break down)
+
+#### Phase 21: Admin Dashboard
+
+**Goal**: Build comprehensive admin dashboard with KPIs, revenue metrics, order tracking, and real-time statistics
+**Depends on**: Phase 20
+**Research**: Unlikely (dashboard UI with established patterns)
+**Plans**: TBD
+
+Plans:
+- [ ] 21-01: TBD (run /gsd:plan-phase 21 to break down)
+
+#### Phase 22: Sales Analytics
+
+**Goal**: Implement detailed sales analytics with product performance, revenue breakdowns, order trends, and inventory insights
+**Depends on**: Phase 21
+**Research**: Unlikely (data visualization with existing stack)
+**Plans**: TBD
+
+Plans:
+- [ ] 22-01: TBD (run /gsd:plan-phase 22 to break down)
+
+#### Phase 23: Customer Intelligence
+
+**Goal**: Add customer segmentation, behavioral analytics, cohort analysis, and lifetime value tracking
+**Depends on**: Phase 22
+**Research**: Likely (customer analytics algorithms)
+**Research topics**: Segmentation strategies, cohort analysis methods, LTV calculation approaches, RFM analysis
+**Plans**: TBD
+
+Plans:
+- [ ] 23-01: TBD (run /gsd:plan-phase 23 to break down)
+| 20. Analytics Foundation | v5.0 | 0/? | Not started | - |
+| 21. Admin Dashboard | v5.0 | 0/? | Not started | - |
+| 22. Sales Analytics | v5.0 | 0/? | Not started | - |
+| 23. Customer Intelligence | v5.0 | 0/? | Not started | - |
