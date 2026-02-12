@@ -137,10 +137,12 @@ Plans:
 **Goal**: Add product reviews, ratings, verified purchase badges, and social proof elements (recently viewed, trending items)
 **Depends on**: Phase 15
 **Research**: Unlikely (database extension with established patterns)
-**Plans**: TBD
+**Plans**: 3 plans, 2 waves
 
 Plans:
-- [ ] 16-01: TBD (run /gsd:plan-phase 16 to break down)
+- [x] 16-01: Reviews Database & API (Wave 1) -- 2026-02-12
+- [x] 16-02: Review Submission Form (Wave 2) -- 2026-02-12
+- [x] 16-03: Social Proof Elements (Wave 2) -- 2026-02-12
 
 #### Phase 17: Customer Accounts & Profiles
 
