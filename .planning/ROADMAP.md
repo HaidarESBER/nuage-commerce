@@ -169,10 +169,11 @@ Phases execute in numeric order: 9 → 10 → 11 → 12 → 13 → 14 → 15 →
 **Depends on**: Previous milestones complete (v4.0)
 **Research**: Likely (analytics platforms and architectures)
 **Research topics**: Analytics libraries (Plausible, PostHog, custom), event tracking patterns, time-series data in Supabase, real-time vs batch processing
-**Plans**: TBD
+**Plans**: 2 plans, 2 waves
 
 Plans:
-- [ ] 20-01: TBD (run /gsd:plan-phase 20 to break down)
+- [x] 20-01: Event Tracking Infrastructure (Wave 1) -- 2026-02-12
+- [x] 20-02: Core Metrics & Aggregation (Wave 2) -- 2026-02-12
 
 #### Phase 21: Admin Dashboard
 
@@ -204,7 +205,7 @@ Plans:
 
 Plans:
 - [ ] 23-01: TBD (run /gsd:plan-phase 23 to break down)
-| 20. Analytics Foundation | v5.0 | 0/? | Not started | - |
+| 20. Analytics Foundation | v5.0 | 2/2 | Complete | 2026-02-12 |
 | 21. Admin Dashboard | v5.0 | 0/? | Not started | - |
 | 22. Sales Analytics | v5.0 | 0/? | Not started | - |
 | 23. Customer Intelligence | v5.0 | 0/? | Not started | - |
