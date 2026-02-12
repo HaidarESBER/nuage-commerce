@@ -141,7 +141,10 @@ export async function getAllDrafts(): Promise<ProductDraft[]> {
     .select("*")
     .order("created_at", { ascending: false });
 
-  if (error) throw new Error(`Failed to get all drafts: ${error.message}`);
+  if (error) {
+    console.error('Failed to get drafts:', error.message);
+    return []; // Return empty array if table doesn't exist yet
+  }
   return (data || []).map(toDraft);
 }
 
