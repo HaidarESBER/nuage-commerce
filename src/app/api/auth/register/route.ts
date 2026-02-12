@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { registerUser } from "@/lib/users";
 import { RegisterData } from "@/types/user";
-import { cookies } from "next/headers";
+import { validatePassword } from "@/lib/password-validation";
+import { createClient } from "@/lib/supabase/server";
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,26 +16,69 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Register user
-    const userSession = await registerUser({
-      email,
+    // Validate password strength before calling Supabase
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.valid) {
+      return NextResponse.json(
+        { error: passwordValidation.error },
+        { status: 400 }
+      );
+    }
+
+    const supabase = await createClient();
+
+    // Sign up with Supabase Auth
+    const { data, error } = await supabase.auth.signUp({
+      email: email.toLowerCase().trim(),
       password,
-      firstName,
-      lastName,
+      options: {
+        data: {
+          first_name: firstName.trim(),
+          last_name: lastName.trim(),
+        },
+      },
     });
 
-    // Set session cookie
-    const cookieStore = await cookies();
-    cookieStore.set("user_session", JSON.stringify(userSession), {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 30, // 30 days
-    });
+    if (error) {
+      // Map Supabase error messages to French
+      if (error.message.includes("already registered")) {
+        return NextResponse.json(
+          { error: "Un compte existe deja avec cette adresse email" },
+          { status: 400 }
+        );
+      }
+      return NextResponse.json(
+        { error: error.message },
+        { status: 400 }
+      );
+    }
+
+    if (!data.user) {
+      return NextResponse.json(
+        { error: "Erreur lors de l'inscription" },
+        { status: 400 }
+      );
+    }
+
+    // Update profile with first_name and last_name
+    // The handle_new_user trigger creates the profile row, but with empty names
+    await supabase
+      .from("profiles")
+      .update({
+        first_name: firstName.trim(),
+        last_name: lastName.trim(),
+      })
+      .eq("id", data.user.id);
 
     return NextResponse.json({
       success: true,
-      user: userSession,
+      user: {
+        id: data.user.id,
+        email: data.user.email,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        isAdmin: false,
+      },
     });
   } catch (error) {
     console.error("Registration error:", error);

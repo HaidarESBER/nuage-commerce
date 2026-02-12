@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { loginUser } from "@/lib/users";
 import { LoginData } from "@/types/user";
-import { cookies } from "next/headers";
+import { createClient } from "@/lib/supabase/server";
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,21 +15,44 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Authenticate user
-    const userSession = await loginUser(email, password);
+    const supabase = await createClient();
 
-    // Set session cookie
-    const cookieStore = await cookies();
-    cookieStore.set("user_session", JSON.stringify(userSession), {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 30, // 30 days
+    // Sign in with Supabase Auth
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email.toLowerCase().trim(),
+      password,
     });
+
+    if (error) {
+      return NextResponse.json(
+        { error: "Email ou mot de passe incorrect" },
+        { status: 401 }
+      );
+    }
+
+    if (!data.user) {
+      return NextResponse.json(
+        { error: "Email ou mot de passe incorrect" },
+        { status: 401 }
+      );
+    }
+
+    // Fetch profile to get additional data (first_name, last_name, is_admin)
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", data.user.id)
+      .single();
 
     return NextResponse.json({
       success: true,
-      user: userSession,
+      user: {
+        id: data.user.id,
+        email: data.user.email,
+        firstName: profile?.first_name || "",
+        lastName: profile?.last_name || "",
+        isAdmin: profile?.is_admin || false,
+      },
     });
   } catch (error) {
     console.error("Login error:", error);

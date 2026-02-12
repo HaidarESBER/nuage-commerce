@@ -1,16 +1,16 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { createClient } from "@/lib/supabase/server";
 
 export async function POST() {
   try {
-    const cookieStore = await cookies();
-    cookieStore.delete("user_session");
+    const supabase = await createClient();
+    await supabase.auth.signOut();
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Logout error:", error);
     return NextResponse.json(
-      { error: "Erreur lors de la déconnexion" },
+      { error: "Erreur lors de la deconnexion" },
       { status: 500 }
     );
   }
