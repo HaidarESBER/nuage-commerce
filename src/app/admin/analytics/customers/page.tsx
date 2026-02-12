@@ -4,12 +4,21 @@ import {
   getRFMSegments,
   getCustomerSegmentStats,
   getTopCustomers,
+  getCohorts,
+  getCustomerLTV,
+  getBehavioralMetrics,
   CustomerRFM,
   CustomerSegmentStats,
+  Cohort,
+  CustomerLTV,
+  BehavioralMetrics,
 } from '@/lib/customer-analytics';
 import RFMDistribution from '@/components/admin/RFMDistribution';
 import CustomerSegments from '@/components/admin/CustomerSegments';
 import TopCustomers from '@/components/admin/TopCustomers';
+import CohortRetention from '@/components/admin/CohortRetention';
+import LTVMetrics from '@/components/admin/LTVMetrics';
+import CustomerBehavior from '@/components/admin/CustomerBehavior';
 import Link from 'next/link';
 
 // Force dynamic rendering for real-time data
@@ -26,6 +35,9 @@ export default async function CustomerIntelligencePage() {
   let segments: CustomerRFM[] = [];
   let stats: CustomerSegmentStats[] = [];
   let topCustomers: CustomerRFM[] = [];
+  let cohorts: Cohort[] = [];
+  let ltvData: CustomerLTV[] = [];
+  let behaviorMetrics: BehavioralMetrics | null = null;
 
   try {
     segments = await getRFMSegments();
@@ -43,6 +55,24 @@ export default async function CustomerIntelligencePage() {
     topCustomers = await getTopCustomers(20);
   } catch (error) {
     console.error('Failed to fetch top customers:', error);
+  }
+
+  try {
+    cohorts = await getCohorts();
+  } catch (error) {
+    console.error('Failed to fetch cohorts:', error);
+  }
+
+  try {
+    ltvData = await getCustomerLTV();
+  } catch (error) {
+    console.error('Failed to fetch LTV data:', error);
+  }
+
+  try {
+    behaviorMetrics = await getBehavioralMetrics();
+  } catch (error) {
+    console.error('Failed to fetch behavioral metrics:', error);
   }
 
   // Calculate KPIs from stats
@@ -133,6 +163,45 @@ export default async function CustomerIntelligencePage() {
           </p>
         </div>
         <CustomerSegments stats={stats} />
+      </section>
+
+      {/* Lifetime Value Metrics */}
+      <section className="space-y-4">
+        <div className="border-b border-background-secondary pb-2">
+          <h2 className="text-xl font-semibold text-primary">Valeur Vie Client (LTV)</h2>
+          <p className="text-sm text-primary-light mt-1">
+            Analyse de la valeur client actuelle et projetée
+          </p>
+        </div>
+        <LTVMetrics ltvData={ltvData} />
+      </section>
+
+      {/* Cohort Retention */}
+      <section className="space-y-4">
+        <div className="border-b border-background-secondary pb-2">
+          <h2 className="text-xl font-semibold text-primary">Rétention par Cohorte</h2>
+          <p className="text-sm text-primary-light mt-1">
+            Taux de rétention mensuel par cohorte d&apos;acquisition
+          </p>
+        </div>
+        <CohortRetention cohorts={cohorts} />
+      </section>
+
+      {/* Customer Behavior */}
+      <section className="space-y-4">
+        <div className="border-b border-background-secondary pb-2">
+          <h2 className="text-xl font-semibold text-primary">Comportement Client</h2>
+          <p className="text-sm text-primary-light mt-1">
+            Conversion du parcours client
+          </p>
+        </div>
+        {behaviorMetrics ? (
+          <CustomerBehavior metrics={behaviorMetrics} />
+        ) : (
+          <div className="text-center py-12 text-primary-light">
+            Erreur lors du chargement des métriques comportementales
+          </div>
+        )}
       </section>
 
       {/* Top Customers */}
