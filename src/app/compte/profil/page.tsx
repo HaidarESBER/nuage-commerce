@@ -10,6 +10,8 @@ import { UserSession, EmailPreferences } from "@/types/user";
 import { Order, orderStatusLabels } from "@/types/order";
 import { formatPrice } from "@/types/product";
 import { formatDateLong } from "@/lib/date-utils";
+import { createClient } from "@/lib/supabase/client";
+import { LogOut } from "lucide-react";
 
 type TabType = "info" | "security" | "preferences" | "orders";
 
@@ -231,6 +233,22 @@ export default function ProfilePage() {
       );
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    if (!confirm("Êtes-vous sûr de vouloir vous déconnecter ?")) {
+      return;
+    }
+
+    try {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+      router.push("/");
+      router.refresh();
+    } catch (error) {
+      console.error("Error logging out:", error);
+      showMessage("error", "Erreur lors de la déconnexion");
     }
   };
 
@@ -534,78 +552,102 @@ export default function ProfilePage() {
 
             {/* Security Tab */}
             {activeTab === "security" && (
-              <motion.form
+              <motion.div
                 key="security"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                onSubmit={handleChangePassword}
-                className="space-y-6 max-w-lg"
+                className="space-y-8 max-w-lg"
               >
-                <div>
-                  <label
-                    htmlFor="currentPassword"
-                    className="block text-sm font-medium text-primary mb-2"
-                  >
-                    Mot de passe actuel
-                  </label>
-                  <input
-                    type="password"
-                    id="currentPassword"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
-                    required
-                  />
-                </div>
+                {/* Change Password Form */}
+                <form onSubmit={handleChangePassword} className="space-y-6">
+                  <h3 className="text-lg font-semibold text-primary">
+                    Changer le mot de passe
+                  </h3>
 
-                <div>
-                  <label
-                    htmlFor="newPassword"
-                    className="block text-sm font-medium text-primary mb-2"
+                  <div>
+                    <label
+                      htmlFor="currentPassword"
+                      className="block text-sm font-medium text-primary mb-2"
+                    >
+                      Mot de passe actuel
+                    </label>
+                    <input
+                      type="password"
+                      id="currentPassword"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      className="w-full px-4 py-3 rounded-lg border border-border bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="newPassword"
+                      className="block text-sm font-medium text-primary mb-2"
+                    >
+                      Nouveau mot de passe
+                    </label>
+                    <input
+                      type="password"
+                      id="newPassword"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="w-full px-4 py-3 rounded-lg border border-border bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                      minLength={12}
+                      required
+                    />
+                    <p className="mt-1 text-xs text-muted">
+                      Minimum 12 caractères, avec majuscule, minuscule, chiffre et
+                      caractère spécial
+                    </p>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="confirmNewPassword"
+                      className="block text-sm font-medium text-primary mb-2"
+                    >
+                      Confirmer le nouveau mot de passe
+                    </label>
+                    <input
+                      type="password"
+                      id="confirmNewPassword"
+                      value={confirmNewPassword}
+                      onChange={(e) => setConfirmNewPassword(e.target.value)}
+                      className="w-full px-4 py-3 rounded-lg border border-border bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                      minLength={12}
+                      required
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSaving}
+                    className="w-full bg-accent text-background font-medium py-3 rounded-lg hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Nouveau mot de passe
-                  </label>
-                  <input
-                    type="password"
-                    id="newPassword"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
-                    minLength={12}
-                    required
-                  />
-                  <p className="mt-1 text-xs text-muted">
-                    Minimum 12 caractères, avec majuscule, minuscule, chiffre et
-                    caractère spécial
+                    {isSaving ? "Modification..." : "Modifier le mot de passe"}
+                  </button>
+                </form>
+
+                {/* Danger Zone - Logout */}
+                <div className="pt-6 border-t border-red-200">
+                  <h3 className="text-lg font-semibold text-red-600 mb-2">
+                    Zone de danger
+                  </h3>
+                  <p className="text-sm text-muted mb-4">
+                    Déconnectez-vous de votre compte sur cet appareil.
                   </p>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="confirmNewPassword"
-                    className="block text-sm font-medium text-primary mb-2"
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="w-full bg-red-50 text-red-600 font-medium py-3 rounded-lg hover:bg-red-100 transition-colors border border-red-200 flex items-center justify-center gap-2"
                   >
-                    Confirmer le nouveau mot de passe
-                  </label>
-                  <input
-                    type="password"
-                    id="confirmNewPassword"
-                    value={confirmNewPassword}
-                    onChange={(e) => setConfirmNewPassword(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
-                    minLength={12}
-                    required
-                  />
+                    <LogOut className="w-5 h-5" />
+                    Se déconnecter
+                  </button>
                 </div>
-
-                <button
-                  type="submit"
-                  disabled={isSaving}
-                  className="w-full bg-accent text-background font-medium py-3 rounded-lg hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSaving ? "Modification..." : "Modifier le mot de passe"}
-                </button>
-              </motion.form>
+              </motion.div>
             )}
 
             {/* Preferences Tab */}
