@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 
 ## Current Position
 
-Phase: 21 of 23 (Admin Dashboard)
-Plan: 21-03 complete
+Phase: 22 of 23 (Sales Analytics)
+Plan: 22-01 complete
 Status: In progress
-Last activity: 2026-02-12 — Plan 21-03 complete
+Last activity: 2026-02-12 — Completed 22-01 (Sales Performance Dashboard)
 
-Progress: ███░░░░░░░ 30% (v5.0: 2/4 phases, partial)
+Progress: ████░░░░░░ 33% (v5.0: 3/4 phases, partial)
 
 ## Milestone Summary
 
@@ -55,9 +55,9 @@ Progress: ███░░░░░░░ 30% (v5.0: 2/4 phases, partial)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 47
-- Average duration: 10.1 min
-- Total execution time: 7.9 hours
+- Total plans completed: 48
+- Average duration: 10.2 min
+- Total execution time: 8.2 hours
 
 **By Phase:**
 
@@ -83,7 +83,8 @@ Progress: ███░░░░░░░ 30% (v5.0: 2/4 phases, partial)
 | 18-wishlist-recommendations | 3/3 | 65 min | 21.7 min |
 | 19-mobile-ux-excellence | 2/3 | 27 min | 13.5 min |
 | 20-analytics-foundation | 2/2 | 10 min | 5 min |
-| 21-admin-dashboard | 3/? | 30 min | 10 min |
+| 21-admin-dashboard | 3/3 | 30 min | 10 min |
+| 22-sales-analytics | 1/? | 18 min | 18 min |
 
 ## Accumulated Context
 
@@ -157,6 +158,8 @@ Progress: ███░░░░░░░ 30% (v5.0: 2/4 phases, partial)
 
 **v5.0 (21-03):** Product analytics dashboard at /admin/analytics/products with TopProducts component (most viewed/cart products in side-by-side tables), SearchAnalytics component (top 20 queries with 0-result highlighting), French number formatting via toLocaleString('fr-FR'), top-3 highlighting with accent color, alternating row backgrounds (Mist/Cream), monospace font for search queries, empty state handling, error boundaries for each data source, admin navigation already added in 21-02.
 
+**v5.0 (22-01):** Sales analytics helpers in analytics-server.ts (getRevenueByCategory, getTopSellingProducts, getAOVTrends) with application-level Map aggregation for order_items queries, /admin/analytics/sales page with category revenue breakdown, top sellers ranking, and AOV trend visualization, pure SVG line charts with area fill (no external libraries), graceful error handling per data source to prevent page-level failures, French formatting throughout, top items highlighted with accent color.
+
 ### Deferred Issues
 
 - Legal pages content (already in place per user)
@@ -172,5 +175,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 21-02 (Revenue Analytics Dashboard)
+Stopped at: Completed 22-01 (Sales Performance Dashboard)
 Resume file: None
