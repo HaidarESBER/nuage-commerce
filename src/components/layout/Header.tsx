@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui";
@@ -10,6 +10,8 @@ import { useWishlist } from "@/contexts/WishlistContext";
 import { useComparison } from "@/contexts/ComparisonContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { categoryLabels, ProductCategory } from "@/types/product";
+import { createClient } from "@/lib/supabase/client";
+import { Settings } from "lucide-react";
 
 /**
  * Site header with brand name and navigation
@@ -22,9 +24,30 @@ import { categoryLabels, ProductCategory } from "@/types/product";
  */
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const pathname = usePathname();
   const { wishlistItems } = useWishlist();
   const { comparisonItems } = useComparison();
+
+  // Check if user is admin
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (user) {
+        // Check if user has admin role in metadata
+        const isAdminUser = user.user_metadata?.role === 'admin' ||
+                           user.app_metadata?.role === 'admin' ||
+                           user.email?.endsWith('@admin.nuage.fr');
+        setIsAdmin(isAdminUser);
+      } else {
+        setIsAdmin(false);
+      }
+    };
+
+    checkAdminStatus();
+  }, []);
 
   // Close menu on navigation
   const handleNavClick = () => {
@@ -144,6 +167,22 @@ export function Header() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
             </Link>
+
+            {/* Admin button - only visible to admins */}
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className={`transition-colors flex items-center gap-1 ${
+                  isHomepage
+                    ? "text-white/90 hover:text-white drop-shadow"
+                    : "text-primary hover:text-accent"
+                }`}
+                aria-label="Admin Panel"
+                title="Admin Panel"
+              >
+                <Settings className="w-5 h-5" />
+              </Link>
+            )}
 
             <CartButton isHomepage={isHomepage} />
           </nav>
@@ -306,6 +345,21 @@ export function Header() {
               >
                 Mon Profil
               </Link>
+              {/* Admin link - only visible to admins */}
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  onClick={handleNavClick}
+                  className={`text-base font-medium transition-colors flex items-center gap-2 ${
+                    pathname.startsWith("/admin")
+                      ? "text-accent"
+                      : "text-primary hover:text-accent"
+                  }`}
+                >
+                  <Settings className="w-5 h-5" />
+                  Admin Panel
+                </Link>
+              )}
               <Link
                 href="/panier"
                 onClick={handleNavClick}
