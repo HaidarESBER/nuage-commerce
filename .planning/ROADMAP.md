@@ -6,6 +6,7 @@
 - ✅ **v1.1 - Enhanced Experience** (Phases 5-8) — COMPLETE 2026-02-09
 - ✅ **v2.0 - Production Launch** (Phases 9-13) — COMPLETE 2026-02-12
 - ✅ **v3.0 - Content & Growth** (Phase 14) — COMPLETE 2026-02-12
+- 🚧 **v4.0 - UX Heaven** (Phases 15-19) — In progress
 
 ## Completed Milestones
 
@@ -100,7 +101,7 @@ Plans:
 - [x] 13-01: AI Translation Engine & Curation Schema (Wave 1) -- 2026-02-11
 - [x] 13-02: Admin Review Queue & Automation (Wave 2) -- 2026-02-11
 
-### 📋 v3.0 - Content & Growth (Planned)
+### ✅ v3.0 - Content & Growth (COMPLETE 2026-02-12)
 
 **Milestone Goal:** Drive organic traffic and brand authority with a blog system for hookah guides, culture articles, and SEO landing pages.
 
@@ -116,10 +117,67 @@ Plans:
 - [x] 14-01: MDX Infrastructure & Blog Utilities (packages, config, types, utilities, Article schema)
 - [x] 14-02: Blog Pages & Content
 
+### 🚧 v4.0 - UX Heaven (In Progress)
+
+**Milestone Goal:** Elevate user experience to premium standards with smart search, social proof, personalized recommendations, and mobile excellence.
+
+#### Phase 15: Smart Search & Filtering
+
+**Goal**: Implement advanced product search with dynamic filters (category, price, features), sorting options, and search suggestions
+**Depends on**: Previous milestones complete (v3.0)
+**Research**: Likely (search technology choices)
+**Research topics**: Search libraries (Algolia, MeiliSearch, self-hosted), French language search, filter UI patterns, search analytics
+**Plans**: TBD
+
+Plans:
+- [ ] 15-01: TBD (run /gsd:plan-phase 15 to break down)
+
+#### Phase 16: Social Proof & Reviews
+
+**Goal**: Add product reviews, ratings, verified purchase badges, and social proof elements (recently viewed, trending items)
+**Depends on**: Phase 15
+**Research**: Unlikely (database extension with established patterns)
+**Plans**: TBD
+
+Plans:
+- [ ] 16-01: TBD (run /gsd:plan-phase 16 to break down)
+
+#### Phase 17: Customer Accounts & Profiles
+
+**Goal**: Build user profiles with order history, saved addresses, communication preferences, and account management
+**Depends on**: Phase 16
+**Research**: Unlikely (Supabase Auth already integrated, extending existing patterns)
+**Plans**: TBD
+
+Plans:
+- [ ] 17-01: TBD (run /gsd:plan-phase 17 to break down)
+
+#### Phase 18: Wishlist & Recommendations
+
+**Goal**: Implement product favorites/wishlist and AI-powered product recommendations based on browsing and purchase history
+**Depends on**: Phase 17 (user accounts for personalization)
+**Research**: Likely (recommendation algorithms and approaches)
+**Research topics**: Recommendation engines (collaborative filtering vs content-based), AI/ML for recommendations, personalization strategies, privacy considerations
+**Plans**: TBD
+
+Plans:
+- [ ] 18-01: TBD (run /gsd:plan-phase 18 to break down)
+
+#### Phase 19: Mobile UX Excellence
+
+**Goal**: Mobile-specific enhancements including pull-to-refresh, native-like gestures, offline support, and PWA features
+**Depends on**: Phase 18
+**Research**: Likely (PWA and offline-first patterns)
+**Research topics**: PWA setup with Next.js, service workers, offline-first architecture, mobile gesture libraries, app-like transitions
+**Plans**: TBD
+
+Plans:
+- [ ] 19-01: TBD (run /gsd:plan-phase 19 to break down)
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 9 → 10 → 11 → 12 → 13 → 14
+Phases execute in numeric order: 9 → 10 → 11 → 12 → 13 → 14 → 15 → 16 → 17 → 18 → 19
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -137,3 +195,8 @@ Phases execute in numeric order: 9 → 10 → 11 → 12 → 13 → 14
 | 12. Product Sourcing Pipeline | v2.0 | 2/2 | Complete | 2026-02-12 |
 | 13. AI Curation & Automation | v2.0 | 2/2 | Complete | 2026-02-11 |
 | 14. Blog & Content Marketing | v3.0 | 2/2 | Complete | 2026-02-12 |
+| 15. Smart Search & Filtering | v4.0 | 0/? | Not started | - |
+| 16. Social Proof & Reviews | v4.0 | 0/? | Not started | - |
+| 17. Customer Accounts & Profiles | v4.0 | 0/? | Not started | - |
+| 18. Wishlist & Recommendations | v4.0 | 0/? | Not started | - |
+| 19. Mobile UX Excellence | v4.0 | 0/? | Not started | - |
