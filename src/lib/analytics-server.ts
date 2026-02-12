@@ -716,24 +716,44 @@ export async function getInventoryVelocity(days: number = 30): Promise<Inventory
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - days);
 
-  // Query order_items for last N days
+  // Fetch orders in date range first
+  const { data: orders, error: ordersError } = await supabase
+    .from('orders')
+    .select('id, created_at')
+    .gte('created_at', startDate.toISOString());
+
+  if (ordersError) {
+    console.error('getInventoryVelocity orders error:', ordersError.message);
+    return [];
+  }
+
+  if (!orders || orders.length === 0) {
+    return [];
+  }
+
+  // Get order IDs from the date range
+  const orderIds = new Set(orders.map(o => o.id));
+
+  // Fetch all order_items
   const { data: orderItems, error: orderItemsError } = await supabase
     .from('order_items')
-    .select('product_id, quantity, orders!inner(created_at)')
-    .gte('orders.created_at', startDate.toISOString());
+    .select('order_id, product_id, quantity');
 
   if (orderItemsError) {
     console.error('getInventoryVelocity error:', orderItemsError.message);
-    throw new Error(`Failed to fetch order items: ${orderItemsError.message}`);
+    return [];
   }
 
-  // Aggregate units sold per product
+  // Aggregate units sold per product (only for orders in date range)
   const salesByProduct = new Map<string, number>();
   if (orderItems && orderItems.length > 0) {
     for (const item of orderItems) {
-      const productId = item.product_id;
-      const quantity = item.quantity;
-      salesByProduct.set(productId, (salesByProduct.get(productId) || 0) + quantity);
+      // Only count items from orders in our date range
+      if (orderIds.has(item.order_id)) {
+        const productId = item.product_id;
+        const quantity = item.quantity;
+        salesByProduct.set(productId, (salesByProduct.get(productId) || 0) + quantity);
+      }
     }
   }
 
