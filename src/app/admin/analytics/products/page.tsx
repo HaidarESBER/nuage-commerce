@@ -96,7 +96,7 @@ export default async function ProductAnalyticsPage() {
                     {index + 1}
                   </span>
                   <span className="text-primary font-medium">
-                    {product.key}
+                    {product.label || product.key}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
