@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 ## Current Position
 
 Phase: 15 of 19 (Smart Search & Filtering)
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-02-12 — Milestone v4.0 created
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-02-12 — Completed 15-01-PLAN.md
 
-Progress: ░░░░░░░░░░ 0% (0/5 phases in v4.0)
+Progress: █░░░░░░░░░ 3% (1/34 plans in v4.0)
 
 ## Milestone Summary
 
@@ -49,9 +49,9 @@ Progress: ░░░░░░░░░░ 0% (0/5 phases in v4.0)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 33
+- Total plans completed: 34
 - Average duration: 9.0 min
-- Total execution time: 5.1 hours
+- Total execution time: 5.4 hours
 
 **By Phase:**
 
@@ -71,6 +71,7 @@ Progress: ░░░░░░░░░░ 0% (0/5 phases in v4.0)
 | 12-product-sourcing-pipeline | 2/2 | 10 min | 5 min |
 | 13-ai-curation-automation | 2/2 | 27 min | 13.5 min |
 | 14-blog-content-marketing | 2/2 | 14 min | 7 min |
+| 15-smart-search-filtering | 1/3 | 15 min | 15 min |
 
 ## Accumulated Context
 
@@ -111,6 +112,8 @@ Progress: ░░░░░░░░░░ 0% (0/5 phases in v4.0)
 
 **v2.0 (12-02):** Admin scraper UI with single/bulk URL input, server actions with revalidatePath for mutations, sendToCurationAction bridges scraped_products to product_drafts via createDraftFromScrapedProduct, automated scrape cron (12-hour interval) with SCRAPE_URLS environment config, full pipeline integration (scrape → draft → AI translate → curate → publish).
 
+**v4.0 (15-01):** FlexSearch client-side search (zero hosting costs), LatinBalance encoder for French text normalization, resolution: 9 with bidirectional context for fuzzy matching, buildSearchQuery helper with filters/sorting/facets/pagination.
+
 ### Deferred Issues
 
 - Legal pages content (already in place per user)
@@ -125,6 +128,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-12
-Stopped at: Milestone v4.0 initialization
+Last session: 2026-02-12T11:21:43Z
+Stopped at: Completed 15-01-PLAN.md
 Resume file: None
