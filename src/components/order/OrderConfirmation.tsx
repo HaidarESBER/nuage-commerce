@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Order, OrderStatus } from "@/types/order";
 import { Button } from "@/components/ui";
 import { OrderDetails } from "./OrderDetails";
 import { useCart } from "@/contexts/CartContext";
+import { trackPurchase } from "@/lib/analytics";
 
 interface OrderConfirmationProps {
   order: Order;
@@ -34,6 +35,7 @@ interface OrderConfirmationProps {
  */
 export function OrderConfirmation({ order, paymentVerified, orderStatus }: OrderConfirmationProps) {
   const { clearCart } = useCart();
+  const [purchaseTracked, setPurchaseTracked] = useState(false);
 
   // Clear cart on mount — user has completed payment
   useEffect(() => {
@@ -51,6 +53,40 @@ export function OrderConfirmation({ order, paymentVerified, orderStatus }: Order
 
   const isConfirmed = paymentVerified || orderStatus === 'confirmed' || orderStatus === 'processing' || orderStatus === 'shipped' || orderStatus === 'delivered';
   const isPendingPayment = orderStatus === 'pending_payment';
+
+  // Track purchase for confirmed orders (once only)
+  useEffect(() => {
+    if (isConfirmed && !purchaseTracked) {
+      // Transform Order type to analytics Order type
+      const analyticsOrder = {
+        id: order.orderNumber,
+        items: order.items.map(item => ({
+          product: {
+            id: item.productId,
+            name: item.productName,
+            price: item.price,
+            // Add minimal required fields for Product type
+            slug: '',
+            shortDescription: '',
+            description: '',
+            category: 'other' as const,
+            images: [item.productImage],
+            inStock: true,
+            featured: false,
+            createdAt: '',
+            updatedAt: '',
+          },
+          quantity: item.quantity,
+        })),
+        total: order.total,
+        shipping: order.shipping,
+        discount: 0,
+      };
+
+      trackPurchase(analyticsOrder);
+      setPurchaseTracked(true);
+    }
+  }, [isConfirmed, order, purchaseTracked]);
 
   useEffect(() => {
     if (!isConfirmed) return;
