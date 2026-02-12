@@ -32,7 +32,9 @@ export async function updateSession(request: NextRequest) {
   // IMPORTANT: Do not remove this line.
   // Refreshes the auth token by making a request to Supabase Auth.
   // This keeps the user session alive on every request.
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  return supabaseResponse;
+  return { supabaseResponse, supabase, user };
 }

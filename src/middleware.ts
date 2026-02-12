@@ -1,74 +1,74 @@
 import { NextRequest, NextResponse } from "next/server";
+import { updateSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Protect admin routes
-  if (pathname.startsWith('/admin')) {
-    const sessionCookie = request.cookies.get('user_session');
+  // Refresh Supabase auth session on every matched request
+  const { supabaseResponse, supabase, user } = await updateSession(request);
 
-    if (!sessionCookie) {
+  // Protect admin routes
+  if (pathname.startsWith("/admin")) {
+    if (!user) {
       // Redirect to login page with return URL
-      const loginUrl = new URL('/compte', request.url);
-      loginUrl.searchParams.set('redirect', pathname);
+      const loginUrl = new URL("/compte", request.url);
+      loginUrl.searchParams.set("redirect", pathname);
       return NextResponse.redirect(loginUrl);
     }
 
-    try {
-      const session = JSON.parse(sessionCookie.value);
+    // Check if user is admin via profiles table
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("is_admin")
+      .eq("id", user.id)
+      .single();
 
-      // Check if user is admin
-      if (!session.isAdmin) {
-        // Non-admin users get redirected to home
-        return NextResponse.redirect(new URL('/', request.url));
-      }
-
-    } catch (error) {
-      // Invalid session, redirect to login
-      return NextResponse.redirect(new URL('/compte', request.url));
+    if (!profile?.is_admin) {
+      // Non-admin users get redirected to home
+      return NextResponse.redirect(new URL("/", request.url));
     }
   }
 
   // Protect admin API routes
-  if (pathname.startsWith('/api/update-order-tracking') ||
-      pathname.startsWith('/api/send-order-email') ||
-      pathname.startsWith('/api/send-shipping-email')) {
-
-    const sessionCookie = request.cookies.get('user_session');
-
-    if (!sessionCookie) {
+  if (
+    pathname.startsWith("/api/update-order-tracking") ||
+    pathname.startsWith("/api/send-order-email") ||
+    pathname.startsWith("/api/send-shipping-email")
+  ) {
+    if (!user) {
       return NextResponse.json(
         { error: "Authentication required" },
         { status: 401 }
       );
     }
 
-    try {
-      const session = JSON.parse(sessionCookie.value);
+    // Check if user is admin via profiles table
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("is_admin")
+      .eq("id", user.id)
+      .single();
 
-      // Check if user is admin
-      if (!session.isAdmin) {
-        return NextResponse.json(
-          { error: "Admin access required" },
-          { status: 403 }
-        );
-      }
-    } catch (error) {
+    if (!profile?.is_admin) {
       return NextResponse.json(
-        { error: "Invalid session" },
-        { status: 401 }
+        { error: "Admin access required" },
+        { status: 403 }
       );
     }
   }
 
-  return NextResponse.next();
+  return supabaseResponse;
 }
 
 export const config = {
   matcher: [
-    '/admin/:path*',
-    '/api/update-order-tracking',
-    '/api/send-order-email',
-    '/api/send-shipping-email',
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * Feel free to modify this pattern to include more paths.
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|mp4)$).*)",
   ],
 };

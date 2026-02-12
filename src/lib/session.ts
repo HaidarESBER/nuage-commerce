@@ -1,25 +1,40 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { UserSession } from "@/types/user";
+import { createClient } from "@/lib/supabase/server";
 
 /**
- * Get the current user session from cookies
+ * Get the current user session from Supabase Auth
  * @returns User session if authenticated, null otherwise
  */
 export async function getSession(): Promise<UserSession | null> {
-  const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get('user_session');
-
-  if (!sessionCookie) {
-    return null;
-  }
-
   try {
-    const session = JSON.parse(sessionCookie.value) as UserSession;
-    return session;
+    const supabase = await createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return null;
+    }
+
+    // Fetch profile for additional data
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+
+    return {
+      id: user.id,
+      email: user.email || "",
+      firstName: profile?.first_name || "",
+      lastName: profile?.last_name || "",
+      isAdmin: profile?.is_admin || false,
+    };
   } catch (error) {
-    console.error("Failed to parse session cookie:", error);
+    console.error("Failed to get session:", error);
     return null;
   }
 }
