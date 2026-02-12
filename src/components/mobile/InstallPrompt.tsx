@@ -21,9 +21,9 @@ import Image from "next/image";
  * - Smooth slide-in animation from left using Framer Motion
  *
  * Positioning:
- * - Fixed bottom-left (FloatingCartButton is bottom-right)
- * - z-index: 40 (FloatingCartButton is 40, so they're on same layer)
- * - Appears at same vertical position (bottom-6) to create symmetry
+ * - Fixed bottom-left, higher up (bottom-20) to avoid overlapping with Filtres button
+ * - z-index: 40
+ * - Positioned higher to prevent UI conflicts with bottom-centered elements
  */
 export function InstallPrompt() {
   const pathname = usePathname();
@@ -63,7 +63,10 @@ export function InstallPrompt() {
   useEffect(() => {
     // Check if user has already dismissed the prompt
     const dismissed = localStorage.getItem("pwa-install-dismissed");
-    if (dismissed === "true") return;
+    if (dismissed === "true") {
+      setShowPrompt(false);
+      return;
+    }
 
     // Check if already installed
     if (window.matchMedia("(display-mode: standalone)").matches) {
@@ -74,6 +77,13 @@ export function InstallPrompt() {
     const handleBeforeInstallPrompt = (e: Event) => {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
+
+      // Double-check dismissal before showing
+      const stillDismissed = localStorage.getItem("pwa-install-dismissed");
+      if (stillDismissed === "true") {
+        return;
+      }
+
       // Stash the event so it can be triggered later
       setDeferredPrompt(e);
       setShowPrompt(true);
@@ -126,7 +136,7 @@ export function InstallPrompt() {
           exit={{ x: -100, opacity: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
           onClick={handleInstallClick}
-          className="fixed bottom-6 left-4 bg-background/95 backdrop-blur-sm border border-border rounded-lg shadow-lg px-3 py-2 z-40 cursor-pointer hover:bg-background transition-colors md:hidden"
+          className="fixed bottom-20 left-4 bg-background/95 backdrop-blur-sm border border-border rounded-lg shadow-lg px-3 py-2 z-40 cursor-pointer hover:bg-background transition-colors md:hidden"
         >
           <button
             onClick={(e) => {
