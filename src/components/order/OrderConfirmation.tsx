@@ -37,7 +37,16 @@ export function OrderConfirmation({ order, paymentVerified, orderStatus }: Order
 
   // Clear cart on mount — user has completed payment
   useEffect(() => {
+    // Clear cart immediately
     clearCart();
+
+    // Also clear localStorage directly to ensure it's removed
+    // (in case CartContext hasn't hydrated yet)
+    try {
+      localStorage.removeItem('nuage-cart');
+    } catch (error) {
+      console.error('Failed to clear cart from localStorage:', error);
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const isConfirmed = paymentVerified || orderStatus === 'confirmed' || orderStatus === 'processing' || orderStatus === 'shipped' || orderStatus === 'delivered';

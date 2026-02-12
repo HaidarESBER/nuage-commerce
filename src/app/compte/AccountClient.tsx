@@ -429,7 +429,11 @@ export function AccountClient() {
                     Aucune commande
                   </h3>
                   <p className="text-muted mb-6">
-                    Vous n&apos;avez pas encore passé de commande
+                    Aucune commande trouvée pour <strong>{user.email}</strong>
+                    <br />
+                    <span className="text-sm">
+                      Les commandes sont liées à l&apos;adresse email utilisée lors du paiement
+                    </span>
                   </p>
                   <Link
                     href="/produits"
