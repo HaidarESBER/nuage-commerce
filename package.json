@@ -25,6 +25,7 @@
     "@types/mdx": "^2.0.13",
     "bcryptjs": "^3.0.3",
     "canvas-confetti": "^1.9.4",
+    "cheerio": "^1.2.0",
     "framer-motion": "^12.33.2",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.563.0",
