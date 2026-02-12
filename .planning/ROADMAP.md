@@ -5,6 +5,7 @@
 - ✅ [v1.0 MVP](milestones/v1.0-ROADMAP.md) (Phases 1-4) — SHIPPED 2026-02-09
 - ✅ **v1.1 - Enhanced Experience** (Phases 5-8) — COMPLETE 2026-02-09
 - 🚧 **v2.0 - Production Launch** (Phases 9-13) — In progress
+- 📋 **v3.0 - Content & Growth** (Phase 14) — Planned
 
 ## Completed Milestones
 
@@ -98,10 +99,25 @@ Plans:
 - [x] 13-01: AI Translation Engine & Curation Schema (Wave 1) -- 2026-02-11
 - [x] 13-02: Admin Review Queue & Automation (Wave 2) -- 2026-02-11
 
+### 📋 v3.0 - Content & Growth (Planned)
+
+**Milestone Goal:** Drive organic traffic and brand authority with a blog system for hookah guides, culture articles, and SEO landing pages.
+
+#### Phase 14: Blog & Content Marketing
+
+**Goal**: Build a blog system with hookah guides, culture articles, and SEO landing pages to drive organic traffic
+**Depends on**: Previous milestones (storefront, database, admin panel all in place)
+**Research**: Likely (CMS approach — MDX vs database-driven, SEO structured data for articles)
+**Research topics**: MDX with Next.js 15 App Router, blog SEO best practices, structured data for articles, French content marketing patterns
+**Plans**: TBD
+
+Plans:
+- [ ] 14-01: TBD (run /gsd:plan-phase 14 to break down)
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 9 → 10 → 11 → 12 → 13
+Phases execute in numeric order: 9 → 10 → 11 → 12 → 13 → 14
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -118,3 +134,4 @@ Phases execute in numeric order: 9 → 10 → 11 → 12 → 13
 | 11. Email Notifications | v2.0 | 2/2 | Complete | 2026-02-11 |
 | 12. Product Sourcing Pipeline | v2.0 | 0/? | Not started | - |
 | 13. AI Curation & Automation | v2.0 | 2/2 | Complete | 2026-02-11 |
+| 14. Blog & Content Marketing | v3.0 | 0/? | Not started | - |
