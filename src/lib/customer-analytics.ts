@@ -37,6 +37,38 @@ export interface CustomerSegmentStats {
   avgOrderValue: number; // cents
 }
 
+export interface Cohort {
+  cohortMonth: string; // YYYY-MM
+  cohortLabel: string; // "Janvier 2026"
+  customerCount: number;
+  firstOrderTotal: number; // cents
+  totalRevenue: number; // cents (all-time)
+  retention: Record<number, number>; // month offset → % retained
+  // e.g., { 0: 100, 1: 45, 2: 38, 3: 32 }
+}
+
+export interface CustomerLTV {
+  email: string;
+  currentLTV: number; // cents (total spent to date)
+  projectedLTV: number; // cents (current + expected future)
+  orderCount: number;
+  avgOrderValue: number; // cents
+  daysSinceFirstOrder: number;
+  purchaseFrequency: number; // orders per 90 days
+  expectedFutureOrders: number; // projected orders in next 90 days
+  segment: string; // from RFM
+}
+
+export interface BehavioralMetrics {
+  totalCustomers: number;
+  browsersOnly: number; // browsed but never purchased
+  wishlisters: number; // added to wishlist
+  purchasers: number; // made at least 1 purchase
+  browseToCart: number; // % who browse and add to cart
+  wishlistToPurchase: number; // % who wishlist and purchase
+  avgDaysToPurchase: number; // avg days from first browse to first purchase
+}
+
 // =============================================================================
 // Helper Functions
 // =============================================================================
@@ -290,4 +322,402 @@ export async function getTopCustomers(limit: number = 20): Promise<CustomerRFM[]
 
   // Already sorted by monetary value DESC in getRFMSegments
   return customers.slice(0, limit);
+}
+
+/**
+ * Format month number to French month label
+ * @param month - YYYY-MM format
+ * @returns French month label (e.g., "Janvier 2026")
+ */
+function formatMonthLabel(month: string): string {
+  const [year, monthNum] = month.split('-');
+  const date = new Date(parseInt(year), parseInt(monthNum) - 1, 1);
+  const formatter = new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' });
+  const formatted = formatter.format(date);
+  // Capitalize first letter
+  return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+}
+
+/**
+ * Get cohort analysis by first purchase month
+ * @returns Array of cohorts with retention metrics, sorted by cohortMonth DESC
+ */
+export async function getCohorts(): Promise<Cohort[]> {
+  const supabase = createAdminClient();
+
+  // Query all orders with email and created_at
+  const { data: orders, error: ordersError } = await supabase
+    .from('orders')
+    .select('user_email, total, created_at')
+    .order('created_at', { ascending: true });
+
+  if (ordersError) {
+    console.error('getCohorts orders error:', ordersError.message);
+    throw new Error(`Failed to fetch orders: ${ordersError.message}`);
+  }
+
+  if (!orders || orders.length === 0) {
+    return [];
+  }
+
+  // Build customer first order map
+  const customerFirstOrder = new Map<string, { date: Date; month: string; total: number }>();
+
+  for (const order of orders) {
+    const email = order.user_email;
+    const orderDate = new Date(order.created_at);
+    const month = orderDate.toISOString().substring(0, 7); // YYYY-MM
+
+    if (!customerFirstOrder.has(email)) {
+      customerFirstOrder.set(email, {
+        date: orderDate,
+        month,
+        total: order.total,
+      });
+    }
+  }
+
+  // Build cohort map
+  const cohortMap = new Map<string, {
+    customers: Set<string>;
+    firstOrderTotal: number;
+    totalRevenue: number;
+    customerOrders: Map<string, Set<string>>; // email → set of order months
+  }>();
+
+  // Initialize cohorts and track all orders
+  for (const order of orders) {
+    const email = order.user_email;
+    const firstOrderData = customerFirstOrder.get(email);
+    if (!firstOrderData) continue;
+
+    const cohortMonth = firstOrderData.month;
+    const orderDate = new Date(order.created_at);
+    const orderMonth = orderDate.toISOString().substring(0, 7);
+
+    if (!cohortMap.has(cohortMonth)) {
+      cohortMap.set(cohortMonth, {
+        customers: new Set(),
+        firstOrderTotal: 0,
+        totalRevenue: 0,
+        customerOrders: new Map(),
+      });
+    }
+
+    const cohort = cohortMap.get(cohortMonth)!;
+    cohort.customers.add(email);
+    cohort.totalRevenue += order.total;
+
+    // Track customer's order months
+    if (!cohort.customerOrders.has(email)) {
+      cohort.customerOrders.set(email, new Set());
+    }
+    cohort.customerOrders.get(email)!.add(orderMonth);
+
+    // Track first order total
+    if (orderMonth === cohortMonth) {
+      cohort.firstOrderTotal += order.total;
+    }
+  }
+
+  // Calculate retention for each cohort
+  const cohorts: Cohort[] = [];
+
+  for (const [cohortMonth, data] of cohortMap.entries()) {
+    const retention: Record<number, number> = {};
+    const totalCustomers = data.customers.size;
+
+    // Calculate retention for each month offset (0 to 12)
+    for (let offset = 0; offset <= 12; offset++) {
+      const cohortDate = new Date(cohortMonth + '-01');
+      const targetMonth = new Date(cohortDate.getFullYear(), cohortDate.getMonth() + offset, 1)
+        .toISOString()
+        .substring(0, 7);
+
+      let retainedCount = 0;
+      for (const [email, orderMonths] of data.customerOrders.entries()) {
+        // Check if customer ordered in or before target month
+        for (const orderMonth of orderMonths) {
+          if (orderMonth <= targetMonth) {
+            retainedCount++;
+            break;
+          }
+        }
+      }
+
+      retention[offset] = totalCustomers > 0 ? Math.round((retainedCount / totalCustomers) * 100) : 0;
+    }
+
+    cohorts.push({
+      cohortMonth,
+      cohortLabel: formatMonthLabel(cohortMonth),
+      customerCount: totalCustomers,
+      firstOrderTotal: data.firstOrderTotal,
+      totalRevenue: data.totalRevenue,
+      retention,
+    });
+  }
+
+  // Sort by cohortMonth DESC (newest first)
+  return cohorts.sort((a, b) => b.cohortMonth.localeCompare(a.cohortMonth));
+}
+
+/**
+ * Get customer lifetime value analysis
+ * @param email - Optional email to filter specific customer
+ * @returns Array of customers with LTV metrics, sorted by projectedLTV DESC
+ */
+export async function getCustomerLTV(email?: string): Promise<CustomerLTV[]> {
+  const supabase = createAdminClient();
+
+  // Query all orders
+  let query = supabase
+    .from('orders')
+    .select('user_email, total, created_at')
+    .order('created_at', { ascending: true });
+
+  if (email) {
+    query = query.eq('user_email', email);
+  }
+
+  const { data: orders, error: ordersError } = await query;
+
+  if (ordersError) {
+    console.error('getCustomerLTV orders error:', ordersError.message);
+    throw new Error(`Failed to fetch orders: ${ordersError.message}`);
+  }
+
+  if (!orders || orders.length === 0) {
+    return [];
+  }
+
+  // Get RFM segments for segment info
+  const rfmSegments = await getRFMSegments();
+  const segmentMap = new Map<string, string>();
+  for (const customer of rfmSegments) {
+    segmentMap.set(customer.email, customer.segment);
+  }
+
+  // Aggregate customer data
+  const customerMap = new Map<string, {
+    currentLTV: number;
+    orderCount: number;
+    firstOrderDate: Date;
+  }>();
+
+  for (const order of orders) {
+    const customerEmail = order.user_email;
+    const existing = customerMap.get(customerEmail);
+
+    if (existing) {
+      customerMap.set(customerEmail, {
+        currentLTV: existing.currentLTV + order.total,
+        orderCount: existing.orderCount + 1,
+        firstOrderDate: existing.firstOrderDate,
+      });
+    } else {
+      customerMap.set(customerEmail, {
+        currentLTV: order.total,
+        orderCount: 1,
+        firstOrderDate: new Date(order.created_at),
+      });
+    }
+  }
+
+  // Calculate LTV metrics
+  const now = new Date();
+  const ltvData: CustomerLTV[] = [];
+
+  for (const [customerEmail, data] of customerMap.entries()) {
+    const daysSinceFirstOrder = Math.floor(
+      (now.getTime() - data.firstOrderDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    const avgOrderValue = Math.round(data.currentLTV / data.orderCount);
+
+    // Calculate purchase frequency (orders per 90 days)
+    // Exclude first order from frequency calculation
+    let purchaseFrequency = 0;
+    if (data.orderCount > 1 && daysSinceFirstOrder > 0) {
+      purchaseFrequency = ((data.orderCount - 1) / daysSinceFirstOrder) * 90;
+    }
+
+    // Project future orders for next 90 days
+    const expectedFutureOrders = Math.round(purchaseFrequency * 100) / 100; // Round to 2 decimals
+
+    // Calculate projected LTV
+    const projectedLTV = data.currentLTV + Math.round(expectedFutureOrders * avgOrderValue);
+
+    ltvData.push({
+      email: customerEmail,
+      currentLTV: data.currentLTV,
+      projectedLTV,
+      orderCount: data.orderCount,
+      avgOrderValue,
+      daysSinceFirstOrder,
+      purchaseFrequency: Math.round(purchaseFrequency * 100) / 100,
+      expectedFutureOrders,
+      segment: segmentMap.get(customerEmail) || 'Inactifs',
+    });
+  }
+
+  // Sort by projected LTV DESC
+  return ltvData.sort((a, b) => b.projectedLTV - a.projectedLTV);
+}
+
+/**
+ * Get behavioral metrics showing customer journey conversion
+ * @returns Behavioral metrics with conversion rates
+ */
+export async function getBehavioralMetrics(): Promise<BehavioralMetrics> {
+  const supabase = createAdminClient();
+
+  // Get total authenticated users (profiles)
+  const { data: profiles, error: profilesError } = await supabase
+    .from('profiles')
+    .select('email');
+
+  if (profilesError) {
+    console.error('getBehavioralMetrics profiles error:', profilesError.message);
+    throw new Error(`Failed to fetch profiles: ${profilesError.message}`);
+  }
+
+  const totalCustomers = profiles?.length || 0;
+
+  // Get users with browse history
+  const { data: browseHistory, error: browseError } = await supabase
+    .from('browse_history')
+    .select('user_id');
+
+  const browserUserIds = new Set<string>();
+  if (browseHistory && !browseError) {
+    for (const entry of browseHistory) {
+      browserUserIds.add(entry.user_id);
+    }
+  }
+
+  // Get users with wishlist entries
+  const { data: wishlist, error: wishlistError } = await supabase
+    .from('wishlist')
+    .select('user_id');
+
+  const wishlisterUserIds = new Set<string>();
+  if (wishlist && !wishlistError) {
+    for (const entry of wishlist) {
+      wishlisterUserIds.add(entry.user_id);
+    }
+  }
+
+  // Get users with orders (need to map email to user_id from profiles)
+  const { data: orders, error: ordersError } = await supabase
+    .from('orders')
+    .select('user_email');
+
+  const purchaserEmails = new Set<string>();
+  if (orders && !ordersError) {
+    for (const order of orders) {
+      purchaserEmails.add(order.user_email);
+    }
+  }
+
+  // Map emails to user IDs for purchasers
+  const { data: profilesWithId, error: profilesWithIdError } = await supabase
+    .from('profiles')
+    .select('id, email');
+
+  const emailToIdMap = new Map<string, string>();
+  if (profilesWithId && !profilesWithIdError) {
+    for (const profile of profilesWithId) {
+      emailToIdMap.set(profile.email, profile.id);
+    }
+  }
+
+  const purchaserUserIds = new Set<string>();
+  for (const email of purchaserEmails) {
+    const userId = emailToIdMap.get(email);
+    if (userId) {
+      purchaserUserIds.add(userId);
+    }
+  }
+
+  // Calculate metrics
+  const browsersOnly = browserUserIds.size - purchaserUserIds.size;
+  const wishlisters = wishlisterUserIds.size;
+  const purchasers = purchaserUserIds.size;
+
+  // Browse-to-cart: users who browsed and added to wishlist (proxy for cart)
+  let browseToCartCount = 0;
+  for (const userId of browserUserIds) {
+    if (wishlisterUserIds.has(userId)) {
+      browseToCartCount++;
+    }
+  }
+  const browseToCart = browserUserIds.size > 0
+    ? Math.round((browseToCartCount / browserUserIds.size) * 100)
+    : 0;
+
+  // Wishlist-to-purchase: users who wishlisted and purchased
+  let wishlistToPurchaseCount = 0;
+  for (const userId of wishlisterUserIds) {
+    if (purchaserUserIds.has(userId)) {
+      wishlistToPurchaseCount++;
+    }
+  }
+  const wishlistToPurchase = wishlisterUserIds.size > 0
+    ? Math.round((wishlistToPurchaseCount / wishlisterUserIds.size) * 100)
+    : 0;
+
+  // Average days to purchase: avg(first_order_date - profile_created_at) for purchasers
+  let totalDaysToPurchase = 0;
+  let purchasersWithData = 0;
+
+  // Get all orders with created_at for days-to-purchase calculation
+  const { data: ordersWithDate, error: ordersWithDateError } = await supabase
+    .from('orders')
+    .select('user_email, created_at')
+    .order('created_at', { ascending: true });
+
+  if (ordersWithDate && !ordersWithDateError) {
+    // Get first order per customer
+    const firstOrderMap = new Map<string, Date>();
+    for (const order of ordersWithDate) {
+      const email = order.user_email;
+      const orderDate = new Date(order.created_at);
+      if (!firstOrderMap.has(email) || orderDate < firstOrderMap.get(email)!) {
+        firstOrderMap.set(email, orderDate);
+      }
+    }
+
+    // Calculate days to purchase
+    const { data: profilesWithCreated } = await supabase
+      .from('profiles')
+      .select('email, created_at');
+
+    if (profilesWithCreated) {
+      for (const profile of profilesWithCreated) {
+        const firstOrder = firstOrderMap.get(profile.email);
+        if (firstOrder && profile.created_at) {
+          const createdAt = new Date(profile.created_at);
+          const days = Math.floor((firstOrder.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24));
+          if (days >= 0) {
+            totalDaysToPurchase += days;
+            purchasersWithData++;
+          }
+        }
+      }
+    }
+  }
+
+  const avgDaysToPurchase = purchasersWithData > 0
+    ? Math.round(totalDaysToPurchase / purchasersWithData)
+    : 0;
+
+  return {
+    totalCustomers,
+    browsersOnly: Math.max(0, browsersOnly),
+    wishlisters,
+    purchasers,
+    browseToCart,
+    wishlistToPurchase,
+    avgDaysToPurchase,
+  };
 }
