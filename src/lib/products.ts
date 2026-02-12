@@ -2,7 +2,6 @@
 
 import { Product } from "@/types/product";
 import { slugify } from "@/lib/slugify";
-import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 // ---------------------------------------------------------------------------
@@ -69,9 +68,10 @@ function toProductRow(product: Partial<Product>): Record<string, unknown> {
 
 /**
  * Get all products
+ * Uses admin client to avoid cookies() dependency (works in static generation)
  */
 export async function getAllProducts(): Promise<Product[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const { data, error } = await supabase
     .from("products")
     .select("*")
@@ -87,9 +87,10 @@ export async function getAllProducts(): Promise<Product[]> {
 
 /**
  * Get a product by its ID
+ * Uses admin client to avoid cookies() dependency (works in static generation)
  */
 export async function getProductById(id: string): Promise<Product | null> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const { data, error } = await supabase
     .from("products")
     .select("*")
@@ -106,11 +107,12 @@ export async function getProductById(id: string): Promise<Product | null> {
 
 /**
  * Get a product by its slug
+ * Uses admin client to avoid cookies() dependency (works in static generation)
  */
 export async function getProductBySlug(
   slug: string
 ): Promise<Product | null> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const { data, error } = await supabase
     .from("products")
     .select("*")
@@ -126,9 +128,10 @@ export async function getProductBySlug(
 
 /**
  * Get all product slugs (for static generation)
+ * Uses admin client to avoid cookies() dependency (works in static generation)
  */
 export async function getAllProductSlugs(): Promise<string[]> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const { data, error } = await supabase.from("products").select("slug");
 
   if (error) {

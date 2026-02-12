@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 
 ## Current Position
 
-Phase: 13 of 13 (AI Curation & Automation)
-Plan: 1 of 2 in current phase
+Phase: 10 of 13 (Stripe Checkout)
+Plan: 2 of 2 in current phase (10-01 complete, executing 10-02)
 Status: In progress
-Last activity: 2026-02-11 — Completed 13-01-PLAN.md
+Last activity: 2026-02-11 — Completed 10-01 Stripe Setup & Checkout Integration
 
-Progress: ██████████░░░ 84% (26/31 plans)
+Progress: ██████████░░░ 87% (27/31 plans)
 
 ## Milestone Summary
 
@@ -54,6 +54,7 @@ Progress: ██████████░░░ 84% (26/31 plans)
 | 07-cart-checkout-polish | 1/1 | 8 min | 8 min |
 | 08-character-delight | 8/8 | 92 min | 11.5 min |
 | 09-supabase-migration-auth | 1/3 | 15 min | 15 min |
+| 10-stripe-checkout | 1/2 | 13 min | 13 min |
 | 11-email-notifications | 2/2 | 7 min | 3.5 min |
 | 13-ai-curation-automation | 1/2 | 12 min | 12 min |
 
@@ -75,6 +76,8 @@ Progress: ██████████░░░ 84% (26/31 plans)
 **v2.0 (11-01):** Server-only email service wrapping Resend SDK (never throws), status-based email content switching via getStatusContent helper.
 
 **v2.0 (11-02):** Fire-and-forget email pattern for all order lifecycle triggers, previousStatus captured before update for status email context.
+
+**v2.0 (10-01):** Stripe redirect mode (not embedded), DB-verified pricing in checkout API, dynamic payment methods (auto Carte Bancaire/Apple Pay), pending_payment status before pending in flow.
 
 **v2.0 (13-01):** claude-sonnet-4-5-20250929 for translation (quality/cost balance), createAdminClient for server-side RLS bypass, effective-value pattern (curated > AI > raw) for product display fields.
 
