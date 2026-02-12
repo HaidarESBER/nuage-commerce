@@ -82,24 +82,31 @@ export function ProduitsClientEnhanced({
   const initialSort = (searchParams.get("sort") as any) || "relevance";
   const { sortOption, setSortOption } = useProductSort(filteredByFilters, initialSort);
 
-  // Track search events
+  // Track search events (only once per unique search query)
+  const lastTrackedSearch = useRef<string>('');
   useEffect(() => {
     if (searchQuery && searchQuery.trim().length > 0) {
-      const query = searchQuery.toLowerCase().trim();
-      // Calculate results count
-      const resultsCount = products.filter((product) =>
-        product.name.toLowerCase().includes(query) ||
-        product.description.toLowerCase().includes(query) ||
-        product.shortDescription.toLowerCase().includes(query) ||
-        product.category.toLowerCase().includes(query)
-      ).length;
+      const query = searchQuery.trim();
 
-      trackEvent('search', {
-        query: searchQuery,
-        resultsCount,
-      });
+      // Only track if this is a new search query
+      if (query !== lastTrackedSearch.current) {
+        lastTrackedSearch.current = query;
+
+        // Calculate results count
+        const resultsCount = products.filter((product) =>
+          product.name.toLowerCase().includes(query.toLowerCase()) ||
+          product.description.toLowerCase().includes(query.toLowerCase()) ||
+          product.shortDescription.toLowerCase().includes(query.toLowerCase()) ||
+          product.category.toLowerCase().includes(query.toLowerCase())
+        ).length;
+
+        trackEvent('search', {
+          query: searchQuery,
+          resultsCount,
+        });
+      }
     }
-  }, [searchQuery, products]);
+  }, [searchQuery]); // Removed products from dependencies
 
   // Combine filters and sort
   const displayProducts = useMemo(() => {
