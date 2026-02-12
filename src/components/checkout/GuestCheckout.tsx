@@ -1,8 +1,9 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { isValidEmail } from "@/types/checkout";
+import { UserSession } from "@/types/user";
 
 interface GuestCheckoutProps {
   email: string;
@@ -11,6 +12,8 @@ interface GuestCheckoutProps {
   onCreateAccountChange: (create: boolean) => void;
   password: string;
   onPasswordChange: (password: string) => void;
+  user: UserSession | null;
+  isLoadingSession: boolean;
 }
 
 /**
@@ -18,6 +21,7 @@ interface GuestCheckoutProps {
  *
  * Features:
  * - Email first (required for order)
+ * - Auto-fill email for logged-in users with checkbox option
  * - Email validation on blur
  * - Optional account creation checkbox
  * - Password field appears when account creation checked
@@ -30,10 +34,32 @@ export function GuestCheckout({
   onCreateAccountChange,
   password,
   onPasswordChange,
+  user,
+  isLoadingSession,
 }: GuestCheckoutProps) {
   const [emailError, setEmailError] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
   const [emailTouched, setEmailTouched] = useState(false);
+  const [useAccountEmail, setUseAccountEmail] = useState(true);
+
+  // When user logs in or session loads, enable useAccountEmail
+  useEffect(() => {
+    if (user && !isLoadingSession) {
+      setUseAccountEmail(true);
+      onEmailChange(user.email);
+    }
+  }, [user, isLoadingSession, onEmailChange]);
+
+  // When toggling useAccountEmail
+  const handleUseAccountEmailChange = (checked: boolean) => {
+    setUseAccountEmail(checked);
+    if (checked && user) {
+      onEmailChange(user.email);
+      setEmailError("");
+    } else {
+      onEmailChange("");
+    }
+  };
 
   const handleEmailBlur = () => {
     setEmailTouched(true);
@@ -63,17 +89,40 @@ export function GuestCheckout({
     >
       <div className="flex items-center justify-between">
         <h2 className="font-heading text-xl text-primary">Votre email</h2>
-        <button
-          type="button"
-          className="text-sm text-accent hover:underline focus:outline-none"
-          onClick={() => {
-            // Placeholder for future auth system
-            alert("Fonctionnalité a venir");
-          }}
-        >
-          Déjà client ? Connectez-vous
-        </button>
+        {!user && (
+          <button
+            type="button"
+            className="text-sm text-accent hover:underline focus:outline-none"
+            onClick={() => {
+              // Placeholder for future auth system
+              alert("Fonctionnalité a venir");
+            }}
+          >
+            Déjà client ? Connectez-vous
+          </button>
+        )}
       </div>
+
+      {/* Use account email checkbox (only for logged-in users) */}
+      {user && !isLoadingSession && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          transition={{ duration: 0.3 }}
+        >
+          <label className="flex items-start gap-3 cursor-pointer group">
+            <input
+              type="checkbox"
+              checked={useAccountEmail}
+              onChange={(e) => handleUseAccountEmailChange(e.target.checked)}
+              className="mt-0.5 w-4 h-4 rounded border-background-secondary text-accent focus:ring-accent focus:ring-2"
+            />
+            <span className="text-sm text-primary group-hover:text-accent transition-colors">
+              Utiliser l&apos;email associé à mon compte ({user.email})
+            </span>
+          </label>
+        </motion.div>
+      )}
 
       {/* Email field */}
       <div>
@@ -89,11 +138,14 @@ export function GuestCheckout({
           value={email}
           onChange={(e) => onEmailChange(e.target.value)}
           onBlur={handleEmailBlur}
+          disabled={!!(user && useAccountEmail)}
           className={`w-full px-4 py-3 rounded-[--radius-button] border ${
             emailError && emailTouched
               ? "border-red-500 focus:ring-red-500"
               : "border-background-secondary focus:ring-accent"
-          } bg-background text-primary focus:outline-none focus:ring-2`}
+          } bg-background text-primary focus:outline-none focus:ring-2 ${
+            user && useAccountEmail ? "opacity-60 cursor-not-allowed" : ""
+          }`}
           placeholder="jean.dupont@email.com"
           autoComplete="email"
         />

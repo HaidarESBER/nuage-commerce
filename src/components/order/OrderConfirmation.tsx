@@ -69,7 +69,7 @@ export function OrderConfirmation({ order, paymentVerified, orderStatus }: Order
             slug: '',
             shortDescription: '',
             description: '',
-            category: 'other' as const,
+            category: 'accessoire' as const, // Default to accessoire as a valid category
             images: [item.productImage],
             inStock: true,
             featured: false,
