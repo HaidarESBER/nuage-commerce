@@ -12,6 +12,7 @@ import {
   generateTwitterCardTags
 } from "@/lib/seo";
 import { ProductDetailClient } from "./ProductDetailClient";
+import { ProductViewTracker } from "@/components/product/ProductViewTracker";
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
@@ -117,6 +118,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
+
+      {/* Track product view for browse history */}
+      <ProductViewTracker productId={product.id} />
 
       <ProductDetailClient
         product={product}
