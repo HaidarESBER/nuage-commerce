@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Sparkles } from "lucide-react";
 
 export const metadata = {
   title: "Nuage Admin",
@@ -40,6 +41,13 @@ export default function AdminLayout({
               className="block px-4 py-2 rounded-md text-primary hover:bg-accent/20 transition-colors"
             >
               Commandes
+            </Link>
+            <Link
+              href="/admin/curation"
+              className="flex items-center gap-2 px-4 py-2 rounded-md text-primary hover:bg-accent/20 transition-colors"
+            >
+              <Sparkles className="w-4 h-4" />
+              Curation
             </Link>
           </nav>
         </aside>

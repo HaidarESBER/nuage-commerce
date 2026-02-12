@@ -1,0 +1,629 @@
+"use client";
+
+import { useState, useTransition } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  ProductDraft,
+  getEffectiveName,
+  getEffectiveDescription,
+  getEffectiveShortDescription,
+  getEffectiveCategory,
+  getEffectivePrice,
+  getEffectiveImages,
+} from "@/types/curation";
+import { categoryLabels, ProductCategory, formatPrice } from "@/types/product";
+import {
+  saveCuratedFields,
+  approveDraft,
+  rejectDraft,
+  setInReview,
+  retranslate,
+  removeDraft,
+} from "../actions";
+
+interface DraftDetailViewProps {
+  draft: ProductDraft;
+}
+
+const categories: ProductCategory[] = [
+  "chicha",
+  "bol",
+  "tuyau",
+  "charbon",
+  "accessoire",
+];
+
+export function DraftDetailView({ draft }: DraftDetailViewProps) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [saveMessage, setSaveMessage] = useState<string | null>(null);
+
+  // Curated form state — pre-filled with effective values
+  const [curatedName, setCuratedName] = useState(
+    draft.curatedName || getEffectiveName(draft)
+  );
+  const [curatedDescription, setCuratedDescription] = useState(
+    draft.curatedDescription || getEffectiveDescription(draft)
+  );
+  const [curatedShortDescription, setCuratedShortDescription] = useState(
+    draft.curatedShortDescription || getEffectiveShortDescription(draft)
+  );
+  const [curatedCategory, setCuratedCategory] = useState(
+    draft.curatedCategory || getEffectiveCategory(draft) || "chicha"
+  );
+  const [curatedPriceEur, setCuratedPriceEur] = useState(
+    (() => {
+      const effectivePrice = getEffectivePrice(draft);
+      return effectivePrice ? (effectivePrice / 100).toFixed(2) : "";
+    })()
+  );
+  const [curatedCompareAtPriceEur, setCuratedCompareAtPriceEur] = useState(
+    draft.curatedCompareAtPrice
+      ? (draft.curatedCompareAtPrice / 100).toFixed(2)
+      : ""
+  );
+  const [curatedImagesStr, setCuratedImagesStr] = useState(
+    getEffectiveImages(draft).join(", ")
+  );
+
+  function handleSave() {
+    setSaveMessage(null);
+    startTransition(async () => {
+      const priceCents = curatedPriceEur
+        ? Math.round(parseFloat(curatedPriceEur) * 100)
+        : null;
+      const compareAtPriceCents = curatedCompareAtPriceEur
+        ? Math.round(parseFloat(curatedCompareAtPriceEur) * 100)
+        : null;
+      const images = curatedImagesStr
+        ? curatedImagesStr
+            .split(",")
+            .map((url) => url.trim())
+            .filter((url) => url.length > 0)
+        : [];
+
+      await saveCuratedFields(draft.id, {
+        curatedName: curatedName || null,
+        curatedDescription: curatedDescription || null,
+        curatedShortDescription: curatedShortDescription || null,
+        curatedCategory: curatedCategory || null,
+        curatedPrice: priceCents,
+        curatedCompareAtPrice: compareAtPriceCents,
+        curatedImages: images,
+      });
+      setSaveMessage("Modifications enregistrees");
+      router.refresh();
+    });
+  }
+
+  function handleApprove() {
+    startTransition(async () => {
+      await approveDraft(draft.id);
+      router.refresh();
+    });
+  }
+
+  function handleReject() {
+    if (!rejectionReason.trim()) return;
+    startTransition(async () => {
+      await rejectDraft(draft.id, rejectionReason);
+      setShowRejectModal(false);
+      setRejectionReason("");
+      router.refresh();
+    });
+  }
+
+  function handleSetInReview() {
+    startTransition(async () => {
+      await setInReview(draft.id);
+      router.refresh();
+    });
+  }
+
+  function handleRetranslate() {
+    startTransition(async () => {
+      await retranslate(draft.id);
+      router.refresh();
+    });
+  }
+
+  function handleDelete() {
+    startTransition(async () => {
+      await removeDraft(draft.id);
+      router.push("/admin/curation");
+    });
+  }
+
+  const STATUS_LABELS: Record<string, string> = {
+    pending_translation: "A traduire",
+    translating: "En traduction",
+    translated: "Traduit",
+    in_review: "En revue",
+    approved: "Approuve",
+    rejected: "Rejete",
+    published: "Publie",
+  };
+
+  const STATUS_COLORS: Record<string, string> = {
+    pending_translation: "bg-primary/10 text-primary/70",
+    translating: "bg-blue-100 text-blue-700 animate-pulse",
+    translated: "bg-blue-100 text-blue-700",
+    in_review: "bg-yellow-100 text-yellow-700",
+    approved: "bg-green-100 text-green-700",
+    rejected: "bg-red-100 text-red-700",
+    published: "bg-emerald-100 text-emerald-700",
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center gap-4">
+        <Link
+          href="/admin/curation"
+          className="text-primary/70 hover:text-primary transition-colors"
+        >
+          &larr; Retour
+        </Link>
+        <span
+          className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded ${
+            STATUS_COLORS[draft.status] || ""
+          }`}
+        >
+          {STATUS_LABELS[draft.status] || draft.status}
+        </span>
+      </div>
+
+      <h2 className="text-2xl font-heading font-semibold text-primary">
+        {getEffectiveName(draft)}
+      </h2>
+
+      {/* Two-column layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* Left column — Curated (editable) */}
+        <div className="lg:col-span-3 space-y-6">
+          <div className="bg-secondary rounded-lg border border-primary/10 p-6">
+            <h3 className="text-lg font-heading font-semibold text-primary mb-4">
+              Version curatee
+            </h3>
+
+            <div className="space-y-4">
+              {/* Name */}
+              <div>
+                <label className="block text-sm font-medium text-primary mb-1">
+                  Nom
+                </label>
+                <input
+                  type="text"
+                  value={curatedName}
+                  onChange={(e) => setCuratedName(e.target.value)}
+                  className="w-full px-4 py-2 border border-primary/30 rounded-md bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                />
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className="block text-sm font-medium text-primary mb-1">
+                  Description
+                </label>
+                <textarea
+                  rows={4}
+                  value={curatedDescription}
+                  onChange={(e) => setCuratedDescription(e.target.value)}
+                  className="w-full px-4 py-2 border border-primary/30 rounded-md bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent resize-y"
+                />
+              </div>
+
+              {/* Short Description */}
+              <div>
+                <label className="block text-sm font-medium text-primary mb-1">
+                  Description courte
+                </label>
+                <input
+                  type="text"
+                  value={curatedShortDescription}
+                  onChange={(e) => setCuratedShortDescription(e.target.value)}
+                  className="w-full px-4 py-2 border border-primary/30 rounded-md bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                />
+              </div>
+
+              {/* Category */}
+              <div>
+                <label className="block text-sm font-medium text-primary mb-1">
+                  Categorie
+                </label>
+                <select
+                  value={curatedCategory}
+                  onChange={(e) => setCuratedCategory(e.target.value)}
+                  className="w-full px-4 py-2 border border-primary/30 rounded-md bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                >
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {categoryLabels[cat]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Price Row */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-primary mb-1">
+                    Prix (EUR)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={curatedPriceEur}
+                    onChange={(e) => setCuratedPriceEur(e.target.value)}
+                    className="w-full px-4 py-2 border border-primary/30 rounded-md bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                    placeholder="49.99"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-primary mb-1">
+                    Prix barre (EUR)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={curatedCompareAtPriceEur}
+                    onChange={(e) =>
+                      setCuratedCompareAtPriceEur(e.target.value)
+                    }
+                    className="w-full px-4 py-2 border border-primary/30 rounded-md bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                    placeholder="59.99 (optionnel)"
+                  />
+                </div>
+              </div>
+
+              {/* Images */}
+              <div>
+                <label className="block text-sm font-medium text-primary mb-1">
+                  Images (URLs separees par des virgules)
+                </label>
+                <input
+                  type="text"
+                  value={curatedImagesStr}
+                  onChange={(e) => setCuratedImagesStr(e.target.value)}
+                  className="w-full px-4 py-2 border border-primary/30 rounded-md bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                  placeholder="https://exemple.com/image1.jpg, https://exemple.com/image2.jpg"
+                />
+              </div>
+
+              {/* Save button */}
+              <div className="flex items-center gap-3 pt-2">
+                <button
+                  onClick={handleSave}
+                  disabled={isPending}
+                  className="px-4 py-2 bg-primary text-background rounded-md hover:bg-accent hover:text-primary transition-colors disabled:opacity-50"
+                >
+                  {isPending ? "Enregistrement..." : "Enregistrer"}
+                </button>
+                {saveMessage && (
+                  <span className="text-sm text-green-700">{saveMessage}</span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right column — Source data (read-only) */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Raw product data */}
+          <div className="bg-secondary rounded-lg border border-primary/10 p-6">
+            <h3 className="text-lg font-heading font-semibold text-primary mb-4">
+              Donnees sources
+            </h3>
+            <dl className="space-y-3 text-sm">
+              <div>
+                <dt className="font-medium text-primary/60">Nom brut</dt>
+                <dd className="text-primary">{draft.rawName}</dd>
+              </div>
+              <div>
+                <dt className="font-medium text-primary/60">Description brute</dt>
+                <dd className="text-primary">
+                  {draft.rawDescription || <span className="text-primary/40">-</span>}
+                </dd>
+              </div>
+              <div>
+                <dt className="font-medium text-primary/60">Prix source</dt>
+                <dd className="text-primary">
+                  {draft.rawPriceText || <span className="text-primary/40">-</span>}
+                </dd>
+              </div>
+              <div>
+                <dt className="font-medium text-primary/60">Source</dt>
+                <dd className="text-primary">
+                  {draft.rawSourceName || <span className="text-primary/40">-</span>}
+                </dd>
+              </div>
+              {draft.rawSourceUrl && (
+                <div>
+                  <dt className="font-medium text-primary/60">URL source</dt>
+                  <dd>
+                    <a
+                      href={draft.rawSourceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-accent hover:underline break-all"
+                    >
+                      {draft.rawSourceUrl}
+                    </a>
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </div>
+
+          {/* AI Translation */}
+          <div className="bg-secondary rounded-lg border border-primary/10 p-6">
+            <h3 className="text-lg font-heading font-semibold text-primary mb-4">
+              Traduction IA
+            </h3>
+            {draft.aiName ? (
+              <dl className="space-y-3 text-sm">
+                <div>
+                  <dt className="font-medium text-primary/60">Nom IA</dt>
+                  <dd className="text-primary">{draft.aiName}</dd>
+                </div>
+                <div>
+                  <dt className="font-medium text-primary/60">Description IA</dt>
+                  <dd className="text-primary">{draft.aiDescription}</dd>
+                </div>
+                <div>
+                  <dt className="font-medium text-primary/60">Description courte IA</dt>
+                  <dd className="text-primary">{draft.aiShortDescription}</dd>
+                </div>
+                <div>
+                  <dt className="font-medium text-primary/60">Categorie IA</dt>
+                  <dd className="text-primary">{draft.aiCategory}</dd>
+                </div>
+                <div>
+                  <dt className="font-medium text-primary/60">Prix suggere IA</dt>
+                  <dd className="text-primary">
+                    {draft.aiSuggestedPrice
+                      ? formatPrice(draft.aiSuggestedPrice)
+                      : "-"}
+                  </dd>
+                </div>
+              </dl>
+            ) : (
+              <p className="text-sm text-primary/40">Pas encore traduit</p>
+            )}
+          </div>
+
+          {/* Metadata */}
+          <div className="bg-secondary rounded-lg border border-primary/10 p-6">
+            <h3 className="text-lg font-heading font-semibold text-primary mb-4">
+              Metadonnees
+            </h3>
+            <dl className="space-y-3 text-sm">
+              <div>
+                <dt className="font-medium text-primary/60">Modele IA</dt>
+                <dd className="text-primary">
+                  {draft.aiModel || <span className="text-primary/40">-</span>}
+                </dd>
+              </div>
+              <div>
+                <dt className="font-medium text-primary/60">Version prompt</dt>
+                <dd className="text-primary">
+                  {draft.aiPromptVersion || <span className="text-primary/40">-</span>}
+                </dd>
+              </div>
+              <div>
+                <dt className="font-medium text-primary/60">Traduit le</dt>
+                <dd className="text-primary">
+                  {draft.translatedAt
+                    ? new Date(draft.translatedAt).toLocaleString("fr-FR")
+                    : "-"}
+                </dd>
+              </div>
+              <div>
+                <dt className="font-medium text-primary/60">Cree le</dt>
+                <dd className="text-primary">
+                  {new Date(draft.createdAt).toLocaleString("fr-FR")}
+                </dd>
+              </div>
+              {draft.translationError && (
+                <div>
+                  <dt className="font-medium text-red-600">Erreur de traduction</dt>
+                  <dd className="text-red-600 text-xs">{draft.translationError}</dd>
+                </div>
+              )}
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      {/* Action Bar */}
+      <div className="bg-secondary rounded-lg border border-primary/10 p-6">
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Translated / In Review actions */}
+          {(draft.status === "translated" || draft.status === "in_review") && (
+            <>
+              <button
+                onClick={handleApprove}
+                disabled={isPending}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:opacity-50"
+              >
+                Approuver
+              </button>
+              <button
+                onClick={() => setShowRejectModal(true)}
+                disabled={isPending}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:opacity-50"
+              >
+                Rejeter
+              </button>
+              {draft.status === "translated" && (
+                <button
+                  onClick={handleSetInReview}
+                  disabled={isPending}
+                  className="px-4 py-2 border border-primary/30 text-primary rounded-md hover:bg-primary/10 transition-colors disabled:opacity-50"
+                >
+                  Mettre en revue
+                </button>
+              )}
+            </>
+          )}
+
+          {/* Approved actions */}
+          {draft.status === "approved" && (
+            <>
+              <Link
+                href={`/admin/curation/${draft.id}/publish`}
+                className="px-4 py-2 bg-primary text-background rounded-md hover:bg-accent hover:text-primary transition-colors"
+                onClick={(e) => {
+                  e.preventDefault();
+                  // We'll handle publish from Task 2's publishDraft
+                  // For now, this is a placeholder — will be wired in Task 2
+                  alert("La publication sera disponible apres la creation du pipeline (Task 2).");
+                }}
+              >
+                Publier
+              </Link>
+              <button
+                onClick={handleSetInReview}
+                disabled={isPending}
+                className="px-4 py-2 border border-primary/30 text-primary rounded-md hover:bg-primary/10 transition-colors disabled:opacity-50"
+              >
+                Retirer approbation
+              </button>
+            </>
+          )}
+
+          {/* Rejected actions */}
+          {draft.status === "rejected" && (
+            <>
+              {draft.rejectionReason && (
+                <div className="w-full mb-2 px-3 py-2 bg-red-50 border border-red-200 rounded-md text-sm text-red-700">
+                  <strong>Raison du rejet :</strong> {draft.rejectionReason}
+                </div>
+              )}
+              <button
+                onClick={handleSetInReview}
+                disabled={isPending}
+                className="px-4 py-2 border border-primary/30 text-primary rounded-md hover:bg-primary/10 transition-colors disabled:opacity-50"
+              >
+                Remettre en revue
+              </button>
+            </>
+          )}
+
+          {/* Published info */}
+          {draft.status === "published" && (
+            <>
+              <span className="inline-flex items-center px-3 py-1.5 bg-emerald-100 text-emerald-700 text-sm font-medium rounded">
+                Publie le{" "}
+                {draft.publishedAt
+                  ? new Date(draft.publishedAt).toLocaleDateString("fr-FR")
+                  : ""}
+              </span>
+              {draft.publishedProductId && (
+                <Link
+                  href={`/admin/produits/${draft.publishedProductId}`}
+                  className="px-4 py-2 border border-primary/30 text-primary rounded-md hover:bg-primary/10 transition-colors"
+                >
+                  Voir le produit publie
+                </Link>
+              )}
+            </>
+          )}
+
+          {/* Always available (except published) */}
+          {draft.status !== "published" && (
+            <>
+              <div className="flex-1" />
+              <button
+                onClick={handleRetranslate}
+                disabled={isPending}
+                className="px-4 py-2 border border-blue-300 text-blue-700 rounded-md hover:bg-blue-50 transition-colors disabled:opacity-50"
+              >
+                Retraduire
+              </button>
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                disabled={isPending}
+                className="px-4 py-2 border border-red-300 text-red-700 rounded-md hover:bg-red-50 transition-colors disabled:opacity-50"
+              >
+                Supprimer
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Reject Modal */}
+      {showRejectModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-background rounded-lg p-6 w-full max-w-md mx-4 space-y-4">
+            <h3 className="text-lg font-heading font-semibold text-primary">
+              Rejeter le brouillon
+            </h3>
+            <textarea
+              rows={3}
+              value={rejectionReason}
+              onChange={(e) => setRejectionReason(e.target.value)}
+              placeholder="Raison du rejet..."
+              className="w-full px-4 py-2 border border-primary/30 rounded-md bg-background text-primary focus:outline-none focus:ring-2 focus:ring-accent resize-y"
+            />
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  setShowRejectModal(false);
+                  setRejectionReason("");
+                }}
+                className="px-4 py-2 border border-primary/30 text-primary rounded-md hover:bg-primary/10 transition-colors"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleReject}
+                disabled={isPending || !rejectionReason.trim()}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:opacity-50"
+              >
+                Confirmer le rejet
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirm Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-background rounded-lg p-6 w-full max-w-md mx-4 space-y-4">
+            <h3 className="text-lg font-heading font-semibold text-primary">
+              Confirmer la suppression
+            </h3>
+            <p className="text-sm text-primary/70">
+              Etes-vous sur de vouloir supprimer ce brouillon ? Cette action est
+              irreversible.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="px-4 py-2 border border-primary/30 text-primary rounded-md hover:bg-primary/10 transition-colors"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={isPending}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:opacity-50"
+              >
+                Supprimer definitivement
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
