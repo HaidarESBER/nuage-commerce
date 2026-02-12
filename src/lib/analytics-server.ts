@@ -176,9 +176,23 @@ export async function getTopEvents(
 export async function getRealtimeEvents(limit: number = 50): Promise<ServerAnalyticsEvent[]> {
   const supabase = createAdminClient();
 
+  // Filter out technical events (web_vital, etc.) - only show business events
+  const businessEventTypes = [
+    'page_view',
+    'product_view',
+    'add_to_cart',
+    'remove_from_cart',
+    'checkout_started',
+    'purchase',
+    'search',
+    'wishlist_add',
+    'wishlist_remove'
+  ];
+
   const { data, error } = await supabase
     .from('analytics_events')
     .select('*')
+    .in('event_type', businessEventTypes)
     .order('created_at', { ascending: false })
     .limit(limit);
 
