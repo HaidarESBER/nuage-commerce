@@ -197,13 +197,10 @@ export function getProductRatingStats(productId: string): ProductRatingStats | n
   const sumRatings = productReviews.reduce((sum, review) => sum + review.rating, 0);
   const averageRating = sumRatings / totalReviews;
 
-  const ratingBreakdown = {
-    5: productReviews.filter((r) => r.rating === 5).length,
-    4: productReviews.filter((r) => r.rating === 4).length,
-    3: productReviews.filter((r) => r.rating === 3).length,
-    2: productReviews.filter((r) => r.rating === 2).length,
-    1: productReviews.filter((r) => r.rating === 1).length,
-  };
+  const ratingBreakdown = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+  for (const review of productReviews) {
+    ratingBreakdown[review.rating as keyof typeof ratingBreakdown]++;
+  }
 
   return {
     productId,

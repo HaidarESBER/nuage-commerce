@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui";
 import { CartButton } from "@/components/cart";
+import { HeaderSearch } from "@/components/layout/HeaderSearch";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useComparison } from "@/contexts/ComparisonContext";
 import { motion, AnimatePresence } from "framer-motion";
@@ -61,32 +62,7 @@ export function Header() {
 
           {/* Search Bar - Desktop */}
           <div className="hidden md:block flex-1 max-w-md">
-            <div className="relative">
-              <input
-                type="search"
-                placeholder="Rechercher..."
-                className={`w-full pl-9 pr-4 py-2 text-sm rounded-full border transition-all ${
-                  isHomepage
-                    ? "bg-white/10 border-white/20 text-white placeholder-white/60 focus:bg-white/20 focus:border-white/40"
-                    : "bg-background-secondary/50 border-border text-primary placeholder-muted focus:bg-background-secondary focus:border-primary/30"
-                } focus:outline-none`}
-              />
-              <svg
-                className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${
-                  isHomepage ? "text-white/60" : "text-muted"
-                }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </div>
+            <HeaderSearch isHomepage={isHomepage} />
           </div>
 
           {/* Desktop Navigation */}

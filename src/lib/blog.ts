@@ -32,7 +32,7 @@ export function getAllPosts(): BlogPostMeta[] {
         author: data.author || 'Nuage',
         category: (data.category || 'guide') as BlogCategory,
         image: data.image,
-        readingTime: stats.text,
+        readingTime: `${Math.ceil(stats.minutes)} min de lecture`,
       };
     })
     .sort(
@@ -80,6 +80,6 @@ export function getPostBySlug(slug: string): BlogPostMeta | null {
     author: data.author || 'Nuage',
     category: (data.category || 'guide') as BlogCategory,
     image: data.image,
-    readingTime: stats.text,
+    readingTime: `${Math.ceil(stats.minutes)} min de lecture`,
   };
 }
