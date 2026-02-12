@@ -10,19 +10,19 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 ## Current Position
 
 Phase: 14 of 14 (Blog & Content Marketing)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-02-12 — Completed 14-01-PLAN.md
+Plan: 2 of 2 in current phase
+Status: Phase complete
+Last activity: 2026-02-12 — Completed 14-02-PLAN.md
 
-Progress: ██████░░░░░░░ 50% (1/2 plans for v3.0)
+Progress: █████████████ 100% (2/2 plans for v3.0)
 
 ## Milestone Summary
 
-**v3.0 Content & Growth (in progress)**
+**v3.0 Content & Growth (complete)**
 
 - 1 phase planned (14), 2 plans total
 - Focus: Blog & content marketing for organic traffic
-- Started: 2026-02-12
+- Started: 2026-02-12, Completed: 2026-02-12
 
 **v2.0 Production Launch (mostly complete)**
 
@@ -43,9 +43,9 @@ Progress: ██████░░░░░░░ 50% (1/2 plans for v3.0)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 30
+- Total plans completed: 31
 - Average duration: 9.0 min
-- Total execution time: 4.8 hours
+- Total execution time: 4.9 hours
 
 **By Phase:**
 
@@ -63,7 +63,7 @@ Progress: ██████░░░░░░░ 50% (1/2 plans for v3.0)
 | 10-stripe-checkout | 1/2 | 13 min | 13 min |
 | 11-email-notifications | 2/2 | 7 min | 3.5 min |
 | 13-ai-curation-automation | 2/2 | 27 min | 13.5 min |
-| 14-blog-content-marketing | 1/2 | 7 min | 7 min |
+| 14-blog-content-marketing | 2/2 | 14 min | 7 min |
 
 ## Accumulated Context
 
@@ -97,6 +97,8 @@ Progress: ██████░░░░░░░ 50% (1/2 plans for v3.0)
 
 **v3.0 (14-01):** String-based remark/rehype plugin names for Turbopack compatibility in Next.js 16, safeJsonLd helper with XSS prevention for Article schema, blog content in content/blog/ directory.
 
+**v3.0 (14-02):** Dual MDX metadata pattern (YAML frontmatter for gray-matter listing + export const metadata for dynamic import), remark-frontmatter to suppress YAML rendering, @/content/* path alias for content directory imports.
+
 ### Deferred Issues
 
 - Legal pages content (already in place per user)
@@ -112,5 +114,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 14-01-PLAN.md
+Stopped at: Completed 14-02-PLAN.md (Phase 14 complete, v3.0 milestone complete)
 Resume file: None
