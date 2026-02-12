@@ -81,6 +81,8 @@ Progress: ████████████░ 93% (30/31 plans estimated)
 
 **v2.0 (13-01):** claude-sonnet-4-5-20250929 for translation (quality/cost balance), createAdminClient for server-side RLS bypass, effective-value pattern (curated > AI > raw) for product display fields.
 
+**v2.0 (09-02):** createAdminClient for ALL queries (reads + writes) to avoid cookies() in static generation, toProduct/toOrder mapping layer preserves interfaces unchanged, order items in separate table with Supabase join queries, updateOrderStripeData helper replaces direct file I/O.
+
 **v2.0 (09-03):** supabase.auth.getUser() for server-validated middleware auth (not getSession), broadened middleware matcher for consistent session refresh, password validation kept server-side before Supabase signUp.
 
 **v2.0 (13-02):** 6-hour Vercel Cron interval for batch translation, CRON_SECRET authentication for production cron endpoint, server actions with revalidatePath for admin form mutations.
@@ -99,6 +101,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-11
-Stopped at: Completed 09-03-PLAN.md (Supabase Auth & admin protection)
+Last session: 2026-02-12
+Stopped at: Completed 09-02-PLAN.md (Data access migration to Supabase)
 Resume file: None
