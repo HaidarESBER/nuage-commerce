@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 ## Current Position
 
 Phase: 18 of 19 (Wishlist & Recommendations)
-Plan: 1 of 3 in current phase (COMPLETE)
-Status: In progress
-Last activity: 2026-02-12 — Completed 18-01-PLAN.md (Wishlist Feature)
+Plan: 3 of 3 in current phase (COMPLETE)
+Status: Phase complete
+Last activity: 2026-02-12 — Completed 18-03-PLAN.md (Product Recommendations)
 
-Progress: ███░░░░░░░ 15% (5/34 plans in v4.0)
+Progress: ███░░░░░░░ 21% (7/34 plans in v4.0)
 
 ## Milestone Summary
 
@@ -49,9 +49,9 @@ Progress: ███░░░░░░░ 15% (5/34 plans in v4.0)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 40
-- Average duration: 10.3 min
-- Total execution time: 6.9 hours
+- Total plans completed: 42
+- Average duration: 10.5 min
+- Total execution time: 7.3 hours
 
 **By Phase:**
 
@@ -74,7 +74,7 @@ Progress: ███░░░░░░░ 15% (5/34 plans in v4.0)
 | 15-smart-search-filtering | 2/3 | 40 min | 20 min |
 | 16-social-proof-reviews | 2/2 | 20 min | 10 min |
 | 17-customer-accounts-profiles | 1/1 | 45 min | 45 min |
-| 18-wishlist-recommendations | 1/3 | 25 min | 25 min |
+| 18-wishlist-recommendations | 3/3 | 65 min | 21.7 min |
 
 ## Accumulated Context
 
@@ -131,6 +131,8 @@ Progress: ███░░░░░░░ 15% (5/34 plans in v4.0)
 
 **v4.0 (18-02):** browse_history table with auto-cleanup trigger (90-day retention), RLS policies for user privacy and admin analytics, fire-and-forget tracking pattern via ProductViewTracker component, 30-minute deduplication window, opt-out privacy model with track_browsing preference, authenticated-users-only tracking.
 
+**v4.0 (18-03):** SQL-based recommendations using Supabase (category affinity from browse history), GET /api/recommendations endpoint with productId/limit params, RecommendationsSection component with loading states and stagger animations, recommendations on homepage/product pages/wishlist, graceful fallback to featured products for guests, excludes wishlisted items from suggestions.
+
 ### Deferred Issues
 
 - Legal pages content (already in place per user)
@@ -145,6 +147,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-12T13:18:40Z
-Stopped at: Completed 18-01-PLAN.md (Wishlist Feature)
+Last session: 2026-02-12T13:26:33Z
+Stopped at: Completed 18-03-PLAN.md (Product Recommendations)
 Resume file: None
