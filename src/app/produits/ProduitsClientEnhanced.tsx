@@ -85,14 +85,21 @@ export function ProduitsClientEnhanced({
     // Apply search filter first if query exists
     if (searchQuery && searchQuery.trim().length > 0) {
       const query = searchQuery.toLowerCase().trim();
+      console.log('🔍 Filtering products with query:', query);
+      console.log('📦 Total products before filter:', products.length);
       result = result.filter((product) => {
-        return (
+        const matches = (
           product.name.toLowerCase().includes(query) ||
           product.description.toLowerCase().includes(query) ||
           product.shortDescription.toLowerCase().includes(query) ||
           product.category.toLowerCase().includes(query)
         );
+        if (matches) {
+          console.log('✅ Match:', product.name);
+        }
+        return matches;
       });
+      console.log('📦 Total products after filter:', result.length);
     }
 
     // Combine activeCategory with sidebar categories
