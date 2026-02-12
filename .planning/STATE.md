@@ -72,7 +72,7 @@ Progress: ███░░░░░░░ 9% (3/34 plans in v4.0)
 | 13-ai-curation-automation | 2/2 | 27 min | 13.5 min |
 | 14-blog-content-marketing | 2/2 | 14 min | 7 min |
 | 15-smart-search-filtering | 2/3 | 40 min | 20 min |
-| 16-social-proof-reviews | 1/2 | 15 min | 15 min |
+| 16-social-proof-reviews | 2/2 | 20 min | 10 min |
 | 17-customer-accounts-profiles | 1/1 | 45 min | 45 min |
 
 ## Accumulated Context
@@ -119,6 +119,8 @@ Progress: ███░░░░░░░ 9% (3/34 plans in v4.0)
 **v4.0 (15-02):** URL searchParams pattern for filter state (bookmarkable, SEO-friendly), use-debounce with 300ms delay for search input, uncontrolled input with defaultValue (Next.js best practice), Suspense boundaries for streaming search/filters/grid, reset pagination to page 1 on search/filter changes.
 
 **v4.0 (16-01):** Reviews table in Supabase with RLS (public read, auth write own), verified_purchase flag from order_items lookup, createAdminClient for public reads (bypasses RLS), createClient for writes (enforces RLS), server-side review data fetching with props to client components.
+
+**v4.0 (16-03):** localStorage-based recently viewed tracking (max 6 items, client-side only), RecentlyViewed horizontal carousel component with stagger animation, TrendingBadge overlay on featured products (fire emoji + "Tendance"), automatic product view tracking on detail page mount, privacy-friendly social proof (no server tracking).
 
 **v4.0 (17-01):** JSONB columns for profiles (saved_addresses array, preferences object), UUID for address IDs via crypto.randomUUID(), server-side default address enforcement (only one default), password validation with 12+ chars + complexity requirements, modal-based address CRUD UI, French postal code validation (5 digits).
 
