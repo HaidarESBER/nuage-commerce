@@ -21,13 +21,13 @@ export default function AdminLayout({
           {/* Mobile menu button */}
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="lg:hidden p-2 rounded-md hover:bg-primary/80 transition-colors"
+            className="lg:hidden p-2 rounded-md hover:bg-white/10 transition-colors text-background"
             aria-label="Toggle menu"
           >
             {isSidebarOpen ? (
-              <X className="w-6 h-6" />
+              <X className="w-6 h-6 text-background" />
             ) : (
-              <Menu className="w-6 h-6" />
+              <Menu className="w-6 h-6 text-background" />
             )}
           </button>
         </div>
