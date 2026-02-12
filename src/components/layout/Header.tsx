@@ -101,6 +101,16 @@ export function Header() {
             >
               Produits
             </Link>
+            <Link
+              href="/blog"
+              className={`text-sm font-medium transition-colors ${
+                isHomepage
+                  ? "text-white/90 hover:text-white drop-shadow"
+                  : "text-primary hover:text-accent"
+              }`}
+            >
+              Blog
+            </Link>
 
             {/* Wishlist button */}
             <Link
@@ -287,6 +297,17 @@ export function Header() {
                 </Link>
               </div>
 
+              <Link
+                href="/blog"
+                onClick={handleNavClick}
+                className={`text-base font-medium transition-colors ${
+                  pathname.startsWith("/blog")
+                    ? "text-accent"
+                    : "text-primary hover:text-accent"
+                }`}
+              >
+                Blog
+              </Link>
               <Link
                 href="/favoris"
                 onClick={handleNavClick}
