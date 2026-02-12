@@ -180,10 +180,12 @@ Plans:
 **Goal**: Build comprehensive admin dashboard with KPIs, revenue metrics, order tracking, and real-time statistics
 **Depends on**: Phase 20
 **Research**: Unlikely (dashboard UI with established patterns)
-**Plans**: TBD
+**Plans**: 3 plans, 1 wave
 
 Plans:
-- [ ] 21-01: TBD (run /gsd:plan-phase 21 to break down)
+- [x] 21-01: Enhanced Dashboard Overview (KPIs, real-time activity) -- 2026-02-12
+- [x] 21-02: Revenue Analytics Page (charts, trends, financial metrics) -- 2026-02-12
+- [x] 21-03: Product Analytics Page (best sellers, search insights) -- 2026-02-12
 
 #### Phase 22: Sales Analytics
 
@@ -206,6 +208,6 @@ Plans:
 Plans:
 - [ ] 23-01: TBD (run /gsd:plan-phase 23 to break down)
 | 20. Analytics Foundation | v5.0 | 2/2 | Complete | 2026-02-12 |
-| 21. Admin Dashboard | v5.0 | 0/? | Not started | - |
+| 21. Admin Dashboard | v5.0 | 3/3 | Complete | 2026-02-12 |
 | 22. Sales Analytics | v5.0 | 0/? | Not started | - |
 | 23. Customer Intelligence | v5.0 | 0/? | Not started | - |
