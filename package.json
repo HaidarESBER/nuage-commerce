@@ -26,6 +26,7 @@
     "bcryptjs": "^3.0.3",
     "canvas-confetti": "^1.9.4",
     "cheerio": "^1.2.0",
+    "flexsearch": "^0.8.212",
     "framer-motion": "^12.33.2",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.563.0",
@@ -44,6 +45,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/typography": "^0.5.19",
+    "@types/flexsearch": "^0.7.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
