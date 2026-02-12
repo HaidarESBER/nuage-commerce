@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui";
 import { GuestCheckout } from "./GuestCheckout";
 import { ShippingForm } from "./ShippingForm";
@@ -17,6 +17,7 @@ import {
   isValidFrenchPostalCode,
   isValidPhone,
 } from "@/types/checkout";
+import { UserSession } from "@/types/user";
 
 interface CheckoutFormProps {
   items: CartItem[];
@@ -30,6 +31,7 @@ type FieldErrors = Partial<Record<keyof ShippingAddress, string>>;
  *
  * Features:
  * - Guest checkout with optional account creation
+ * - Auto-fill email for logged-in users
  * - Two-column layout on desktop (form + summary)
  * - Stacked on mobile (summary first)
  * - Section-based progression (email → shipping → payment)
@@ -37,10 +39,36 @@ type FieldErrors = Partial<Record<keyof ShippingAddress, string>>;
  * - Loading state during submission
  */
 export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
+  // User session state
+  const [user, setUser] = useState<UserSession | null>(null);
+  const [isLoadingSession, setIsLoadingSession] = useState(true);
+
   // Guest checkout state
   const [email, setEmail] = useState("");
   const [createAccount, setCreateAccount] = useState(false);
   const [password, setPassword] = useState("");
+
+  // Fetch user session on mount
+  useEffect(() => {
+    const fetchSession = async () => {
+      try {
+        const response = await fetch("/api/auth/session");
+        const data = await response.json();
+
+        if (data.user) {
+          setUser(data.user);
+          // Pre-fill email with user's account email
+          setEmail(data.user.email);
+        }
+      } catch (error) {
+        console.error("Error fetching session:", error);
+      } finally {
+        setIsLoadingSession(false);
+      }
+    };
+
+    fetchSession();
+  }, []);
 
   // Shipping state
   const [shippingAddress, setShippingAddress] = useState<ShippingAddress>(
@@ -154,6 +182,8 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
             onCreateAccountChange={setCreateAccount}
             password={password}
             onPasswordChange={setPassword}
+            user={user}
+            isLoadingSession={isLoadingSession}
           />
 
           {/* Section 2: Shipping information */}
