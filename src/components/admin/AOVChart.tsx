@@ -88,7 +88,7 @@ export default function AOVChart({ data }: AOVChartProps) {
                       '0,240',
                       ...data.map((d, i) => {
                         const x = (i / (data.length - 1)) * 1000;
-                        const normalizedValue = (d.avgOrderValue - yMin) / yRange;
+                        const normalizedValue = yRange === 0 ? 0.5 : (d.avgOrderValue - yMin) / yRange;
                         const y = 240 - (normalizedValue * 220); // Leave 20px padding
                         return `${x},${y}`;
                       }),
@@ -103,7 +103,7 @@ export default function AOVChart({ data }: AOVChartProps) {
                     points={data
                       .map((d, i) => {
                         const x = (i / (data.length - 1)) * 1000;
-                        const normalizedValue = (d.avgOrderValue - yMin) / yRange;
+                        const normalizedValue = yRange === 0 ? 0.5 : (d.avgOrderValue - yMin) / yRange;
                         const y = 240 - (normalizedValue * 220);
                         return `${x},${y}`;
                       })
@@ -118,8 +118,8 @@ export default function AOVChart({ data }: AOVChartProps) {
 
               {/* Data points */}
               {data.map((d, i) => {
-                const x = (i / (data.length - 1)) * 1000;
-                const normalizedValue = (d.avgOrderValue - yMin) / yRange;
+                const x = data.length === 1 ? 500 : (i / (data.length - 1)) * 1000; // Center single point
+                const normalizedValue = yRange === 0 ? 0.5 : (d.avgOrderValue - yMin) / yRange; // Handle zero range
                 const y = 240 - (normalizedValue * 220);
                 return (
                   <circle

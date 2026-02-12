@@ -126,8 +126,11 @@ export async function getTopEvents(
 
   // Determine which JSONB key to group by based on event type
   let groupByKey: string;
-  if (eventType === 'product_view') {
+  let labelKey: string | null = null;
+
+  if (eventType === 'product_view' || eventType === 'add_to_cart') {
     groupByKey = 'productId';
+    labelKey = 'productName';
   } else if (eventType === 'search') {
     groupByKey = 'query';
   } else {
@@ -151,18 +154,25 @@ export async function getTopEvents(
     return [];
   }
 
-  // Aggregate counts in application
-  const counts = new Map<string, number>();
+  // Aggregate counts and names in application
+  const stats = new Map<string, { count: number; label?: string }>();
   for (const row of data) {
     const key = row.event_data?.[groupByKey];
     if (key) {
-      counts.set(key, (counts.get(key) || 0) + 1);
+      const existing = stats.get(key);
+      const label = labelKey ? row.event_data?.[labelKey] : undefined;
+
+      if (existing) {
+        existing.count++;
+      } else {
+        stats.set(key, { count: 1, label: label || key });
+      }
     }
   }
 
   // Convert to array and sort by count descending
-  const topEvents = Array.from(counts.entries())
-    .map(([key, count]) => ({ key, count }))
+  const topEvents = Array.from(stats.entries())
+    .map(([key, data]) => ({ key, count: data.count, label: data.label }))
     .sort((a, b) => b.count - a.count)
     .slice(0, limit);
 
@@ -253,10 +263,11 @@ export async function getProductViewsWithUniqueVisitors(limit: number = 10): Pro
   }
 
   // Aggregate total views and unique sessions per product
-  const productStats = new Map<string, { count: number; sessions: Set<string> }>();
+  const productStats = new Map<string, { count: number; sessions: Set<string>; name: string }>();
 
   for (const row of data) {
     const productId = row.event_data?.productId;
+    const productName = row.event_data?.productName || productId;
     const sessionId = row.session_id;
 
     if (productId && sessionId) {
@@ -267,16 +278,18 @@ export async function getProductViewsWithUniqueVisitors(limit: number = 10): Pro
       } else {
         productStats.set(productId, {
           count: 1,
-          sessions: new Set([sessionId])
+          sessions: new Set([sessionId]),
+          name: productName
         });
       }
     }
   }
 
-  // Convert to array with uniqueCount
+  // Convert to array with uniqueCount and product name
   const results = Array.from(productStats.entries())
     .map(([key, stats]) => ({
       key,
+      label: stats.name,
       count: stats.count,
       uniqueCount: stats.sessions.size
     }))
@@ -397,14 +410,13 @@ export interface AOVTrend {
 export async function getRevenueByCategory(): Promise<CategoryRevenue[]> {
   const supabase = createAdminClient();
 
-  // Query orders joined with order_items and products
-  const { data: orderItems, error } = await supabase
+  // Fetch order_items and products separately (no FK relationship exists)
+  const { data: orderItems, error: itemsError } = await supabase
     .from('order_items')
-    .select('quantity, price, product:products(category)')
-    .not('product', 'is', null);
+    .select('product_id, quantity, price');
 
-  if (error) {
-    console.error('getRevenueByCategory error:', error.message);
+  if (itemsError) {
+    console.error('getRevenueByCategory error:', itemsError.message);
     return [];
   }
 
@@ -412,11 +424,28 @@ export async function getRevenueByCategory(): Promise<CategoryRevenue[]> {
     return [];
   }
 
+  // Fetch all products to get categories
+  const { data: products, error: productsError } = await supabase
+    .from('products')
+    .select('id, category');
+
+  if (productsError) {
+    console.error('getRevenueByCategory products error:', productsError.message);
+    return [];
+  }
+
+  if (!products || products.length === 0) {
+    return [];
+  }
+
+  // Create product lookup map
+  const productMap = new Map(products.map(p => [p.id, p.category]));
+
   // Aggregate by category
   const categoryMap = new Map<string, { revenue: number; orderCount: number }>();
 
   for (const item of orderItems) {
-    const category = (item as any).product?.category;
+    const category = productMap.get(item.product_id);
     if (!category) continue;
 
     const itemRevenue = item.price * item.quantity;
@@ -450,20 +479,36 @@ export async function getRevenueByCategory(): Promise<CategoryRevenue[]> {
 export async function getTopSellingProducts(limit: number = 10): Promise<TopSellingProduct[]> {
   const supabase = createAdminClient();
 
-  // Query order_items joined with products
-  const { data: orderItems, error } = await supabase
+  // Fetch order_items and products separately (no FK relationship exists)
+  const { data: orderItems, error: itemsError } = await supabase
     .from('order_items')
-    .select('product_id, quantity, price, product:products(name, category)')
-    .not('product', 'is', null);
+    .select('product_id, quantity, price');
 
-  if (error) {
-    console.error('getTopSellingProducts error:', error.message);
+  if (itemsError) {
+    console.error('getTopSellingProducts error:', itemsError.message);
     return [];
   }
 
   if (!orderItems || orderItems.length === 0) {
     return [];
   }
+
+  // Fetch all products
+  const { data: products, error: productsError } = await supabase
+    .from('products')
+    .select('id, name, category');
+
+  if (productsError) {
+    console.error('getTopSellingProducts products error:', productsError.message);
+    return [];
+  }
+
+  if (!products || products.length === 0) {
+    return [];
+  }
+
+  // Create product lookup map
+  const productsById = new Map(products.map(p => [p.id, p]));
 
   // Aggregate by product_id
   const productMap = new Map<string, {
@@ -476,7 +521,7 @@ export async function getTopSellingProducts(limit: number = 10): Promise<TopSell
 
   for (const item of orderItems) {
     const productId = item.product_id;
-    const product = (item as any).product;
+    const product = productsById.get(productId);
     if (!product || !productId) continue;
 
     const itemRevenue = item.price * item.quantity;

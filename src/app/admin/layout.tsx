@@ -80,6 +80,24 @@ export default function AdminLayout({
               >
                 📦 Produits
               </Link>
+              <Link
+                href="/admin/analytics/sales"
+                className="block px-4 py-2 rounded-md text-primary hover:bg-accent/20 transition-colors"
+              >
+                📈 Ventes
+              </Link>
+              <Link
+                href="/admin/analytics/inventory"
+                className="block px-4 py-2 rounded-md text-primary hover:bg-accent/20 transition-colors"
+              >
+                📦 Stocks
+              </Link>
+              <Link
+                href="/admin/analytics/orders"
+                className="block px-4 py-2 rounded-md text-primary hover:bg-accent/20 transition-colors"
+              >
+                📋 Commandes
+              </Link>
             </div>
           </nav>
         </aside>
