@@ -168,11 +168,23 @@ export function ProduitsClientEnhanced({
 
   // Auto-scroll to products when search query is present
   useEffect(() => {
-    if (searchQuery && searchQuery.trim().length > 0 && productsRef.current) {
-      // Small delay to ensure content is rendered
-      setTimeout(() => {
-        productsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
+    if (searchQuery && searchQuery.trim().length > 0) {
+      // Wait for multiple frames to ensure everything is rendered
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            if (productsRef.current) {
+              const elementPosition = productsRef.current.getBoundingClientRect().top;
+              const offsetPosition = elementPosition + window.pageYOffset - 100; // 100px offset for header
+
+              window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+              });
+            }
+          }, 100);
+        });
+      });
     }
   }, [searchQuery]);
 
