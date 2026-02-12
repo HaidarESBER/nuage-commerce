@@ -125,23 +125,10 @@ export async function POST(request: NextRequest) {
       cancel_url: `${siteUrl}/panier`,
     })
 
-    // Update order with Stripe session ID
-    // Read and update the order file directly since we need to add stripeSessionId
-    const { updateOrderStatus } = await import('@/lib/orders')
-    // We'll use a simple approach: read orders, find by ID, update stripeSessionId
-    const fs = await import('fs/promises')
-    const path = await import('path')
-    const ordersPath = path.join(process.cwd(), 'data', 'orders.json')
-
+    // Update order with Stripe session ID via Supabase
+    const { updateOrderStripeData } = await import('@/lib/orders')
     try {
-      const ordersData = await fs.readFile(ordersPath, 'utf-8')
-      const orders = JSON.parse(ordersData)
-      const orderIndex = orders.findIndex((o: { id: string }) => o.id === order.id)
-      if (orderIndex !== -1) {
-        orders[orderIndex].stripeSessionId = session.id
-        orders[orderIndex].updatedAt = new Date().toISOString()
-        await fs.writeFile(ordersPath, JSON.stringify(orders, null, 2), 'utf-8')
-      }
+      await updateOrderStripeData(order.id, { stripeSessionId: session.id })
     } catch {
       // Non-blocking: order was created, session works, just couldn't save session ID
       console.error('Failed to update order with Stripe session ID')

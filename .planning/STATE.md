@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 
 ## Current Position
 
-Phase: 13 of 13 (AI Curation & Automation) — COMPLETE
-Plan: 2/2 complete
-Status: Phase 13 complete
-Last activity: 2026-02-11 — Completed Phase 13 (Admin Review Queue & Automation)
+Phase: 9 of 13 (Supabase Migration & Auth) — COMPLETE
+Plan: 3/3 complete
+Status: Phase 9 complete
+Last activity: 2026-02-11 — Completed 09-03-PLAN.md (Supabase Auth & admin protection)
 
-Progress: ████████████░ 90% (29/31 plans estimated)
+Progress: ████████████░ 93% (30/31 plans estimated)
 
 ## Milestone Summary
 
@@ -37,9 +37,9 @@ Progress: ████████████░ 90% (29/31 plans estimated)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 28
-- Average duration: 9.2 min
-- Total execution time: 4.6 hours
+- Total plans completed: 29
+- Average duration: 9.1 min
+- Total execution time: 4.7 hours
 
 **By Phase:**
 
@@ -53,7 +53,7 @@ Progress: ████████████░ 90% (29/31 plans estimated)
 | 06-product-experience | 1/1 | 8 min | 8 min |
 | 07-cart-checkout-polish | 1/1 | 8 min | 8 min |
 | 08-character-delight | 8/8 | 92 min | 11.5 min |
-| 09-supabase-migration-auth | 1/3 | 15 min | 15 min |
+| 09-supabase-migration-auth | 3/3 | 25 min | 8.3 min |
 | 10-stripe-checkout | 1/2 | 13 min | 13 min |
 | 11-email-notifications | 2/2 | 7 min | 3.5 min |
 | 13-ai-curation-automation | 2/2 | 27 min | 13.5 min |
@@ -81,6 +81,8 @@ Progress: ████████████░ 90% (29/31 plans estimated)
 
 **v2.0 (13-01):** claude-sonnet-4-5-20250929 for translation (quality/cost balance), createAdminClient for server-side RLS bypass, effective-value pattern (curated > AI > raw) for product display fields.
 
+**v2.0 (09-03):** supabase.auth.getUser() for server-validated middleware auth (not getSession), broadened middleware matcher for consistent session refresh, password validation kept server-side before Supabase signUp.
+
 **v2.0 (13-02):** 6-hour Vercel Cron interval for batch translation, CRON_SECRET authentication for production cron endpoint, server actions with revalidatePath for admin form mutations.
 
 ### Deferred Issues
@@ -98,5 +100,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed Phase 13 (AI Curation & Automation)
+Stopped at: Completed 09-03-PLAN.md (Supabase Auth & admin protection)
 Resume file: None

@@ -48,8 +48,8 @@ See [v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md) for full details.
 
 Plans:
 - [x] 09-01: Supabase Foundation (packages, client helpers, schema, seed data)
-- [ ] 09-02: Migrate data access layer to Supabase
-- [ ] 09-03: Supabase Auth & admin protection
+- [x] 09-02: Migrate data access layer to Supabase
+- [x] 09-03: Supabase Auth & admin protection
 
 #### Phase 10: Stripe Checkout
 
@@ -113,7 +113,7 @@ Phases execute in numeric order: 9 → 10 → 11 → 12 → 13
 | 6. Product Experience | v1.1 | 1/1 | Complete | 2026-02-09 |
 | 7. Cart & Checkout Polish | v1.1 | 1/1 | Complete | 2026-02-09 |
 | 8. Character & Delight | v1.1 | 8/8 | Complete | 2026-02-09 |
-| 9. Supabase Migration & Auth | v2.0 | 1/3 | In progress | - |
+| 9. Supabase Migration & Auth | v2.0 | 3/3 | Complete | 2026-02-11 |
 | 10. Stripe Checkout | v2.0 | 0/? | Not started | - |
 | 11. Email Notifications | v2.0 | 2/2 | Complete | 2026-02-11 |
 | 12. Product Sourcing Pipeline | v2.0 | 0/? | Not started | - |
