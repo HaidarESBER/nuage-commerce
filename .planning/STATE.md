@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 
 ## Current Position
 
-Phase: 15 of 19 (Smart Search & Filtering)
-Plan: 1 of 3 in current phase
-Status: In progress
-Last activity: 2026-02-12 — Completed 15-01-PLAN.md
+Phase: 16 of 19 (Social Proof & Reviews)
+Plan: 1 of 2 in current phase
+Status: Complete
+Last activity: 2026-02-12 — Completed 16-01-PLAN.md (Reviews Database Migration)
 
-Progress: █░░░░░░░░░ 3% (1/34 plans in v4.0)
+Progress: █░░░░░░░░░ 6% (2/34 plans in v4.0)
 
 ## Milestone Summary
 
@@ -72,6 +72,7 @@ Progress: █░░░░░░░░░ 3% (1/34 plans in v4.0)
 | 13-ai-curation-automation | 2/2 | 27 min | 13.5 min |
 | 14-blog-content-marketing | 2/2 | 14 min | 7 min |
 | 15-smart-search-filtering | 1/3 | 15 min | 15 min |
+| 16-social-proof-reviews | 1/2 | 15 min | 15 min |
 
 ## Accumulated Context
 
@@ -113,6 +114,8 @@ Progress: █░░░░░░░░░ 3% (1/34 plans in v4.0)
 **v2.0 (12-02):** Admin scraper UI with single/bulk URL input, server actions with revalidatePath for mutations, sendToCurationAction bridges scraped_products to product_drafts via createDraftFromScrapedProduct, automated scrape cron (12-hour interval) with SCRAPE_URLS environment config, full pipeline integration (scrape → draft → AI translate → curate → publish).
 
 **v4.0 (15-01):** FlexSearch client-side search (zero hosting costs), LatinBalance encoder for French text normalization, resolution: 9 with bidirectional context for fuzzy matching, buildSearchQuery helper with filters/sorting/facets/pagination.
+
+**v4.0 (16-01):** Reviews table in Supabase with RLS (public read, auth write own), verified_purchase flag from order_items lookup, createAdminClient for public reads (bypasses RLS), createClient for writes (enforces RLS), server-side review data fetching with props to client components.
 
 ### Deferred Issues
 
