@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 ## Current Position
 
 Phase: 22 of 23 (Sales Analytics)
-Plan: 22-02 complete
+Plan: 22-03 complete
 Status: Complete
-Last activity: 2026-02-12 — Completed 22-02 (Inventory Management Dashboard)
+Last activity: 2026-02-12 — Completed 22-03 (Order Intelligence Dashboard)
 
-Progress: ████░░░░░░ 35% (v5.0: 3/4 phases, partial)
+Progress: ████░░░░░░ 36% (v5.0: 3/4 phases, partial)
 
 ## Milestone Summary
 
@@ -162,6 +162,8 @@ Progress: ████░░░░░░ 35% (v5.0: 3/4 phases, partial)
 
 **v5.0 (22-02):** Inventory analytics helpers in analytics-server.ts (getStockAlerts, getInventoryVelocity, getRestockRecommendations) with sales velocity calculation (unitsSold / days), days remaining calculation (stockLevel / dailyVelocity), and automated restock quantity recommendations rounded to nearest 5, /admin/analytics/inventory dashboard with stock alerts (urgency levels: 0 = critical, 1-5 = urgent, 6-10 = limited), velocity table highlighting < 30 days remaining, and restock recommendations highlighting < 14 days urgent, 30-day velocity window, 60-day restock target, French date formatting via toLocaleDateString('fr-FR'), urgency-based color coding (red/orange/yellow badges).
 
+**v5.0 (22-03):** Order intelligence helpers in analytics-server.ts (getOrdersByTimePattern with 7×24 day/hour heatmap, getShippingDistribution with tier classification, getOrderStatusFunnel with drop-off rate calculation), /admin/analytics/orders dashboard with pure CSS heatmap using color intensity gradients (bg-blush/20 to bg-blush), horizontal flexbox bar charts for shipping distribution, conversion funnel with decreasing widths and drop-off warnings (red text if >20%), insights section with peak times and payment abandon rate alerts, complete heatmap data (all 168 day/hour cells even if zero), French day names (Lundi, Mardi, etc.), separated cancelled orders from main funnel for clarity.
+
 ### Deferred Issues
 
 - Legal pages content (already in place per user)
@@ -177,5 +179,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 22-01 (Sales Performance Dashboard)
+Stopped at: Completed 22-03 (Order Intelligence Dashboard)
 Resume file: None
