@@ -128,7 +128,7 @@ export function HeaderSearch({ isHomepage }: HeaderSearchProps) {
                       href={`/produits/${product.slug}`}
                       onClick={() => {
                         setIsOpen(false);
-                        setQuery("");
+                        // Keep query so user can navigate back and see their search
                       }}
                       className="flex items-center gap-3 p-3 hover:bg-background-secondary transition-colors"
                     >
@@ -152,11 +152,11 @@ export function HeaderSearch({ isHomepage }: HeaderSearchProps) {
                   href={`/produits?q=${encodeURIComponent(query)}`}
                   onClick={() => {
                     setIsOpen(false);
-                    setQuery("");
+                    // Keep query in search bar so user sees what they searched for
                   }}
                   className="block p-3 text-center text-sm text-accent hover:bg-background-secondary transition-colors border-t border-border"
                 >
-                  Voir tous les résultats
+                  Voir tous les produits ({results.length}+ résultats)
                 </Link>
               </>
             ) : (
