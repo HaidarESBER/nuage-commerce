@@ -13,6 +13,7 @@ import { BottomSheet } from "@/components/mobile/BottomSheet";
 import { PullToRefresh } from "@/components/mobile/PullToRefresh";
 import { Product, ProductCategory, categoryLabels } from "@/types/product";
 import { FracturedCategories } from "@/components/home/FracturedCategories";
+import { trackEvent } from "@/lib/analytics";
 
 interface ProduitsClientEnhancedProps {
   products: Product[];
@@ -80,6 +81,25 @@ export function ProduitsClientEnhanced({
   // Sort functionality
   const initialSort = (searchParams.get("sort") as any) || "relevance";
   const { sortOption, setSortOption } = useProductSort(filteredByFilters, initialSort);
+
+  // Track search events
+  useEffect(() => {
+    if (searchQuery && searchQuery.trim().length > 0) {
+      const query = searchQuery.toLowerCase().trim();
+      // Calculate results count
+      const resultsCount = products.filter((product) =>
+        product.name.toLowerCase().includes(query) ||
+        product.description.toLowerCase().includes(query) ||
+        product.shortDescription.toLowerCase().includes(query) ||
+        product.category.toLowerCase().includes(query)
+      ).length;
+
+      trackEvent('search', {
+        query: searchQuery,
+        resultsCount,
+      });
+    }
+  }, [searchQuery, products]);
 
   // Combine filters and sort
   const displayProducts = useMemo(() => {
