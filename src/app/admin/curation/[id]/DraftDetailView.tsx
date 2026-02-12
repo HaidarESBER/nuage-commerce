@@ -20,6 +20,7 @@ import {
   setInReview,
   retranslate,
   removeDraft,
+  publishDraftAction,
 } from "../actions";
 
 interface DraftDetailViewProps {
@@ -113,6 +114,13 @@ export function DraftDetailView({ draft }: DraftDetailViewProps) {
       await rejectDraft(draft.id, rejectionReason);
       setShowRejectModal(false);
       setRejectionReason("");
+      router.refresh();
+    });
+  }
+
+  function handlePublish() {
+    startTransition(async () => {
+      await publishDraftAction(draft.id);
       router.refresh();
     });
   }
@@ -476,18 +484,13 @@ export function DraftDetailView({ draft }: DraftDetailViewProps) {
           {/* Approved actions */}
           {draft.status === "approved" && (
             <>
-              <Link
-                href={`/admin/curation/${draft.id}/publish`}
-                className="px-4 py-2 bg-primary text-background rounded-md hover:bg-accent hover:text-primary transition-colors"
-                onClick={(e) => {
-                  e.preventDefault();
-                  // We'll handle publish from Task 2's publishDraft
-                  // For now, this is a placeholder — will be wired in Task 2
-                  alert("La publication sera disponible apres la creation du pipeline (Task 2).");
-                }}
+              <button
+                onClick={handlePublish}
+                disabled={isPending}
+                className="px-4 py-2 bg-primary text-background rounded-md hover:bg-accent hover:text-primary transition-colors disabled:opacity-50"
               >
-                Publier
-              </Link>
+                {isPending ? "Publication..." : "Publier"}
+              </button>
               <button
                 onClick={handleSetInReview}
                 disabled={isPending}

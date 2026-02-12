@@ -8,6 +8,7 @@ import {
   deleteDraft,
   getDraftById,
 } from "@/lib/curation";
+import { publishDraft } from "@/lib/pipeline";
 import { DraftStatus } from "@/types/curation";
 
 /**
@@ -95,6 +96,17 @@ export async function retranslate(draftId: string) {
 export async function removeDraft(draftId: string) {
   await deleteDraft(draftId);
   revalidatePath("/admin/curation");
+}
+
+/**
+ * Publish an approved draft as a real product
+ */
+export async function publishDraftAction(draftId: string) {
+  const product = await publishDraft(draftId);
+  revalidatePath("/admin/curation");
+  revalidatePath(`/admin/curation/${draftId}`);
+  revalidatePath("/admin/produits");
+  return product;
 }
 
 /**
