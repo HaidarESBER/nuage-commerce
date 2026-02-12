@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 ## Current Position
 
 Phase: 22 of 23 (Sales Analytics)
-Plan: 22-01 complete
-Status: In progress
-Last activity: 2026-02-12 — Completed 22-01 (Sales Performance Dashboard)
+Plan: 22-02 complete
+Status: Complete
+Last activity: 2026-02-12 — Completed 22-02 (Inventory Management Dashboard)
 
-Progress: ████░░░░░░ 33% (v5.0: 3/4 phases, partial)
+Progress: ████░░░░░░ 35% (v5.0: 3/4 phases, partial)
 
 ## Milestone Summary
 
@@ -55,9 +55,9 @@ Progress: ████░░░░░░ 33% (v5.0: 3/4 phases, partial)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 48
-- Average duration: 10.2 min
-- Total execution time: 8.2 hours
+- Total plans completed: 50
+- Average duration: 10.0 min
+- Total execution time: 8.4 hours
 
 **By Phase:**
 
@@ -84,7 +84,7 @@ Progress: ████░░░░░░ 33% (v5.0: 3/4 phases, partial)
 | 19-mobile-ux-excellence | 2/3 | 27 min | 13.5 min |
 | 20-analytics-foundation | 2/2 | 10 min | 5 min |
 | 21-admin-dashboard | 3/3 | 30 min | 10 min |
-| 22-sales-analytics | 1/? | 18 min | 18 min |
+| 22-sales-analytics | 2/2 | 33 min | 16.5 min |
 
 ## Accumulated Context
 
@@ -159,6 +159,8 @@ Progress: ████░░░░░░ 33% (v5.0: 3/4 phases, partial)
 **v5.0 (21-03):** Product analytics dashboard at /admin/analytics/products with TopProducts component (most viewed/cart products in side-by-side tables), SearchAnalytics component (top 20 queries with 0-result highlighting), French number formatting via toLocaleString('fr-FR'), top-3 highlighting with accent color, alternating row backgrounds (Mist/Cream), monospace font for search queries, empty state handling, error boundaries for each data source, admin navigation already added in 21-02.
 
 **v5.0 (22-01):** Sales analytics helpers in analytics-server.ts (getRevenueByCategory, getTopSellingProducts, getAOVTrends) with application-level Map aggregation for order_items queries, /admin/analytics/sales page with category revenue breakdown, top sellers ranking, and AOV trend visualization, pure SVG line charts with area fill (no external libraries), graceful error handling per data source to prevent page-level failures, French formatting throughout, top items highlighted with accent color.
+
+**v5.0 (22-02):** Inventory analytics helpers in analytics-server.ts (getStockAlerts, getInventoryVelocity, getRestockRecommendations) with sales velocity calculation (unitsSold / days), days remaining calculation (stockLevel / dailyVelocity), and automated restock quantity recommendations rounded to nearest 5, /admin/analytics/inventory dashboard with stock alerts (urgency levels: 0 = critical, 1-5 = urgent, 6-10 = limited), velocity table highlighting < 30 days remaining, and restock recommendations highlighting < 14 days urgent, 30-day velocity window, 60-day restock target, French date formatting via toLocaleDateString('fr-FR'), urgency-based color coding (red/orange/yellow badges).
 
 ### Deferred Issues
 
