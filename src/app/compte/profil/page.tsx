@@ -34,6 +34,7 @@ export default function ProfilePage() {
     email_marketing: false,
     email_order_updates: true,
     email_promotions: false,
+    track_browsing: true,
   });
 
   useEffect(() => {
@@ -63,6 +64,7 @@ export default function ProfilePage() {
           email_marketing: false,
           email_order_updates: true,
           email_promotions: false,
+          track_browsing: true,
         }
       );
     } catch (error) {
@@ -514,6 +516,34 @@ export default function ProfilePage() {
                       <p className="text-xs text-muted mt-1">
                         Recevoir nos newsletters avec nouveautés, conseils et
                         tendances
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      id="track_browsing"
+                      checked={preferences.track_browsing}
+                      onChange={(e) =>
+                        setPreferences({
+                          ...preferences,
+                          track_browsing: e.target.checked,
+                        })
+                      }
+                      className="mt-1 w-4 h-4 rounded border-border text-accent focus:ring-accent"
+                    />
+                    <div>
+                      <label
+                        htmlFor="track_browsing"
+                        className="text-sm font-medium text-primary cursor-pointer"
+                      >
+                        Historique de navigation
+                      </label>
+                      <p className="text-xs text-muted mt-1">
+                        Suivre les produits que je consulte pour personnaliser mes
+                        recommandations. Vos données sont privées et supprimées
+                        automatiquement après 90 jours.
                       </p>
                     </div>
                   </div>

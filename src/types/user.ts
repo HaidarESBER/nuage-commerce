@@ -26,6 +26,7 @@ export interface EmailPreferences {
   email_marketing: boolean;
   email_order_updates: boolean;
   email_promotions: boolean;
+  track_browsing: boolean; // Allow browse history tracking for recommendations
 }
 
 /**

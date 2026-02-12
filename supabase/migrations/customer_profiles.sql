@@ -15,8 +15,13 @@ ALTER TABLE profiles ADD COLUMN IF NOT EXISTS phone TEXT;
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS saved_addresses JSONB DEFAULT '[]'::jsonb;
 
 -- Add preferences column (JSONB object)
--- Structure: {email_marketing: boolean, email_order_updates: boolean, email_promotions: boolean}
-ALTER TABLE profiles ADD COLUMN IF NOT EXISTS preferences JSONB DEFAULT '{"email_marketing": false, "email_order_updates": true, "email_promotions": false}'::jsonb;
+-- Structure: {email_marketing: boolean, email_order_updates: boolean, email_promotions: boolean, track_browsing: boolean}
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS preferences JSONB DEFAULT '{"email_marketing": false, "email_order_updates": true, "email_promotions": false, "track_browsing": true}'::jsonb;
+
+-- Update existing profiles to include track_browsing default (for existing users)
+UPDATE profiles
+SET preferences = jsonb_set(preferences, '{track_browsing}', 'true'::jsonb)
+WHERE preferences->>'track_browsing' IS NULL;
 
 -- Add index on saved_addresses for faster queries
 CREATE INDEX IF NOT EXISTS idx_profiles_saved_addresses ON profiles USING gin (saved_addresses);
