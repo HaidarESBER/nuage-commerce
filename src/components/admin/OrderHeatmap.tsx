@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { TimePattern, PeakTimes } from '@/lib/analytics-server';
 
 interface OrderHeatmapProps {
@@ -66,10 +67,9 @@ export default function OrderHeatmap({ data, peakTimes }: OrderHeatmapProps) {
 
             {/* Data rows - Days */}
             {DAYS_FR.map((dayLabel, dayIndex) => (
-              <>
+              <React.Fragment key={`day-row-${dayIndex}`}>
                 {/* Day label */}
                 <div
-                  key={`day-label-${dayIndex}`}
                   className="text-xs text-stone-600 pr-2 flex items-center justify-end font-medium"
                 >
                   {dayLabel}
@@ -94,7 +94,7 @@ export default function OrderHeatmap({ data, peakTimes }: OrderHeatmapProps) {
                     </div>
                   );
                 })}
-              </>
+              </React.Fragment>
             ))}
           </div>
 
