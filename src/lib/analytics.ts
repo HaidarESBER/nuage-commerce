@@ -33,6 +33,7 @@ interface AnalyticsEvent {
 
 const STORAGE_KEY = 'nuage_analytics_events';
 const MAX_STORED_EVENTS = 100;
+const SESSION_ID_KEY = 'nuage_session_id';
 
 /**
  * Check if analytics should be disabled
@@ -49,6 +50,63 @@ function isTrackingDisabled(): boolean {
   }
 
   return false;
+}
+
+/**
+ * Get or create anonymous session ID
+ * Stored in sessionStorage (resets on tab close, privacy-friendly)
+ */
+function getOrCreateSessionId(): string {
+  if (typeof window === 'undefined') return '';
+
+  try {
+    // Check for existing session ID
+    let sessionId = sessionStorage.getItem(SESSION_ID_KEY);
+
+    if (!sessionId) {
+      // Generate new session ID
+      sessionId = crypto.randomUUID();
+      sessionStorage.setItem(SESSION_ID_KEY, sessionId);
+    }
+
+    return sessionId;
+  } catch (error) {
+    console.warn('Failed to get/create session ID:', error);
+    return '';
+  }
+}
+
+/**
+ * Send event to server for persistence
+ * Fire-and-forget: non-blocking, no error handling
+ */
+function sendToServer(eventType: string, eventData: any) {
+  if (typeof window === 'undefined') return;
+
+  try {
+    const sessionId = getOrCreateSessionId();
+    if (!sessionId) return;
+
+    // Fire-and-forget POST request
+    fetch('/api/analytics/track', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        eventType,
+        eventData,
+        sessionId,
+        url: window.location.href,
+        referrer: document.referrer || undefined,
+      }),
+      keepalive: true, // Ensures event sent even on page unload
+    }).catch(() => {
+      // Silent failure - tracking should never break UX
+    });
+  } catch (error) {
+    // Silent failure - tracking should never break UX
+  }
 }
 
 /**
@@ -122,6 +180,9 @@ function trackEvent(eventType: string, data: any = {}) {
     if (window.clarity) {
       window.clarity('set', eventType, JSON.stringify(data));
     }
+
+    // Send to server for persistence (Phase 20: Analytics Foundation)
+    sendToServer(eventType, data);
   }
 }
 
