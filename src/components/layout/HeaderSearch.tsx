@@ -68,10 +68,9 @@ export function HeaderSearch({ isHomepage }: HeaderSearchProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (query.trim()) {
-      router.push(`/produits?q=${encodeURIComponent(query)}`);
-      setIsOpen(false);
-    }
+    // Allow empty search to show all products
+    router.push(query.trim() ? `/produits?q=${encodeURIComponent(query)}` : '/produits');
+    setIsOpen(false);
   };
 
   return (
