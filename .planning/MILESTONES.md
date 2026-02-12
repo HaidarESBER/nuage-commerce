@@ -1,28 +1,99 @@
 # Project Milestones: Nuage E-Commerce
 
+## v4.0 UX Heaven (Shipped: 2026-02-12)
+
+**Delivered:** Advanced search, social proof, personalized recommendations, and Progressive Web App with mobile-native features.
+
+**Phases completed:** 15-19 (11 plans total)
+
+**Key accomplishments:**
+
+- FlexSearch-powered client-side search with French normalization and advanced filtering
+- Product reviews with verified purchase badges and social proof elements
+- Wishlist and SQL-based recommendation engine with category affinity
+- Profile management with saved addresses and preferences
+- Progressive Web App with offline support and installability
+- Mobile-native features (pull-to-refresh, install prompts, app-like transitions)
+
+**Stats:**
+
+- 126 files created/modified (+12,155 / -1,007 lines)
+- ~27,600 lines TypeScript/TSX
+- 5 phases, 11 plans, 26 feature commits
+- Same-day delivery (~3 hours)
+
+**Git range:** `c855dd0` → `081d201`
+
+**Archive:** [v4.0-ROADMAP.md](milestones/v4.0-ROADMAP.md)
+
+---
+
+## v3.0 Content & Growth (Shipped: 2026-02-12)
+
+**Delivered:** Blog system with MDX support for hookah guides and SEO content.
+
+**Phases completed:** 14 (2 plans total)
+
+**Key accomplishments:**
+
+- MDX infrastructure with Next.js 16 App Router
+- Blog pages with structured data (Article schema)
+- Content directory pattern for blog posts
+- SEO-optimized article pages
+
+---
+
+## v2.0 Production Launch (Shipped: 2026-02-12)
+
+**Delivered:** Real payments, PostgreSQL database, email notifications, product sourcing pipeline, and AI curation.
+
+**Phases completed:** 9-13 (12 plans total)
+
+**Key accomplishments:**
+
+- Supabase PostgreSQL migration with RLS policies
+- Stripe Checkout integration for payments
+- Email notifications with Resend
+- Web scraping pipeline for product sourcing
+- AI translation and curation with Claude Sonnet 4.5
+- Admin panel for product management
+
+---
+
+## v1.1 Enhanced Experience (Shipped: 2026-02-09)
+
+**Delivered:** Dynamic animations, interactive product galleries, mobile gestures, trust signals, and SEO foundation.
+
+**Phases completed:** 5-8 (10 plans total)
+
+**Key accomplishments:**
+
+- Motion foundation with Framer Motion
+- Interactive product galleries with zoom
+- Mobile gestures and bottom sheets
+- Trust signals and exit intent modals
+- Performance optimization
+- SEO structured data
+
+---
+
 ## v1.0 MVP (Shipped: 2026-02-09)
 
-**Delivered:** Complete premium e-commerce storefront for hookah accessories with shopping cart, checkout, order management, and mobile-responsive design.
+**Delivered:** Complete premium e-commerce storefront with shopping cart, checkout, order management, and mobile-responsive design.
 
 **Phases completed:** 1-4 (11 plans total)
 
 **Key accomplishments:**
 
-- Established "Nuage" brand identity with elegant French positioning and premium color palette
-- Built product catalog with 8 curated items across 5 categories and static generation
-- Implemented complete shopping flow: cart, checkout, and order confirmation
-- Created admin panel with product management and order tracking
-- Launched mobile-responsive site with hamburger navigation and SEO optimization
+- Premium brand identity (Nuage)
+- Product catalog with categories
+- Shopping cart and checkout flow
+- Order tracking
+- Mobile-responsive design
+- Guest checkout
 
-**Stats:**
-
-- 80 files created/modified
-- 4,540 lines of TypeScript
-- 4 phases, 11 plans
-- Same-day execution (09:15 - 12:48)
-
-**Git range:** `feat(01-01)` -> `feat(04-03)`
-
-**What's next:** Production deployment, payment integration, real supplier data
+**Archive:** [v1.0-ROADMAP.md](milestones/v1.0-ROADMAP.md)
 
 ---
+
+_Total: 5 milestones shipped, 19 phases completed, 46 plans executed_

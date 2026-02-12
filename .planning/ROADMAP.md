@@ -3,10 +3,10 @@
 ## Milestones
 
 - ✅ [v1.0 MVP](milestones/v1.0-ROADMAP.md) (Phases 1-4) — SHIPPED 2026-02-09
-- ✅ **v1.1 - Enhanced Experience** (Phases 5-8) — COMPLETE 2026-02-09
-- ✅ **v2.0 - Production Launch** (Phases 9-13) — COMPLETE 2026-02-12
-- ✅ **v3.0 - Content & Growth** (Phase 14) — COMPLETE 2026-02-12
-- 🚧 **v4.0 - UX Heaven** (Phases 15-19) — In progress
+- ✅ **v1.1 - Enhanced Experience** (Phases 5-8) — SHIPPED 2026-02-09
+- ✅ **v2.0 - Production Launch** (Phases 9-13) — SHIPPED 2026-02-12
+- ✅ **v3.0 - Content & Growth** (Phase 14) — SHIPPED 2026-02-12
+- ✅ [**v4.0 - UX Heaven**](milestones/v4.0-ROADMAP.md) (Phases 15-19) — SHIPPED 2026-02-12
 
 ## Completed Milestones
 
@@ -117,67 +117,20 @@ Plans:
 - [x] 14-01: MDX Infrastructure & Blog Utilities (packages, config, types, utilities, Article schema)
 - [x] 14-02: Blog Pages & Content
 
-### 🚧 v4.0 - UX Heaven (In Progress)
+<details>
+<summary>✅ v4.0 - UX Heaven (Phases 15-19) — SHIPPED 2026-02-12</summary>
 
-**Milestone Goal:** Elevate user experience to premium standards with smart search, social proof, personalized recommendations, and mobile excellence.
+- [x] Phase 15: Smart Search & Filtering (3/3 plans) — 2026-02-12
+- [x] Phase 16: Social Proof & Reviews (3/3 plans) — 2026-02-12
+- [x] Phase 17: Customer Accounts & Profiles (1/1 plan) — 2026-02-12
+- [x] Phase 18: Wishlist & Recommendations (3/3 plans) — 2026-02-12
+- [x] Phase 19: Mobile UX Excellence (2/2 plans) — 2026-02-12
 
-#### Phase 15: Smart Search & Filtering
+**Delivered:** Advanced search, social proof, personalized recommendations, and Progressive Web App with mobile-native features.
 
-**Goal**: Implement advanced product search with dynamic filters (category, price, features), sorting options, and search suggestions
-**Depends on**: Previous milestones complete (v3.0)
-**Research**: Likely (search technology choices)
-**Research topics**: Search libraries (Algolia, MeiliSearch, self-hosted), French language search, filter UI patterns, search analytics
-**Plans**: TBD
+See [milestones/v4.0-ROADMAP.md](milestones/v4.0-ROADMAP.md) for full details.
 
-Plans:
-- [ ] 15-01: TBD (run /gsd:plan-phase 15 to break down)
-
-#### Phase 16: Social Proof & Reviews
-
-**Goal**: Add product reviews, ratings, verified purchase badges, and social proof elements (recently viewed, trending items)
-**Depends on**: Phase 15
-**Research**: Unlikely (database extension with established patterns)
-**Plans**: 3 plans, 2 waves
-
-Plans:
-- [x] 16-01: Reviews Database & API (Wave 1) -- 2026-02-12
-- [x] 16-02: Review Submission Form (Wave 2) -- 2026-02-12
-- [x] 16-03: Social Proof Elements (Wave 2) -- 2026-02-12
-
-#### Phase 17: Customer Accounts & Profiles
-
-**Goal**: Build user profiles with order history, saved addresses, communication preferences, and account management
-**Depends on**: Phase 16
-**Research**: Unlikely (Supabase Auth already integrated, extending existing patterns)
-**Plans**: 1 plan, 1 wave
-
-Plans:
-- [x] 17-01: Profile Management & Saved Addresses (Wave 1) -- 2026-02-12
-
-#### Phase 18: Wishlist & Recommendations
-
-**Goal**: Implement product favorites/wishlist and AI-powered product recommendations based on browsing and purchase history
-**Depends on**: Phase 17 (user accounts for personalization)
-**Research**: Likely (recommendation algorithms and approaches)
-**Research topics**: Recommendation engines (collaborative filtering vs content-based), AI/ML for recommendations, personalization strategies, privacy considerations
-**Plans**: 3 plans, 2 waves
-
-Plans:
-- [x] 18-01: Wishlist Feature (Wave 1) -- 2026-02-12
-- [x] 18-02: Browse Tracking Foundation (Wave 1) -- 2026-02-12
-- [x] 18-03: Recommendation Engine & UI (Wave 2) -- 2026-02-12
-
-#### Phase 19: Mobile UX Excellence
-
-**Goal**: Mobile-specific enhancements including pull-to-refresh, native-like gestures, offline support, and PWA features
-**Depends on**: Phase 18
-**Research**: Likely (PWA and offline-first patterns)
-**Research topics**: PWA setup with Next.js, service workers, offline-first architecture, mobile gesture libraries, app-like transitions
-**Plans**: 2 plans, 2 waves
-
-Plans:
-- [x] 19-01: PWA Foundation & Service Worker (Wave 1) -- 2026-02-12
-- [x] 19-02: Mobile-Native Features (Wave 2) -- 2026-02-12
+</details>
 
 ## Progress
 
