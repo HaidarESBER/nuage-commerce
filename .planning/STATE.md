@@ -9,18 +9,18 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 
 ## Current Position
 
-Phase: 15 of 19 (Smart Search & Filtering)
-Plan: 2 of 3 in current phase
-Status: In progress
-Last activity: 2026-02-12 — Completed 15-02-PLAN.md (Search UI Integration)
+Phase: 17 of 19 (Customer Accounts & Profiles)
+Plan: 1 of 1 in current phase (COMPLETE)
+Status: Complete
+Last activity: 2026-02-12 — Completed 17-01-PLAN.md (Profile & Addresses Management)
 
-Progress: ██░░░░░░░░ 6% (2/34 plans in v4.0)
+Progress: ███░░░░░░░ 9% (3/34 plans in v4.0)
 
 ## Milestone Summary
 
 **v4.0 UX Heaven (in progress)**
 
-- 5 phases planned (15-19), 0 complete
+- 5 phases planned (15-19), 1 complete
 - Focus: Smart search, social proof, accounts, recommendations, mobile excellence
 - Started: 2026-02-12
 
@@ -49,9 +49,9 @@ Progress: ██░░░░░░░░ 6% (2/34 plans in v4.0)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 34
-- Average duration: 9.0 min
-- Total execution time: 5.4 hours
+- Total plans completed: 37
+- Average duration: 9.7 min
+- Total execution time: 6.0 hours
 
 **By Phase:**
 
@@ -73,6 +73,7 @@ Progress: ██░░░░░░░░ 6% (2/34 plans in v4.0)
 | 14-blog-content-marketing | 2/2 | 14 min | 7 min |
 | 15-smart-search-filtering | 2/3 | 40 min | 20 min |
 | 16-social-proof-reviews | 1/2 | 15 min | 15 min |
+| 17-customer-accounts-profiles | 1/1 | 45 min | 45 min |
 
 ## Accumulated Context
 
@@ -119,6 +120,8 @@ Progress: ██░░░░░░░░ 6% (2/34 plans in v4.0)
 
 **v4.0 (16-01):** Reviews table in Supabase with RLS (public read, auth write own), verified_purchase flag from order_items lookup, createAdminClient for public reads (bypasses RLS), createClient for writes (enforces RLS), server-side review data fetching with props to client components.
 
+**v4.0 (17-01):** JSONB columns for profiles (saved_addresses array, preferences object), UUID for address IDs via crypto.randomUUID(), server-side default address enforcement (only one default), password validation with 12+ chars + complexity requirements, modal-based address CRUD UI, French postal code validation (5 digits).
+
 ### Deferred Issues
 
 - Legal pages content (already in place per user)
@@ -133,6 +136,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-12T11:21:43Z
-Stopped at: Completed 15-01-PLAN.md
+Last session: 2026-02-12T14:30:00Z
+Stopped at: Completed 17-01-PLAN.md (Profile & Addresses Management)
 Resume file: None
