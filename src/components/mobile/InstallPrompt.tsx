@@ -10,14 +10,20 @@ import Image from "next/image";
  *
  * Features:
  * - Listens for beforeinstallprompt event
- * - Shows only on /produits page after scrolling 200px
- * - Small, subtle banner in bottom-left (doesn't interfere with FloatingCartButton)
- * - Dismiss button (X icon)
- * - Triggers native install prompt on click
+ * - Shows only on /produits page after scrolling 200px down
+ * - Small, subtle banner in bottom-left corner (doesn't interfere with FloatingCartButton)
+ * - Compact design: small logo + text + install icon
+ * - Dismiss button (X icon in top-right)
+ * - Triggers native install prompt on banner click
  * - Dismisses after install or on X click
  * - Stores dismissal in localStorage (don't show again)
  * - Only shows on mobile (<768px)
- * - Smooth slide-up animation using Framer Motion
+ * - Smooth slide-in animation from left using Framer Motion
+ *
+ * Positioning:
+ * - Fixed bottom-left (FloatingCartButton is bottom-right)
+ * - z-index: 40 (FloatingCartButton is 40, so they're on same layer)
+ * - Appears at same vertical position (bottom-6) to create symmetry
  */
 export function InstallPrompt() {
   const pathname = usePathname();
