@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
@@ -63,6 +63,7 @@ export function ProduitsClientEnhanced({
   const [view, setView] = useState<"grid" | "list">("grid");
   const router = useRouter();
   const searchParams = useSearchParams();
+  const productsRef = useRef<HTMLDivElement>(null);
 
   // Filter functionality
   const {
@@ -165,6 +166,16 @@ export function ProduitsClientEnhanced({
     router.replace(newUrl, { scroll: false });
   }, [sortOption, router, searchParams]);
 
+  // Auto-scroll to products when search query is present
+  useEffect(() => {
+    if (searchQuery && searchQuery.trim().length > 0 && productsRef.current) {
+      // Small delay to ensure content is rendered
+      setTimeout(() => {
+        productsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [searchQuery]);
+
   const validCategories: ProductCategory[] = [
     "chicha",
     "bol",
@@ -251,6 +262,7 @@ export function ProduitsClientEnhanced({
 
       {/* Toolbar - Clean & Minimal */}
       <motion.div
+        ref={productsRef}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4, delay: 0.2 }}
