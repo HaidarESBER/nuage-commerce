@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-11)
 ## Current Position
 
 Phase: 12 of 14 (Product Sourcing Pipeline)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-02-12 — Completed 12-01-PLAN.md
+Plan: 2 of 2 in current phase
+Status: Complete
+Last activity: 2026-02-12 — Completed 12-02-PLAN.md
 
-Progress: ██████░░░░░░░ 50% (1/2 plans for Phase 12)
+Progress: ████████████░ 100% (2/2 plans for Phase 12)
 
 ## Milestone Summary
 
@@ -26,7 +26,7 @@ Progress: ██████░░░░░░░ 50% (1/2 plans for Phase 12)
 
 **v2.0 Production Launch (in progress)**
 
-- 5 phases planned (9-13), 4 complete, Phase 12 in progress (1/2 plans done)
+- 5 phases planned (9-13), 5 complete
 - Focus: Payments, database, email, product sourcing, AI curation
 - Started: 2026-02-11
 
@@ -43,9 +43,9 @@ Progress: ██████░░░░░░░ 50% (1/2 plans for Phase 12)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 32
+- Total plans completed: 33
 - Average duration: 9.0 min
-- Total execution time: 5.0 hours
+- Total execution time: 5.1 hours
 
 **By Phase:**
 
@@ -62,7 +62,7 @@ Progress: ██████░░░░░░░ 50% (1/2 plans for Phase 12)
 | 09-supabase-migration-auth | 3/3 | 25 min | 8.3 min |
 | 10-stripe-checkout | 2/2 | 18 min | 9 min |
 | 11-email-notifications | 2/2 | 7 min | 3.5 min |
-| 12-product-sourcing-pipeline | 1/2 | 5 min | 5 min |
+| 12-product-sourcing-pipeline | 2/2 | 10 min | 5 min |
 | 13-ai-curation-automation | 2/2 | 27 min | 13.5 min |
 | 14-blog-content-marketing | 2/2 | 14 min | 7 min |
 
@@ -102,6 +102,8 @@ Progress: ██████░░░░░░░ 50% (1/2 plans for Phase 12)
 
 **v2.0 (12-01):** Cheerio for lightweight HTML parsing (no headless browser), adapter pattern for site-specific extraction (SourceAdapter interface with canHandle/extract), URL-based deduplication (source_url UNIQUE constraint), rate limiting (1s delay between batch requests), failed scrapes saved with error_message for admin debugging.
 
+**v2.0 (12-02):** Admin scraper UI with single/bulk URL input, server actions with revalidatePath for mutations, sendToCurationAction bridges scraped_products to product_drafts via createDraftFromScrapedProduct, automated scrape cron (12-hour interval) with SCRAPE_URLS environment config, full pipeline integration (scrape → draft → AI translate → curate → publish).
+
 ### Deferred Issues
 
 - Legal pages content (already in place per user)
@@ -117,5 +119,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-12
-Stopped at: Completed 12-01-PLAN.md (Task 1 & 2 complete, Phase 12 50% done)
-Resume file: .planning/phases/12-product-sourcing-pipeline/12-02-PLAN.md
+Stopped at: Completed 12-02-PLAN.md (Phase 12 complete, v2.0 Production Launch complete)
+Resume file: Next phase or milestone (check ROADMAP.md)
