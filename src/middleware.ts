@@ -15,7 +15,6 @@ export async function middleware(request: NextRequest) {
   // Protect admin routes
   if (pathname.startsWith("/admin")) {
     if (!user) {
-      // Redirect to login page with return URL
       const loginUrl = new URL("/compte", request.url);
       loginUrl.searchParams.set("redirect", pathname);
       return NextResponse.redirect(loginUrl);
@@ -29,7 +28,6 @@ export async function middleware(request: NextRequest) {
       .single();
 
     if (!profile?.is_admin) {
-      // Non-admin users get redirected to home
       return NextResponse.redirect(new URL("/", request.url));
     }
   }

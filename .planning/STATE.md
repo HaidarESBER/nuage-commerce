@@ -26,7 +26,7 @@ Progress: █████████████ 100% (2/2 plans for v3.0)
 
 **v2.0 Production Launch (mostly complete)**
 
-- 5 phases planned (9-13), 4 complete (Phase 10/12 partially remaining)
+- 5 phases planned (9-13), 5 complete (Phase 12 partially remaining)
 - Focus: Payments, database, email, product sourcing, AI curation
 - Started: 2026-02-11
 
@@ -60,7 +60,7 @@ Progress: █████████████ 100% (2/2 plans for v3.0)
 | 07-cart-checkout-polish | 1/1 | 8 min | 8 min |
 | 08-character-delight | 8/8 | 92 min | 11.5 min |
 | 09-supabase-migration-auth | 3/3 | 25 min | 8.3 min |
-| 10-stripe-checkout | 1/2 | 13 min | 13 min |
+| 10-stripe-checkout | 2/2 | 18 min | 9 min |
 | 11-email-notifications | 2/2 | 7 min | 3.5 min |
 | 13-ai-curation-automation | 2/2 | 27 min | 13.5 min |
 | 14-blog-content-marketing | 2/2 | 14 min | 7 min |
