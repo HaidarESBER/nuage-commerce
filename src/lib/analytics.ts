@@ -145,9 +145,9 @@ function logEvent(eventType: string, data: any) {
 }
 
 /**
- * Generic event tracking
+ * Generic event tracking (exported for custom events)
  */
-function trackEvent(eventType: string, data: any = {}) {
+export function trackEvent(eventType: string, data: any = {}) {
   if (isTrackingDisabled()) return;
 
   const event: AnalyticsEvent = {
