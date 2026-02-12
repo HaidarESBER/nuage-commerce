@@ -1,5 +1,6 @@
 import * as cheerio from 'cheerio';
-import { SourceAdapter, ScrapeResult } from '@/types/scraper';
+import { SourceAdapter, ScrapeResult, ReviewScrapeResult } from '@/types/scraper';
+import { fetchWithBrowser } from '@/lib/scraper/browser';
 
 /**
  * AliExpress adapter: extracts product data from AliExpress HTML
@@ -9,6 +10,7 @@ import { SourceAdapter, ScrapeResult } from '@/types/scraper';
  */
 export const aliexpressAdapter: SourceAdapter = {
   name: 'aliexpress',
+  supportsReviewScraping: true,
 
   canHandle(url: string): boolean {
     return url.includes('aliexpress.com');
@@ -76,6 +78,106 @@ export const aliexpressAdapter: SourceAdapter = {
     };
 
     return result;
+  },
+
+  /**
+   * Extract reviews from AliExpress product page
+   * Uses Playwright to render JavaScript-heavy review section
+   */
+  async extractReviews(html: string, url: string): Promise<ReviewScrapeResult[]> {
+    const reviews: ReviewScrapeResult[] = [];
+
+    try {
+      // AliExpress reviews require JavaScript rendering, use Playwright
+      const renderedHtml = await fetchWithBrowser(url, '.feedback-list-wrap', 30000);
+      const $ = cheerio.load(renderedHtml);
+
+      // Find all review items
+      const reviewElements = $('.feedback-item, .review-item, [class*="feedback"]').toArray();
+
+      for (const element of reviewElements) {
+        const $review = $(element);
+
+        // Extract review text
+        const text =
+          $review.find('.buyer-feedback span, .review-content, [class*="feedback-content"]').text().trim() ||
+          $review.find('.buyer-review, [class*="review-text"]').text().trim();
+
+        if (!text || text.length < 10) continue; // Skip empty or too short reviews
+
+        // Extract rating (parse from star elements or data attributes)
+        const ratingElement = $review.find('.star-view, .stars, [class*="star-"]');
+        let rating = 5; // Default to 5 if not found
+
+        // Try to extract rating from class or style
+        const ratingClass = ratingElement.attr('class') || '';
+        const ratingMatch = ratingClass.match(/star-(\d)/);
+        if (ratingMatch) {
+          rating = parseInt(ratingMatch[1]);
+        } else {
+          // Try to count filled stars
+          const filledStars = $review.find('.star-view .star-full, [class*="star-fill"]').length;
+          if (filledStars > 0) {
+            rating = filledStars;
+          }
+        }
+
+        // Extract author info
+        const authorName =
+          $review.find('.user-name, .reviewer-name, [class*="user-name"]').text().trim() || undefined;
+        const authorCountry =
+          $review.find('.user-country, .reviewer-country, [class*="country"]').text().trim() || undefined;
+
+        // Extract date
+        const reviewDate =
+          $review.find('.r-time-new, .review-date, [class*="review-time"]').text().trim() || undefined;
+
+        // Extract review images (customer photos)
+        const imageElements = $review.find('.r-photo-view img, .review-image img, [class*="review-img"] img').toArray();
+        const images: string[] = [];
+
+        for (const img of imageElements) {
+          let src = $(img).attr('src') || $(img).attr('data-src');
+          if (src) {
+            // Convert thumbnail to full size
+            // AliExpress thumbnails: _50x50.jpg -> .jpg
+            src = src.replace(/_\d+x\d+\.(jpg|jpeg|png|webp)/i, '.$1');
+            // Ensure HTTPS
+            if (src.startsWith('//')) {
+              src = 'https:' + src;
+            }
+            if (isValidAliExpressImageUrl(src)) {
+              images.push(src);
+            }
+          }
+        }
+
+        // Detect original language (AliExpress shows reviews in original language)
+        // Simple heuristic: if text contains non-ASCII characters, guess language
+        const originalLanguage = detectLanguage(text);
+
+        reviews.push({
+          text,
+          rating,
+          authorName,
+          authorCountry,
+          reviewDate,
+          images,
+          originalLanguage,
+        });
+
+        // Limit to 100 reviews max to avoid performance issues
+        if (reviews.length >= 100) break;
+      }
+
+      console.log(`Extracted ${reviews.length} reviews from ${url}`);
+    } catch (error) {
+      console.error('Failed to extract reviews:', error);
+      // Return empty array on error instead of throwing
+      // This allows product scraping to succeed even if review scraping fails
+    }
+
+    return reviews;
   },
 };
 
@@ -201,4 +303,20 @@ function isValidAliExpressImageUrl(url: string): boolean {
   // AliExpress images are on ae01.alicdn.com or similar CDN domains
   const aliExpressImagePattern = /(alicdn\.com|ae\d+\.|\.jpg|\.jpeg|\.png|\.webp)/i;
   return aliExpressImagePattern.test(url);
+}
+
+/**
+ * Simple language detection heuristic for review text
+ */
+function detectLanguage(text: string): string | undefined {
+  // Very basic detection based on character sets
+  if (/[\u4e00-\u9fa5]/.test(text)) return 'zh'; // Chinese
+  if (/[\u3040-\u309f\u30a0-\u30ff]/.test(text)) return 'ja'; // Japanese
+  if (/[\uac00-\ud7af]/.test(text)) return 'ko'; // Korean
+  if (/[\u0400-\u04ff]/.test(text)) return 'ru'; // Russian
+  if (/[\u0600-\u06ff]/.test(text)) return 'ar'; // Arabic
+
+  // For Latin-based languages, default to English
+  // (More sophisticated detection would require a library)
+  return 'en';
 }

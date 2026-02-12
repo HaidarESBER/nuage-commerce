@@ -25,6 +25,9 @@ function toScrapedProduct(row: any): ScrapedProduct {
     rawMetadata: row.raw_metadata || {},
     scrapeStatus: row.scrape_status,
     errorMessage: row.error_message,
+    imageUploadStatus: row.image_upload_status || 'pending',
+    uploadedImageUrls: row.uploaded_image_urls || [],
+    reviewCount: row.review_count || 0,
     sentToCuration: row.sent_to_curation,
     draftId: row.draft_id,
     createdAt: row.created_at,
@@ -50,6 +53,9 @@ function toScrapedProductRow(data: Partial<ScrapedProduct>): Record<string, unkn
   if (data.rawMetadata !== undefined) row.raw_metadata = data.rawMetadata;
   if (data.scrapeStatus !== undefined) row.scrape_status = data.scrapeStatus;
   if (data.errorMessage !== undefined) row.error_message = data.errorMessage;
+  if (data.imageUploadStatus !== undefined) row.image_upload_status = data.imageUploadStatus;
+  if (data.uploadedImageUrls !== undefined) row.uploaded_image_urls = data.uploadedImageUrls;
+  if (data.reviewCount !== undefined) row.review_count = data.reviewCount;
   if (data.sentToCuration !== undefined) row.sent_to_curation = data.sentToCuration;
   if (data.draftId !== undefined) row.draft_id = data.draftId;
 

@@ -139,6 +139,13 @@ export default function AdminLayout({
               >
                 📋 Commandes
               </Link>
+              <Link
+                href="/admin/analytics/customers"
+                onClick={() => setIsSidebarOpen(false)}
+                className="block px-4 py-2 rounded-md text-primary hover:bg-accent/20 transition-colors"
+              >
+                👥 Clients
+              </Link>
             </div>
           </nav>
         </aside>
