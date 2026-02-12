@@ -114,7 +114,7 @@ export function Header() {
 
             {/* Wishlist button */}
             <Link
-              href="/favoris"
+              href="/compte/wishlist"
               className={`relative transition-colors ${
                 isHomepage
                   ? "text-white/90 hover:text-white drop-shadow"
@@ -176,7 +176,7 @@ export function Header() {
           <div className="flex md:hidden items-center gap-4">
             {/* Wishlist button */}
             <Link
-              href="/favoris"
+              href="/compte/wishlist"
               className={`relative transition-colors ${
                 isHomepage
                   ? "text-white/90 hover:text-white drop-shadow"
