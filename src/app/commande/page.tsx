@@ -7,6 +7,7 @@ import { CheckoutForm } from "@/components/checkout";
 import { useCart } from "@/contexts/CartContext";
 import { CheckoutFormData } from "@/types/checkout";
 import { OrderItem } from "@/types/order";
+import { getVisitorId } from "@/lib/referral";
 
 /**
  * Checkout page for completing purchases
@@ -42,6 +43,9 @@ export default function CheckoutPage() {
         quantity: item.quantity,
       }));
 
+      // Get visitor ID for referral tracking
+      const visitorId = getVisitorId();
+
       // Call checkout API to create Stripe Checkout Session
       const response = await fetch("/api/checkout", {
         method: "POST",
@@ -51,6 +55,7 @@ export default function CheckoutPage() {
           shippingAddress: formData.shippingAddress,
           shippingCost: formData.shippingCost,
           notes: formData.notes,
+          visitorId,
         }),
       });
 
