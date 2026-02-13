@@ -1,5 +1,29 @@
 # Project Milestones: Nuage E-Commerce
 
+## v5.0 Analytics & Insights (Shipped: 2026-02-12)
+
+**Delivered:** Comprehensive analytics dashboards with business KPIs, revenue tracking, sales analytics, inventory management, and customer intelligence.
+
+**Phases completed:** 20-23 (10 plans total)
+
+**Key accomplishments:**
+
+- Analytics event tracking infrastructure with privacy compliance
+- Admin dashboard with real-time KPIs and activity feed
+- Revenue analytics with pure HTML/CSS charts (zero dependencies)
+- Product analytics with search insights and top products
+- Sales performance, inventory velocity, and order intelligence dashboards
+- Customer segmentation with RFM analysis (VIP, Champions, etc.)
+- Cohort analysis and lifetime value tracking
+- Behavioral metrics funnel (browse → wishlist → purchase)
+
+**Stats:**
+
+- 4 phases, 10 plans, same-day delivery
+- Pure CSS/SVG charts throughout (no external charting libraries)
+
+---
+
 ## v4.0 UX Heaven (Shipped: 2026-02-12)
 
 **Delivered:** Advanced search, social proof, personalized recommendations, and Progressive Web App with mobile-native features.
@@ -96,4 +120,4 @@
 
 ---
 
-_Total: 5 milestones shipped, 19 phases completed, 46 plans executed_
+_Total: 6 milestones shipped, 23 phases completed, 51 plans executed_

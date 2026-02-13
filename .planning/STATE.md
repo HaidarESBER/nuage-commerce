@@ -5,18 +5,24 @@
 See: .planning/PROJECT.md (updated 2026-02-12)
 
 **Core value:** The brand looks so premium and legitimate that visitors trust it instantly — visual identity drives conversion.
-**Current focus:** v4.0 UX Heaven — SHIPPED 2026-02-12
+**Current focus:** v6.0 Growth & Marketing — Starting
 
 ## Current Position
 
-Phase: 23 of 23 (Customer Intelligence)
-Plan: 2 of 2 in current phase
-Status: Phase complete
-Last activity: 2026-02-12 — Completed 23-02-PLAN.md
+Phase: 24 of 27 (SEO & Organic Growth)
+Plan: 0 of 0 in current phase
+Status: Not started
+Last activity: 2026-02-13 — Created v6.0 milestone
 
-Progress: █████░░░░░ 38% (v5.0: 4/4 phases complete)
+Progress: ░░░░░░░░░░ 0% (v6.0: 0/4 phases complete)
 
 ## Milestone Summary
+
+**v6.0 Growth & Marketing (In Progress)**
+
+- 4 phases planned (24-27), 0 complete
+- Focus: SEO, promotions, social media, email marketing
+- Started: 2026-02-13
 
 **v5.0 Analytics & Insights (COMPLETE 2026-02-12)**
 
@@ -96,6 +102,7 @@ Progress: █████░░░░░ 38% (v5.0: 4/4 phases complete)
 - Milestone v3.0 created: Content & Growth with blog & content marketing, 1 phase (Phase 14)
 - Milestone v4.0 created: UX Heaven with search, social proof, accounts, recommendations, mobile, 5 phases (Phase 15-19)
 - Milestone v5.0 created: Analytics & Insights with tracking, dashboards, sales analytics, customer intelligence, 4 phases (Phase 20-23)
+- Milestone v6.0 created: Growth & Marketing with SEO, promotions, social media, email marketing, 4 phases (Phase 24-27)
 
 ### Key Decisions
 
@@ -163,19 +170,15 @@ Progress: █████░░░░░ 38% (v5.0: 4/4 phases complete)
 
 **v5.0 (22-02):** Inventory analytics helpers in analytics-server.ts (getStockAlerts, getInventoryVelocity, getRestockRecommendations) with sales velocity calculation (unitsSold / days), days remaining calculation (stockLevel / dailyVelocity), and automated restock quantity recommendations rounded to nearest 5, /admin/analytics/inventory dashboard with stock alerts (urgency levels: 0 = critical, 1-5 = urgent, 6-10 = limited), velocity table highlighting < 30 days remaining, and restock recommendations highlighting < 14 days urgent, 30-day velocity window, 60-day restock target, French date formatting via toLocaleDateString('fr-FR'), urgency-based color coding (red/orange/yellow badges).
 
-**v5.0 (22-03):** Order intelligence helpers in analytics-server.ts (getOrdersByTimePattern with 7×24 day/hour heatmap, getShippingDistribution with tier classification, getOrderStatusFunnel with drop-off rate calculation), /admin/analytics/orders dashboard with pure CSS heatmap using color intensity gradients (bg-blush/20 to bg-blush), horizontal flexbox bar charts for shipping distribution, conversion funnel with decreasing widths and drop-off warnings (red text if >20%), insights section with peak times and payment abandon rate alerts, complete heatmap data (all 168 day/hour cells even if zero), French day names (Lundi, Mardi, etc.), separated cancelled orders from main funnel for clarity.
+**v5.0 (22-03):** Order intelligence helpers in analytics-server.ts (getOrdersByTimePattern with 7x24 day/hour heatmap, getShippingDistribution with tier classification, getOrderStatusFunnel with drop-off rate calculation), /admin/analytics/orders dashboard with pure CSS heatmap using color intensity gradients (bg-blush/20 to bg-blush), horizontal flexbox bar charts for shipping distribution, conversion funnel with decreasing widths and drop-off warnings (red text if >20%), insights section with peak times and payment abandon rate alerts, complete heatmap data (all 168 day/hour cells even if zero), French day names (Lundi, Mardi, etc.), separated cancelled orders from main funnel for clarity.
 
-**v5.0 (23-01):** Customer intelligence library in customer-analytics.ts (getRFMSegments, getCustomerSegmentStats, getTopCustomers) with quintile-based RFM scoring (1-5 scale) for Recency/Frequency/Monetary dimensions, 5-tier customer segmentation (VIP, Champions, Fidèles, À Risque, Inactifs) based on RFM score combinations, application-level Map aggregation for customer metrics calculation, recency score inversion (lower days = higher score), /admin/analytics/customers dashboard with 5 KPIs (Total, VIP, Active, At Risk, Inactive), RFMDistribution horizontal bar chart with segment-specific colors (VIP=blush, Champions=green, Fidèles=blue, À Risque=orange, Inactifs=gray), CustomerSegments stats table with VIP/Champions highlighting, TopCustomers ranking table with top 3 accent highlighting, French labels throughout.
+**v5.0 (23-01):** Customer intelligence library in customer-analytics.ts (getRFMSegments, getCustomerSegmentStats, getTopCustomers) with quintile-based RFM scoring (1-5 scale) for Recency/Frequency/Monetary dimensions, 5-tier customer segmentation (VIP, Champions, Fideles, A Risque, Inactifs) based on RFM score combinations, application-level Map aggregation for customer metrics calculation, recency score inversion (lower days = higher score), /admin/analytics/customers dashboard with 5 KPIs (Total, VIP, Active, At Risk, Inactive), RFMDistribution horizontal bar chart with segment-specific colors, CustomerSegments stats table with VIP/Champions highlighting, TopCustomers ranking table with top 3 accent highlighting, French labels throughout.
 
-**v5.0 (23-02):** Cohort analysis and LTV tracking in customer-analytics.ts (getCohorts, getCustomerLTV, getBehavioralMetrics) with monthly cohort grouping by first purchase (YYYY-MM), cumulative retention calculation (% ordering by month N), 90-day purchase frequency projection for LTV forecasting (currentLTV + expectedFutureOrders × avgOrderValue), French month labels via Intl.DateTimeFormat (Janvier 2026), behavioral metrics combining browse_history/wishlist/orders for conversion funnel, CohortRetention heatmap component with 20-100% opacity gradient on accent color, LTVMetrics component with summary cards and top 20 customers table (top 5 highlighted), CustomerBehavior funnel with decreasing width bars showing browse→wishlist→purchase progression, all sections integrated into /admin/analytics/customers dashboard with section dividers and graceful error handling.
+**v5.0 (23-02):** Cohort analysis and LTV tracking in customer-analytics.ts (getCohorts, getCustomerLTV, getBehavioralMetrics) with monthly cohort grouping by first purchase (YYYY-MM), cumulative retention calculation (% ordering by month N), 90-day purchase frequency projection for LTV forecasting, French month labels via Intl.DateTimeFormat, behavioral metrics combining browse_history/wishlist/orders for conversion funnel, CohortRetention heatmap component, LTVMetrics component with summary cards and top 20 customers table, CustomerBehavior funnel, all sections integrated into /admin/analytics/customers dashboard.
 
 ### Deferred Issues
 
 - Legal pages content (already in place per user)
-- Database migration → Phase 9 (now planned)
-- Payment integration → Phase 10 (now planned)
-- Email notifications → Phase 11 (now planned)
-- Admin authentication → Phase 9 (now planned)
 
 ### Blockers/Concerns
 
@@ -183,6 +186,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-12
-Stopped at: Completed 23-02 (Cohort Analysis & Lifetime Value Tracking)
+Last session: 2026-02-13
+Stopped at: Created v6.0 milestone (Growth & Marketing)
 Resume file: None

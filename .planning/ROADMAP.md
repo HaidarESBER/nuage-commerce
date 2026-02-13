@@ -7,6 +7,8 @@
 - ✅ **v2.0 - Production Launch** (Phases 9-13) — SHIPPED 2026-02-12
 - ✅ **v3.0 - Content & Growth** (Phase 14) — SHIPPED 2026-02-12
 - ✅ [**v4.0 - UX Heaven**](milestones/v4.0-ROADMAP.md) (Phases 15-19) — SHIPPED 2026-02-12
+- ✅ **v5.0 - Analytics & Insights** (Phases 20-23) — SHIPPED 2026-02-12
+- 🚧 **v6.0 - Growth & Marketing** (Phases 24-27) — In Progress
 
 ## Completed Milestones
 
@@ -135,7 +137,7 @@ See [milestones/v4.0-ROADMAP.md](milestones/v4.0-ROADMAP.md) for full details.
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 9 → 10 → 11 → 12 → 13 → 14 → 15 → 16 → 17 → 18 → 19
+Phases execute in numeric order: 9 → ... → 23 → 24 → 25 → 26 → 27
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -159,7 +161,7 @@ Phases execute in numeric order: 9 → 10 → 11 → 12 → 13 → 14 → 15 →
 | 18. Wishlist & Recommendations | v4.0 | 3/3 | Complete | 2026-02-12 |
 | 19. Mobile UX Excellence | v4.0 | 2/2 | Complete | 2026-02-12 |
 
-### 🚧 v5.0 - Analytics & Insights (In Progress)
+### ✅ v5.0 - Analytics & Insights (COMPLETE 2026-02-12)
 
 **Milestone Goal:** Provide comprehensive analytics and insights into business performance, customer behavior, and sales trends through admin dashboards and intelligence tools.
 
@@ -214,3 +216,44 @@ Plans:
 | 21. Admin Dashboard | v5.0 | 3/3 | Complete | 2026-02-12 |
 | 22. Sales Analytics | v5.0 | 3/3 | Complete | 2026-02-12 |
 | 23. Customer Intelligence | v5.0 | 2/2 | Complete | 2026-02-12 |
+
+### 🚧 v6.0 - Growth & Marketing (In Progress)
+
+**Milestone Goal:** Drive customer acquisition and retention through SEO optimization, promotional tools, social media integration, and email marketing campaigns.
+
+#### Phase 24: SEO & Organic Growth
+
+**Goal**: Optimize the site for search engines with technical SEO improvements, structured data enhancements, sitemap generation, and meta tag optimization for French market
+**Depends on**: Previous milestones complete (v5.0)
+**Research**: Likely (French SEO best practices, Google Search Console integration)
+**Research topics**: Next.js SEO patterns, French-market SEO, sitemap generation, Open Graph optimization, Core Web Vitals
+**Plans**: TBD
+
+#### Phase 25: Promotions & Discount Codes
+
+**Goal**: Build a promotional system with discount codes, flash sales, bundle deals, and automated pricing rules for marketing campaigns
+**Depends on**: Phase 24
+**Research**: Likely (Stripe coupon/promotion integration, pricing strategies)
+**Research topics**: Stripe Coupons API, promotion code validation, cart-level vs item-level discounts, time-limited offers
+**Plans**: TBD
+
+#### Phase 26: Social Media Integration
+
+**Goal**: Integrate social sharing, Instagram feed display, social login options, and referral tracking for organic growth
+**Depends on**: Phase 24
+**Research**: Likely (social platform APIs, sharing SDKs)
+**Research topics**: Instagram Basic Display API, social share buttons, Open Graph previews, UTM tracking, referral systems
+**Plans**: TBD
+
+#### Phase 27: Email Marketing & Retention
+
+**Goal**: Build email marketing capabilities with newsletter signup, automated campaigns, abandoned cart recovery, and customer re-engagement flows
+**Depends on**: Phase 25
+**Research**: Likely (email marketing platforms, automation patterns)
+**Research topics**: Resend broadcast emails, newsletter management, abandoned cart detection, drip campaign architecture, unsubscribe handling
+**Plans**: TBD
+
+| 24. SEO & Organic Growth | v6.0 | 0/0 | Pending | - |
+| 25. Promotions & Discount Codes | v6.0 | 0/0 | Pending | - |
+| 26. Social Media Integration | v6.0 | 0/0 | Pending | - |
+| 27. Email Marketing & Retention | v6.0 | 0/0 | Pending | - |
