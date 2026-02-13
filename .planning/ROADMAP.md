@@ -239,7 +239,10 @@ Plans:
 **Depends on**: Phase 24
 **Research**: Likely (Stripe coupon/promotion integration, pricing strategies)
 **Research topics**: Stripe Coupons API, promotion code validation, cart-level vs item-level discounts, time-limited offers
-**Plans**: TBD
+**Plans**: 1 plan, 1 wave
+
+Plans:
+- [x] 25-01: Promotions Backend & Admin Management (Wave 1) -- 2026-02-13
 
 #### Phase 26: Social Media Integration
 
@@ -258,6 +261,6 @@ Plans:
 **Plans**: TBD
 
 | 24. SEO & Organic Growth | v6.0 | 2/2 | Complete | 2026-02-13 |
-| 25. Promotions & Discount Codes | v6.0 | 0/0 | Pending | - |
+| 25. Promotions & Discount Codes | v6.0 | 1/1 | Complete | 2026-02-13 |
 | 26. Social Media Integration | v6.0 | 0/0 | Pending | - |
 | 27. Email Marketing & Retention | v6.0 | 0/0 | Pending | - |

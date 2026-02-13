@@ -9,18 +9,18 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 
 ## Current Position
 
-Phase: 24 of 27 (SEO & Organic Growth)
-Plan: 2 of 2 in current phase
-Status: Phase complete
-Last activity: 2026-02-13 — Completed 24-02-PLAN.md
+Phase: 25 of 27 (Promotions & Discount Codes)
+Plan: 1 of 1 in current phase
+Status: In progress
+Last activity: 2026-02-13 — Completed 25-01-PLAN.md
 
-Progress: ██░░░░░░░░ 25% (v6.0: 1/4 phases complete)
+Progress: ████░░░░░░ 50% (v6.0: 2/4 phases complete)
 
 ## Milestone Summary
 
 **v6.0 Growth & Marketing (In Progress)**
 
-- 4 phases planned (24-27), 1 complete
+- 4 phases planned (24-27), 2 complete
 - Focus: SEO, promotions, social media, email marketing
 - Started: 2026-02-13
 
@@ -61,9 +61,9 @@ Progress: ██░░░░░░░░ 25% (v6.0: 1/4 phases complete)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 53
+- Total plans completed: 54
 - Average duration: 9.8 min
-- Total execution time: 8.7 hours
+- Total execution time: 8.8 hours
 
 **By Phase:**
 
@@ -93,6 +93,7 @@ Progress: ██░░░░░░░░ 25% (v6.0: 1/4 phases complete)
 | 22-sales-analytics | 2/2 | 33 min | 16.5 min |
 | 23-customer-intelligence | 2/2 | 19 min | 9.5 min |
 | 24-seo-organic-growth | 2/2 | 10 min | 5 min |
+| 25-promotions-discount-codes | 1/1 | 8 min | 8 min |
 
 ## Accumulated Context
 
@@ -181,6 +182,8 @@ Progress: ██░░░░░░░░ 25% (v6.0: 1/4 phases complete)
 
 **v6.0 (24-02):** WebSite schema with SearchAction on homepage for Google sitelinks search box (targets /produits?q=), ItemList schema generator for collections (limited to 10 items), page-specific schema in page component (WebSite on homepage) vs site-wide schema in layout (Organization), safeJsonLd for XSS-safe JSON-LD serialization, enhanced homepage metadata with "Chicha Premium en France" keywords and canonical URL.
 
+**v6.0 (25-01):** Promotions table with RLS (public read active, admin full access), cents-based fixed_amount storage, BIENVENUE10 seed, createAdminClient CRUD pattern (toPromotion mapping), validatePromotion with French error messages (code lookup, active check, date range, usage limits, minimum order), calculateDiscount capped at subtotal, admin /admin/promotions page with inline create/edit forms and server actions, Tag icon in sidebar.
+
 ### Deferred Issues
 
 - Legal pages content (already in place per user)
@@ -192,5 +195,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-13
-Stopped at: Completed 24-02-PLAN.md (Phase 24 complete - SEO & Organic Growth)
+Stopped at: Completed 25-01-PLAN.md (Promotions backend & admin management)
 Resume file: None
