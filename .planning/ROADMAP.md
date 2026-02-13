@@ -264,9 +264,13 @@ Plans:
 **Depends on**: Phase 25
 **Research**: Likely (email marketing platforms, automation patterns)
 **Research topics**: Resend broadcast emails, newsletter management, abandoned cart detection, drip campaign architecture, unsubscribe handling
-**Plans**: TBD
+**Plans**: 2 plans, 2 waves
+
+Plans:
+- [x] 27-01: Newsletter Subscription System (Wave 1) -- 2026-02-13
+- [ ] 27-02: Email Campaigns & Automated Flows (Wave 2)
 
 | 24. SEO & Organic Growth | v6.0 | 2/2 | Complete | 2026-02-13 |
 | 25. Promotions & Discount Codes | v6.0 | 2/2 | Complete | 2026-02-13 |
 | 26. Social Media Integration | v6.0 | 2/3 | Complete | 2026-02-13 |
-| 27. Email Marketing & Retention | v6.0 | 0/0 | Pending | - |
+| 27. Email Marketing & Retention | v6.0 | 1/2 | In progress | - |

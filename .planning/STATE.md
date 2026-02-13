@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 
 ## Current Position
 
-Phase: 26 of 27 (Social Media Integration)
-Plan: 3 of 3 in current phase
-Status: Phase complete
-Last activity: 2026-02-13 — Completed 26-03-PLAN.md
+Phase: 27 of 27 (Email Marketing & Retention)
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-02-13 — Completed 27-01-PLAN.md
 
-Progress: ██████░░░░ 57% (v6.0: 3/4 phases complete)
+Progress: ██████░░░░ 57% (v6.0: 3/4 phases, 27: 1/2 plans)
 
 ## Milestone Summary
 
@@ -61,9 +61,9 @@ Progress: ██████░░░░ 57% (v6.0: 3/4 phases complete)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 56
+- Total plans completed: 57
 - Average duration: 9.8 min
-- Total execution time: 9.3 hours
+- Total execution time: 9.4 hours
 
 **By Phase:**
 
@@ -95,6 +95,7 @@ Progress: ██████░░░░ 57% (v6.0: 3/4 phases complete)
 | 24-seo-organic-growth | 2/2 | 10 min | 5 min |
 | 25-promotions-discount-codes | 2/2 | 16 min | 8 min |
 | 26-social-media-integration | 3/3 | 37 min | 12.3 min |
+| 27-email-marketing-retention | 1/2 | 8 min | 8 min |
 
 ## Accumulated Context
 
@@ -191,6 +192,8 @@ Progress: ██████░░░░ 57% (v6.0: 3/4 phases complete)
 
 **v6.0 (26-03):** Session storage for visitor ID (privacy-friendly, tab-scoped), auto-generate 8-char alphanumeric referral codes on insert, track conversions server-side via Stripe webhook metadata, fire-and-forget pattern for referral conversion API calls, referral dashboard as new tab in profile page, UTM capture on app load with session storage persistence, referral code extraction from URL referrer parameter, visitor ID passed through checkout to Stripe metadata, server-side conversion tracking prevents client-side manipulation.
 
+**v6.0 (27-01):** Newsletter subscribers table with RLS (admin-only, service role for API routes), HMAC-SHA256 signed unsubscribe tokens using CRON_SECRET as key (no new env var), newsletter-tokens.ts separated from "use server" newsletter.ts to allow sync token functions, fire-and-forget welcome email on subscribe, NewsletterForm with 5-state UI (idle/loading/success/error/already), /desabonnement page with token-based and manual unsubscribe flows, getUnsubscribeUrl private helper in email.ts for all marketing emails.
+
 ### Deferred Issues
 
 - Legal pages content (already in place per user)
@@ -202,5 +205,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-13
-Stopped at: Completed 26-03-PLAN.md (Phase 26 complete - UTM tracking and referral system)
+Stopped at: Completed 27-01-PLAN.md (Newsletter subscription system)
 Resume file: None
