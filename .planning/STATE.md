@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-12)
 
 **Core value:** The brand looks so premium and legitimate that visitors trust it instantly — visual identity drives conversion.
-**Current focus:** v6.0 Growth & Marketing — Starting
+**Current focus:** v6.0 Growth & Marketing — In Progress
 
 ## Current Position
 
 Phase: 24 of 27 (SEO & Organic Growth)
-Plan: 0 of 0 in current phase
-Status: Not started
-Last activity: 2026-02-13 — Created v6.0 milestone
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-02-13 — Completed 24-01-PLAN.md
 
-Progress: ░░░░░░░░░░ 0% (v6.0: 0/4 phases complete)
+Progress: █░░░░░░░░░ 10% (v6.0: 0/4 phases complete, 1/2 plans in phase 24)
 
 ## Milestone Summary
 
@@ -61,9 +61,9 @@ Progress: ░░░░░░░░░░ 0% (v6.0: 0/4 phases complete)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 51
-- Average duration: 10.0 min
-- Total execution time: 8.6 hours
+- Total plans completed: 52
+- Average duration: 9.9 min
+- Total execution time: 8.7 hours
 
 **By Phase:**
 
@@ -92,6 +92,7 @@ Progress: ░░░░░░░░░░ 0% (v6.0: 0/4 phases complete)
 | 21-admin-dashboard | 3/3 | 30 min | 10 min |
 | 22-sales-analytics | 2/2 | 33 min | 16.5 min |
 | 23-customer-intelligence | 2/2 | 19 min | 9.5 min |
+| 24-seo-organic-growth | 1/2 | 5 min | 5 min |
 
 ## Accumulated Context
 
@@ -176,6 +177,8 @@ Progress: ░░░░░░░░░░ 0% (v6.0: 0/4 phases complete)
 
 **v5.0 (23-02):** Cohort analysis and LTV tracking in customer-analytics.ts (getCohorts, getCustomerLTV, getBehavioralMetrics) with monthly cohort grouping by first purchase (YYYY-MM), cumulative retention calculation (% ordering by month N), 90-day purchase frequency projection for LTV forecasting, French month labels via Intl.DateTimeFormat, behavioral metrics combining browse_history/wishlist/orders for conversion funnel, CohortRetention heatmap component, LTVMetrics component with summary cards and top 20 customers table, CustomerBehavior funnel, all sections integrated into /admin/analytics/customers dashboard.
 
+**v6.0 (24-01):** Complete sitemap with blog/category/legal URLs (removed panier/checkout/favoris/comparaison), generateMetadata with searchParams for dynamic category-specific French SEO on /produits, robots.txt sufficient for admin noindex (no meta tag needed), OpenGraph locale fr_FR for French market, category URLs use query parameter format matching existing routing.
+
 ### Deferred Issues
 
 - Legal pages content (already in place per user)
@@ -187,5 +190,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-13
-Stopped at: Created v6.0 milestone (Growth & Marketing)
+Stopped at: Completed 24-01-PLAN.md (Technical SEO & Sitemap Completeness)
 Resume file: None
