@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Container } from "@/components/ui";
+import { PWAInstallButton } from "@/components/pwa/PWAInstallButton";
+import { NewsletterForm } from "@/components/newsletter/NewsletterForm";
 
 /**
  * Site footer with brand, navigation, and legal links
@@ -158,6 +160,9 @@ export function Footer() {
                 Informations
               </h4>
               <nav className="flex flex-col gap-2">
+                {/* PWA Install Button */}
+                <PWAInstallButton variant="link" />
+
                 <Link href="/mentions-legales" className="group inline-block w-fit">
                   <motion.span
                     className="relative text-background/80 transition-colors duration-200 group-hover:text-background"
@@ -208,6 +213,25 @@ export function Footer() {
           </div>
         </Container>
       </motion.div>
+
+      {/* Newsletter section */}
+      <div className="border-t border-background/20">
+        <Container size="lg">
+          <div className="py-8 flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-8">
+            <div className="text-center md:text-left flex-shrink-0">
+              <h4 className="font-medium text-sm uppercase tracking-wide mb-1">
+                Restez informe
+              </h4>
+              <p className="text-background/70 text-sm max-w-xs">
+                Recevez nos offres exclusives et nouveautes directement dans votre boite mail.
+              </p>
+            </div>
+            <div className="w-full max-w-md">
+              <NewsletterForm variant="footer" />
+            </div>
+          </div>
+        </Container>
+      </div>
 
       {/* Copyright bar */}
       <div className="py-4 border-t border-background/20">
