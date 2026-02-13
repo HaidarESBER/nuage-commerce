@@ -7,6 +7,7 @@ import { ShippingNotificationEmail } from "@/emails/ShippingNotificationEmail";
 import { OrderStatusUpdateEmail } from "@/emails/OrderStatusUpdateEmail";
 import { WelcomeEmail } from "@/emails/WelcomeEmail";
 import { AbandonedCartEmail } from "@/emails/AbandonedCartEmail";
+import { WinBackEmail } from "@/emails/WinBackEmail";
 import { generateUnsubscribeToken } from "@/lib/newsletter-tokens";
 
 const FROM_ADDRESS = "Nuage <commandes@nuage.fr>";
@@ -244,6 +245,47 @@ export async function sendAbandonedCartEmail(
     return { success: true };
   } catch (err) {
     console.error("Unexpected error sending abandoned cart email:", err);
+    return { success: false, error: "Unexpected error sending email" };
+  }
+}
+
+/**
+ * Send win-back email to inactive customers.
+ * Called by the email campaigns cron job.
+ * Fire-and-forget pattern (never throws).
+ */
+export async function sendWinBackEmail(
+  email: string,
+  firstName: string,
+  products: Array<{ name: string; price: number }>
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const resend = getResendClient();
+    if (!resend) {
+      return { success: false, error: "Email service not configured" };
+    }
+
+    const unsubscribeUrl = getUnsubscribeUrl(email);
+
+    const subject = firstName
+      ? `Vous nous manquez, ${firstName} !`
+      : "Vous nous manquez !";
+
+    const { error } = await resend.emails.send({
+      from: MARKETING_FROM_ADDRESS,
+      to: [email],
+      subject,
+      react: WinBackEmail({ firstName, products, unsubscribeUrl }),
+    });
+
+    if (error) {
+      console.error("Error sending win-back email:", error);
+      return { success: false, error: "Failed to send win-back email" };
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error("Unexpected error sending win-back email:", err);
     return { success: false, error: "Unexpected error sending email" };
   }
 }
