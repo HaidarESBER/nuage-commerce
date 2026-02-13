@@ -6,9 +6,11 @@ import { OrderConfirmationEmail } from "@/emails/OrderConfirmationEmail";
 import { ShippingNotificationEmail } from "@/emails/ShippingNotificationEmail";
 import { OrderStatusUpdateEmail } from "@/emails/OrderStatusUpdateEmail";
 import { WelcomeEmail } from "@/emails/WelcomeEmail";
+import { AbandonedCartEmail } from "@/emails/AbandonedCartEmail";
 import { generateUnsubscribeToken } from "@/lib/newsletter-tokens";
 
 const FROM_ADDRESS = "Nuage <commandes@nuage.fr>";
+const MARKETING_FROM_ADDRESS = "Nuage <bonjour@nuage.fr>";
 
 /**
  * Lazy-initialize Resend client.
@@ -196,3 +198,53 @@ export async function sendWelcomeEmail(
     return { success: false, error: "Unexpected error sending email" };
   }
 }
+
+// ---------------------------------------------------------------------------
+// Marketing Campaign Emails
+// ---------------------------------------------------------------------------
+
+/**
+ * Send abandoned cart recovery email.
+ * Called when a Stripe checkout session expires.
+ * Fire-and-forget pattern (never throws).
+ */
+export async function sendAbandonedCartEmail(
+  order: Order
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const resend = getResendClient();
+    if (!resend) {
+      return { success: false, error: "Email service not configured" };
+    }
+
+    if (!order.shippingAddress?.email) {
+      return { success: false, error: "Customer email is missing" };
+    }
+
+    const email = order.shippingAddress.email;
+    const firstName = order.shippingAddress.firstName || "";
+    const unsubscribeUrl = getUnsubscribeUrl(email);
+
+    const subject = firstName
+      ? `Vous avez oublie quelque chose, ${firstName} ?`
+      : "Vous avez oublie quelque chose ?";
+
+    const { error } = await resend.emails.send({
+      from: MARKETING_FROM_ADDRESS,
+      to: [email],
+      subject,
+      react: AbandonedCartEmail({ order, unsubscribeUrl }),
+    });
+
+    if (error) {
+      console.error("Error sending abandoned cart email:", error);
+      return { success: false, error: "Failed to send abandoned cart email" };
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error("Unexpected error sending abandoned cart email:", err);
+    return { success: false, error: "Unexpected error sending email" };
+  }
+}
+

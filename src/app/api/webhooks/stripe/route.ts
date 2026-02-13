@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import Stripe from 'stripe'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { sendAbandonedCartEmail } from '@/lib/email'
 import { Order, OrderItem } from '@/types/order'
 import { ShippingAddress } from '@/types/checkout'
 
@@ -200,6 +201,20 @@ export async function POST(request: NextRequest) {
             .eq('id', orderId)
 
           console.log('Webhook: Expired session, order cancelled:', orderId)
+
+          // Send abandoned cart recovery email
+          const { data: orderData } = await supabase
+            .from('orders')
+            .select('*, order_items(*)')
+            .eq('id', orderId)
+            .single()
+
+          if (orderData && orderData.shipping_email) {
+            const mappedOrder = mapToOrderType(orderData)
+            sendAbandonedCartEmail(mappedOrder).catch((err: unknown) =>
+              console.error('Failed to send abandoned cart email:', err)
+            )
+          }
         }
 
         break
