@@ -203,6 +203,53 @@ export function safeJsonLd(schema: Record<string, unknown>): string {
 }
 
 /**
+ * Generate WebSite schema with SearchAction for Google sitelinks search box
+ * Placed on homepage to enable search box in Google search results
+ */
+export function generateWebSiteSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Nuage",
+    "url": "https://nuage.fr",
+    "description": "Boutique en ligne d'accessoires chicha haut de gamme",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://nuage.fr/produits?q={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
+  };
+}
+
+/**
+ * Generate ItemList schema for product collections
+ * Used by homepage featured products and category pages
+ * Limits to first 10 items to keep JSON-LD payload reasonable
+ */
+export function generateItemListSchema(products: Array<{
+  name: string;
+  url: string;
+  image?: string;
+  price: number;
+}>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "numberOfItems": products.length,
+    "itemListElement": products.slice(0, 10).map((product, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "url": product.url,
+      "name": product.name,
+      "image": product.image,
+    }))
+  };
+}
+
+/**
  * Helper to inject JSON-LD script tag
  * Usage in Next.js metadata API:
  *   <script type="application/ld+json">{JSON.stringify(schema)}</script>
