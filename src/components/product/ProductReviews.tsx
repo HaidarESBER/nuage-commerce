@@ -52,8 +52,8 @@ export function ProductReviews({ reviews, stats }: ProductReviewsProps) {
         return a.rating - b.rating;
       case 'relevant':
         // Relevance: verified + has photos + high rating + recent
-        const scoreA = (a.verified ? 2 : 0) + (a.photos?.length ? 1 : 0) + a.rating * 0.2;
-        const scoreB = (b.verified ? 2 : 0) + (b.photos?.length ? 1 : 0) + b.rating * 0.2;
+        const scoreA = (a.verifiedPurchase ? 2 : 0) + (a.photos?.length ? 1 : 0) + a.rating * 0.2;
+        const scoreB = (b.verifiedPurchase ? 2 : 0) + (b.photos?.length ? 1 : 0) + b.rating * 0.2;
         return scoreB - scoreA;
       default:
         return 0;
