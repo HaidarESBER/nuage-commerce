@@ -5,6 +5,8 @@ import { Order, OrderStatus } from "@/types/order";
 import { OrderConfirmationEmail } from "@/emails/OrderConfirmationEmail";
 import { ShippingNotificationEmail } from "@/emails/ShippingNotificationEmail";
 import { OrderStatusUpdateEmail } from "@/emails/OrderStatusUpdateEmail";
+import { WelcomeEmail } from "@/emails/WelcomeEmail";
+import { generateUnsubscribeToken } from "@/lib/newsletter-tokens";
 
 const FROM_ADDRESS = "Nuage <commandes@nuage.fr>";
 
@@ -142,6 +144,55 @@ export async function sendOrderStatusUpdateEmail(
     return { success: true };
   } catch (err) {
     console.error("Unexpected error sending order status update email:", err);
+    return { success: false, error: "Unexpected error sending email" };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Newsletter Emails
+// ---------------------------------------------------------------------------
+
+/**
+ * Generate the full unsubscribe URL with a signed token for an email.
+ * Reused by all marketing emails.
+ */
+function getUnsubscribeUrl(email: string): string {
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const token = generateUnsubscribeToken(email);
+  return `${siteUrl}/api/newsletter/unsubscribe?token=${token}`;
+}
+
+/**
+ * Send welcome email to a new newsletter subscriber.
+ * Fire-and-forget pattern (never throws).
+ */
+export async function sendWelcomeEmail(
+  email: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const resend = getResendClient();
+    if (!resend) {
+      return { success: false, error: "Email service not configured" };
+    }
+
+    const unsubscribeUrl = getUnsubscribeUrl(email);
+
+    const { error } = await resend.emails.send({
+      from: FROM_ADDRESS,
+      to: [email],
+      subject: "Bienvenue dans l'univers Nuage !",
+      react: WelcomeEmail({ unsubscribeUrl }),
+    });
+
+    if (error) {
+      console.error("Error sending welcome email:", error);
+      return { success: false, error: "Failed to send welcome email" };
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error("Unexpected error sending welcome email:", err);
     return { success: false, error: "Unexpected error sending email" };
   }
 }
