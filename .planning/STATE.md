@@ -5,24 +5,24 @@
 See: .planning/PROJECT.md (updated 2026-02-12)
 
 **Core value:** The brand looks so premium and legitimate that visitors trust it instantly — visual identity drives conversion.
-**Current focus:** v6.0 Growth & Marketing — In Progress
+**Current focus:** v6.0 Growth & Marketing — COMPLETE
 
 ## Current Position
 
 Phase: 27 of 27 (Email Marketing & Retention)
-Plan: 1 of 2 in current phase
-Status: In progress
-Last activity: 2026-02-13 — Completed 27-01-PLAN.md
+Plan: 2 of 2 in current phase
+Status: Phase complete, milestone complete
+Last activity: 2026-02-13 — Completed 27-02-PLAN.md
 
-Progress: ██████░░░░ 57% (v6.0: 3/4 phases, 27: 1/2 plans)
+Progress: ██████████ 100% (v6.0: 4/4 phases, 27: 2/2 plans)
 
 ## Milestone Summary
 
-**v6.0 Growth & Marketing (In Progress)**
+**v6.0 Growth & Marketing (COMPLETE 2026-02-13)**
 
-- 4 phases planned (24-27), 3 complete
+- 4 phases planned (24-27), 4 complete
 - Focus: SEO, promotions, social media, email marketing
-- Started: 2026-02-13
+- Started: 2026-02-13, Completed: 2026-02-13
 
 **v5.0 Analytics & Insights (COMPLETE 2026-02-12)**
 
@@ -61,9 +61,9 @@ Progress: ██████░░░░ 57% (v6.0: 3/4 phases, 27: 1/2 plans)
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 57
+- Total plans completed: 58
 - Average duration: 9.8 min
-- Total execution time: 9.4 hours
+- Total execution time: 9.5 hours
 
 **By Phase:**
 
@@ -95,7 +95,7 @@ Progress: ██████░░░░ 57% (v6.0: 3/4 phases, 27: 1/2 plans)
 | 24-seo-organic-growth | 2/2 | 10 min | 5 min |
 | 25-promotions-discount-codes | 2/2 | 16 min | 8 min |
 | 26-social-media-integration | 3/3 | 37 min | 12.3 min |
-| 27-email-marketing-retention | 1/2 | 8 min | 8 min |
+| 27-email-marketing-retention | 2/2 | 15 min | 7.5 min |
 
 ## Accumulated Context
 
@@ -194,6 +194,8 @@ Progress: ██████░░░░ 57% (v6.0: 3/4 phases, 27: 1/2 plans)
 
 **v6.0 (27-01):** Newsletter subscribers table with RLS (admin-only, service role for API routes), HMAC-SHA256 signed unsubscribe tokens using CRON_SECRET as key (no new env var), newsletter-tokens.ts separated from "use server" newsletter.ts to allow sync token functions, fire-and-forget welcome email on subscribe, NewsletterForm with 5-state UI (idle/loading/success/error/already), /desabonnement page with token-based and manual unsubscribe flows, getUnsubscribeUrl private helper in email.ts for all marketing emails.
 
+**v6.0 (27-02):** Abandoned cart email on Stripe checkout.session.expired with order items and BIENVENUE10 incentive, marketing from address (bonjour@nuage.fr) vs transactional (commandes@nuage.fr), win-back email for 30+ day inactive customers with product recommendations and RETOUR15 code, email-campaigns.ts with rate-limited batch sending (max 50/run), weekly Monday 10 AM cron at /api/cron/email-campaigns, unsubscribe preference enforcement in all campaign targeting.
+
 ### Deferred Issues
 
 - Legal pages content (already in place per user)
@@ -205,5 +207,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-13
-Stopped at: Completed 27-01-PLAN.md (Newsletter subscription system)
+Stopped at: Completed 27-02-PLAN.md (Email campaigns & automated flows) - v6.0 milestone complete
 Resume file: None
