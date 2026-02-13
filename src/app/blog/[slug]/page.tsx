@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getAllPosts, getPostBySlug, getPostSlugs } from '@/lib/blog';
 import { generateArticleSchema, safeJsonLd } from '@/lib/seo';
+import { SocialShareButtons } from '@/components/social/SocialShareButtons';
 import { categoryLabels, BlogPostMeta } from '@/types/blog';
 
 export function generateStaticParams() {
@@ -133,6 +134,19 @@ export default async function BlogPostPage({
           <article className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:font-light prose-headings:text-primary prose-h2:text-2xl prose-h2:md:text-3xl prose-h2:mt-12 prose-h2:mb-5 prose-h3:text-xl prose-h3:md:text-2xl prose-h3:mt-10 prose-h3:mb-4 prose-p:text-primary/75 prose-p:leading-[1.8] prose-li:text-primary/75 prose-li:leading-[1.8] prose-strong:text-primary prose-strong:font-medium prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-ol:my-6 prose-ul:my-6">
             <Post />
           </article>
+
+          {/* Social Share Buttons */}
+          <div className="mt-12 pt-8 border-t border-background-secondary">
+            <h3 className="font-heading text-lg text-primary mb-4 font-light">
+              Partager cet article
+            </h3>
+            <SocialShareButtons
+              url={`/blog/${slug}`}
+              title={post.title}
+              description={post.description}
+              variant="inline"
+            />
+          </div>
         </div>
       </section>
 

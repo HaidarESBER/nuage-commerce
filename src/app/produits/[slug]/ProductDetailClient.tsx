@@ -14,6 +14,7 @@ import { ProductReviews } from "@/components/product/ProductReviews";
 import { ProductSpecs } from "@/components/product/ProductSpecs";
 import { ExpandableSection } from "@/components/product/ProductContent/ExpandableSection";
 import { MobileStickyBar } from "@/components/product/StickyBuyBar/MobileStickyBar";
+import { SocialShareButtons } from "@/components/social/SocialShareButtons";
 import { Product, categoryLabels } from "@/types/product";
 import { Review, ProductRatingStats } from "@/data/reviews";
 import { addToRecentlyViewed } from "@/lib/social-proof";
@@ -155,6 +156,7 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                 category={product.category}
                 hasDiscount={hasDiscount}
                 discountPercentage={discountPercentage}
+                isFeatured={product.featured}
                 selectedIndex={selectedImageIndex}
                 onImageSelect={setSelectedImageIndex}
                 onImageClick={openZoom}
@@ -191,6 +193,7 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                 category={product.category}
                 hasDiscount={hasDiscount}
                 discountPercentage={discountPercentage}
+                isFeatured={product.featured}
                 selectedIndex={selectedImageIndex}
                 onImageSelect={setSelectedImageIndex}
                 onImageClick={openZoom}
@@ -247,6 +250,19 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
               <p className="text-text text-sm lg:text-base leading-relaxed whitespace-pre-line">
                 {product.description}
               </p>
+            </div>
+
+            {/* Social Share Buttons */}
+            <div className="bg-background border border-border/30 rounded-xl p-6 lg:p-8 shadow-sm">
+              <h2 className="font-heading text-xl lg:text-2xl text-primary mb-4 font-light tracking-wide">
+                Partager ce produit
+              </h2>
+              <SocialShareButtons
+                url={`/produits/${product.slug}`}
+                title={product.name}
+                description={product.shortDescription}
+                variant="inline"
+              />
             </div>
 
             {/* Specifications if available */}
