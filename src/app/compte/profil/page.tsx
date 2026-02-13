@@ -12,8 +12,9 @@ import { formatPrice } from "@/types/product";
 import { formatDateLong } from "@/lib/date-utils";
 import { createClient } from "@/lib/supabase/client";
 import { LogOut } from "lucide-react";
+import { ReferralDashboard } from "@/components/account/ReferralDashboard";
 
-type TabType = "info" | "security" | "preferences" | "orders";
+type TabType = "info" | "security" | "preferences" | "orders" | "referral";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -338,6 +339,16 @@ export default function ProfilePage() {
             >
               Préférences
             </button>
+            <button
+              onClick={() => setActiveTab("referral")}
+              className={`flex-1 py-4 px-6 font-medium transition-colors whitespace-nowrap ${
+                activeTab === "referral"
+                  ? "bg-background text-primary border-b-2 border-accent"
+                  : "text-muted hover:text-primary"
+              }`}
+            >
+              Parrainage
+            </button>
           </div>
 
           <div className="p-8">
@@ -648,6 +659,11 @@ export default function ProfilePage() {
                   </button>
                 </div>
               </motion.div>
+            )}
+
+            {/* Referral Tab */}
+            {activeTab === "referral" && user && (
+              <ReferralDashboard userId={user.id} />
             )}
 
             {/* Preferences Tab */}
