@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Sparkles, Search, Menu, X, MessageSquare, Layers } from "lucide-react";
+import { Menu, X, MessageSquare, Layers } from "lucide-react";
 import { useState } from "react";
 
 export default function AdminLayout({
@@ -89,23 +89,7 @@ export default function AdminLayout({
               className="flex items-center gap-2 px-4 py-2 rounded-md text-primary hover:bg-accent/20 transition-colors"
             >
               <Layers className="w-4 h-4" />
-              Pipeline Simplifiée
-            </Link>
-            <Link
-              href="/admin/sourcing"
-              onClick={() => setIsSidebarOpen(false)}
-              className="flex items-center gap-2 px-4 py-2 rounded-md text-primary hover:bg-accent/20 transition-colors"
-            >
-              <Search className="w-4 h-4" />
-              Sourcing & AI Pipeline
-            </Link>
-            <Link
-              href="/admin/curation"
-              onClick={() => setIsSidebarOpen(false)}
-              className="flex items-center gap-2 px-4 py-2 rounded-md text-primary hover:bg-accent/20 transition-colors"
-            >
-              <Sparkles className="w-4 h-4" />
-              Final Review
+              Pipeline
             </Link>
 
             {/* Analytics Section */}
