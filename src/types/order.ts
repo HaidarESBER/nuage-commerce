@@ -53,11 +53,15 @@ export interface Order {
   subtotal: number;
   /** Shipping cost in cents (0 for free shipping) */
   shipping: number;
-  /** Total in cents (subtotal + shipping) */
+  /** Total in cents (subtotal + shipping - discount) */
   total: number;
   status: OrderStatus;
   shippingAddress: ShippingAddress;
   notes?: string;
+  /** Applied discount code */
+  discountCode?: string;
+  /** Discount amount in cents */
+  discountAmount?: number;
   /** Tracking number from shipping carrier */
   trackingNumber?: string;
   /** URL to track shipment */
@@ -86,6 +90,10 @@ export interface CreateOrderData {
   total: number;
   shippingAddress: ShippingAddress;
   notes?: string;
+  /** Applied discount code */
+  discountCode?: string;
+  /** Discount amount in cents */
+  discountAmount?: number;
   /** Optional initial status (defaults to "pending") */
   status?: OrderStatus;
 }

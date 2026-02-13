@@ -96,6 +96,9 @@ export function ExitIntentModal() {
     // Store email in localStorage (for future email marketing)
     localStorage.setItem("subscriber-email", email);
 
+    // Store discount code in sessionStorage for auto-apply at checkout
+    sessionStorage.setItem("pendingDiscountCode", "BIENVENUE10");
+
     // Success state
     setStatus("success");
 
@@ -107,7 +110,8 @@ export function ExitIntentModal() {
 
   const copyDiscountCode = () => {
     navigator.clipboard.writeText("BIENVENUE10");
-    // Could show a toast here
+    // Store in sessionStorage so checkout can auto-apply it
+    sessionStorage.setItem("pendingDiscountCode", "BIENVENUE10");
   };
 
   if (!hasEligibility || !isVisible) return null;

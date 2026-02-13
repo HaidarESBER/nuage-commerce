@@ -72,6 +72,8 @@ function toOrder(row: OrderRow, itemRows?: OrderItemRow[]): Order {
     status: row.status as Order["status"],
     shippingAddress: row.shipping_address,
     notes: row.notes ?? undefined,
+    discountCode: row.discount_code ?? undefined,
+    discountAmount: row.discount_amount ?? undefined,
     trackingNumber: row.tracking_number ?? undefined,
     trackingUrl: row.tracking_url ?? undefined,
     estimatedDelivery: row.estimated_delivery ?? undefined,
@@ -137,6 +139,8 @@ export async function createOrder(data: CreateOrderData): Promise<Order> {
       status: data.status || "pending",
       shipping_address: data.shippingAddress,
       notes: data.notes || null,
+      discount_code: data.discountCode || null,
+      discount_amount: data.discountAmount || null,
     })
     .select()
     .single();

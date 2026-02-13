@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import Stripe from 'stripe'
 import { stripe } from '@/lib/stripe'
 import { createOrder } from '@/lib/orders'
 import { getAllProducts } from '@/lib/products'
@@ -120,7 +121,7 @@ export async function POST(request: NextRequest) {
     }))
 
     // Build Stripe session options
-    const sessionOptions: Parameters<typeof stripe.checkout.sessions.create>[0] = {
+    const sessionOptions: Stripe.Checkout.SessionCreateParams = {
       mode: 'payment',
       line_items,
       shipping_options: shippingCost > 0
