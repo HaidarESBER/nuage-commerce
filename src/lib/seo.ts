@@ -111,6 +111,8 @@ export function generateOpenGraphTags(config: {
   type?: "website" | "product";
   price?: number;
   currency?: string;
+  imageWidth?: number;
+  imageHeight?: number;
 }) {
   const tags = {
     "og:title": config.title,
@@ -121,8 +123,30 @@ export function generateOpenGraphTags(config: {
   };
 
   if (config.image) {
-    (tags as any)["og:image"] = config.image;
+    // Ensure absolute URL
+    const imageUrl = config.image.startsWith('http')
+      ? config.image
+      : `https://nuage.fr${config.image}`;
+
+    (tags as any)["og:image"] = imageUrl;
     (tags as any)["og:image:alt"] = config.title;
+
+    // Add image dimensions if provided (recommended 1200x630 for optimal display)
+    if (config.imageWidth) {
+      (tags as any)["og:image:width"] = config.imageWidth;
+    }
+    if (config.imageHeight) {
+      (tags as any)["og:image:height"] = config.imageHeight;
+    }
+
+    // Add image type if we can infer it
+    if (imageUrl.endsWith('.jpg') || imageUrl.endsWith('.jpeg')) {
+      (tags as any)["og:image:type"] = "image/jpeg";
+    } else if (imageUrl.endsWith('.png')) {
+      (tags as any)["og:image:type"] = "image/png";
+    } else if (imageUrl.endsWith('.webp')) {
+      (tags as any)["og:image:type"] = "image/webp";
+    }
   }
 
   if (config.type === "product" && config.price !== undefined) {

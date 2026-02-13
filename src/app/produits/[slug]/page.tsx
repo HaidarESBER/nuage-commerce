@@ -42,20 +42,29 @@ export async function generateMetadata({
   }
 
   const productUrl = `https://nuage.fr/produits/${product.slug}`;
+
+  // Ensure absolute URL for images
+  const productImage = product.images[0];
+  const absoluteImageUrl = productImage?.startsWith('http')
+    ? productImage
+    : `https://nuage.fr${productImage}`;
+
   const ogTags = generateOpenGraphTags({
     title: product.name,
     description: product.shortDescription,
-    image: product.images[0],
+    image: productImage,
     url: productUrl,
     type: "product",
     price: product.price,
-    currency: "EUR"
+    currency: "EUR",
+    imageWidth: 1200,
+    imageHeight: 630
   });
 
   const twitterTags = generateTwitterCardTags({
     title: product.name,
     description: product.shortDescription,
-    image: product.images[0]
+    image: productImage
   });
 
   return {
@@ -70,13 +79,18 @@ export async function generateMetadata({
       url: ogTags["og:url"],
       type: "website",
       locale: ogTags["og:locale"],
-      images: product.images[0] ? [{ url: product.images[0], alt: product.name }] : [],
+      images: productImage ? [{
+        url: absoluteImageUrl,
+        alt: product.name,
+        width: 1200,
+        height: 630,
+      }] : [],
     },
     twitter: {
       card: "summary_large_image",
       title: twitterTags["twitter:title"],
       description: twitterTags["twitter:description"],
-      images: product.images[0] ? [product.images[0]] : [],
+      images: productImage ? [absoluteImageUrl] : [],
     },
   };
 }
