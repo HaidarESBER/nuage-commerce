@@ -227,7 +227,11 @@ Plans:
 **Depends on**: Previous milestones complete (v5.0)
 **Research**: Likely (French SEO best practices, Google Search Console integration)
 **Research topics**: Next.js SEO patterns, French-market SEO, sitemap generation, Open Graph optimization, Core Web Vitals
-**Plans**: TBD
+**Plans**: 2 plans, 1 wave
+
+Plans:
+- [ ] 24-01: Technical SEO & Sitemap Completeness (Wave 1)
+- [ ] 24-02: Enhanced Structured Data & Homepage SEO (Wave 1)
 
 #### Phase 25: Promotions & Discount Codes
 
