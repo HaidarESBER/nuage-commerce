@@ -251,7 +251,12 @@ Plans:
 **Depends on**: Phase 24
 **Research**: Likely (social platform APIs, sharing SDKs)
 **Research topics**: Instagram Basic Display API, social share buttons, Open Graph previews, UTM tracking, referral systems
-**Plans**: TBD
+**Plans**: 3 plans, 1 wave
+
+Plans:
+- [x] 26-01: Social Share Buttons & Enhanced OG Images (Wave 1) -- 2026-02-13
+- [ ] 26-02: Instagram Feed Integration (Wave 1) -- Skipped
+- [x] 26-03: Referral & UTM Tracking (Wave 1) -- 2026-02-13
 
 #### Phase 27: Email Marketing & Retention
 
@@ -263,5 +268,5 @@ Plans:
 
 | 24. SEO & Organic Growth | v6.0 | 2/2 | Complete | 2026-02-13 |
 | 25. Promotions & Discount Codes | v6.0 | 2/2 | Complete | 2026-02-13 |
-| 26. Social Media Integration | v6.0 | 0/0 | Pending | - |
+| 26. Social Media Integration | v6.0 | 2/3 | Complete | 2026-02-13 |
 | 27. Email Marketing & Retention | v6.0 | 0/0 | Pending | - |
