@@ -13,6 +13,7 @@ import {
   getEffectiveImages,
 } from "@/types/curation";
 import { categoryLabels, ProductCategory, formatPrice } from "@/types/product";
+import { ScrapedReview } from "@/types/scraper";
 import {
   saveCuratedFields,
   approveDraft,
@@ -21,10 +22,13 @@ import {
   retranslate,
   removeDraft,
   publishDraftAction,
+  unpublishDraftAction,
 } from "../actions";
+import { uploadReviewImagesAction, syncPublishedReviewImagesAction } from "./actions";
 
 interface DraftDetailViewProps {
   draft: ProductDraft;
+  reviews: ScrapedReview[];
 }
 
 const categories: ProductCategory[] = [
@@ -35,13 +39,39 @@ const categories: ProductCategory[] = [
   "accessoire",
 ];
 
-export function DraftDetailView({ draft }: DraftDetailViewProps) {
+export function DraftDetailView({ draft, reviews }: DraftDetailViewProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
+
+  // Review editing state
+  const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
+  const [editedReviewText, setEditedReviewText] = useState<string>("");
+
+  // Handle review edit
+  const handleEditReview = (reviewId: string, currentText: string) => {
+    setEditingReviewId(reviewId);
+    setEditedReviewText(currentText);
+  };
+
+  const handleSaveReview = async (reviewId: string) => {
+    startTransition(async () => {
+      const { updateScrapedReview } = await import("@/lib/scraper/review-data");
+      await updateScrapedReview(reviewId, {
+        curatedText: editedReviewText.trim() || null,
+      });
+      setEditingReviewId(null);
+      router.refresh();
+    });
+  };
+
+  const handleCancelEditReview = () => {
+    setEditingReviewId(null);
+    setEditedReviewText("");
+  };
 
   // Curated form state — pre-filled with effective values
   const [curatedName, setCuratedName] = useState(
@@ -121,6 +151,16 @@ export function DraftDetailView({ draft }: DraftDetailViewProps) {
   function handlePublish() {
     startTransition(async () => {
       await publishDraftAction(draft.id);
+      router.refresh();
+    });
+  }
+
+  function handleUnpublish() {
+    if (!confirm("Dépublier ce produit ? Il sera retiré du site et le brouillon repassera en statut 'approuvé'.")) {
+      return;
+    }
+    startTransition(async () => {
+      await unpublishDraftAction(draft.id);
       router.refresh();
     });
   }
@@ -406,6 +446,205 @@ export function DraftDetailView({ draft }: DraftDetailViewProps) {
             )}
           </div>
 
+          {/* Scraped Reviews */}
+          <div className="bg-secondary rounded-lg border border-primary/10 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-heading font-semibold text-primary">
+                Avis scrapes ({reviews.length})
+              </h3>
+              <div className="flex gap-2">
+                {draft.scrapedProductId && reviews.some(r => r.reviewImages.length > 0) && (
+                  <button
+                    onClick={() => {
+                      startTransition(async () => {
+                        const result = await uploadReviewImagesAction(draft.id, draft.scrapedProductId!);
+                        if (result.success) {
+                          alert(result.message);
+                        } else {
+                          alert(`Error: ${result.error}`);
+                        }
+                      });
+                    }}
+                    disabled={isPending}
+                    className="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors disabled:opacity-50"
+                  >
+                    📤 Upload Review Images
+                  </button>
+                )}
+                {draft.status === "published" && draft.publishedProductId && draft.scrapedProductId && reviews.some(r => r.uploadedReviewImages.length > 0) && (
+                  <button
+                    onClick={() => {
+                      startTransition(async () => {
+                        const result = await syncPublishedReviewImagesAction(draft.id);
+                        if (result.success) {
+                          alert(result.message);
+                        } else {
+                          alert(`Error: ${result.error}`);
+                        }
+                      });
+                    }}
+                    disabled={isPending}
+                    className="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 transition-colors disabled:opacity-50"
+                  >
+                    🔄 Sync to Product
+                  </button>
+                )}
+              </div>
+            </div>
+            {reviews.length > 0 ? (
+              <div className="space-y-4 max-h-96 overflow-y-auto">
+                {reviews.map((review) => (
+                  <div
+                    key={review.id}
+                    className="bg-background rounded-lg p-4 border border-primary/10"
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <svg
+                            key={star}
+                            className={`w-4 h-4 ${
+                              star <= review.rating
+                                ? "text-yellow-400"
+                                : "text-gray-300"
+                            }`}
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                      </div>
+                      {review.translationStatus === "translated" ? (
+                        <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
+                          Traduit
+                        </span>
+                      ) : review.translationStatus === "pending" ? (
+                        <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded">
+                          En attente
+                        </span>
+                      ) : review.translationStatus === "failed" ? (
+                        <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded">
+                          Echec
+                        </span>
+                      ) : null}
+                      {review.curatedText && (
+                        <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded ml-2">
+                          ✏️ Curated
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Review text - editable */}
+                    {editingReviewId === review.id ? (
+                      <div className="mb-2">
+                        <textarea
+                          value={editedReviewText}
+                          onChange={(e) => setEditedReviewText(e.target.value)}
+                          className="w-full px-3 py-2 border border-primary/30 rounded-md text-sm"
+                          rows={4}
+                        />
+                        <div className="flex gap-2 mt-2">
+                          <button
+                            onClick={() => handleSaveReview(review.id)}
+                            disabled={isPending}
+                            className="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600 transition-colors disabled:opacity-50"
+                          >
+                            ✓ Save
+                          </button>
+                          <button
+                            onClick={handleCancelEditReview}
+                            disabled={isPending}
+                            className="px-3 py-1 bg-gray-300 text-gray-700 text-xs rounded hover:bg-gray-400 transition-colors disabled:opacity-50"
+                          >
+                            ✕ Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="mb-2">
+                        <p className="text-sm text-primary/90">
+                          {review.curatedText || review.translatedText || review.reviewText}
+                        </p>
+                        <button
+                          onClick={() => handleEditReview(review.id, review.curatedText || review.translatedText || review.reviewText)}
+                          className="text-xs text-blue-600 hover:text-blue-800 mt-1"
+                        >
+                          ✏️ Edit
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Debug panel */}
+                    <div className="mb-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
+                      <div className="font-bold text-yellow-800 mb-1">🔍 Debug Info:</div>
+                      <div>Raw images: {review.reviewImages?.length || 0}</div>
+                      <div>Uploaded images: {review.uploadedReviewImages?.length || 0}</div>
+                      {review.reviewImages && review.reviewImages.length > 0 && (
+                        <div className="mt-1">
+                          <div className="font-semibold">Raw URL:</div>
+                          <div className="truncate text-blue-600">{review.reviewImages[0]}</div>
+                        </div>
+                      )}
+                      {review.uploadedReviewImages && review.uploadedReviewImages.length > 0 && (
+                        <div className="mt-1">
+                          <div className="font-semibold">Uploaded URL:</div>
+                          <div className="truncate text-green-600">{review.uploadedReviewImages[0]}</div>
+                        </div>
+                      )}
+                    </div>
+                    {review.authorName && (
+                      <p className="text-xs text-primary/60">
+                        Par {review.authorName}
+                        {review.authorCountry && ` (${review.authorCountry})`}
+                      </p>
+                    )}
+                    {(() => {
+                      const images = review.uploadedReviewImages && review.uploadedReviewImages.length > 0
+                        ? review.uploadedReviewImages
+                        : review.reviewImages || [];
+
+                      return images.length > 0 && (
+                        <div className="flex gap-3 mt-3 flex-wrap">
+                          <div className="w-full text-xs text-primary/60 mb-1">
+                            📷 {images.length} photo{images.length > 1 ? 's' : ''}
+                          </div>
+                          {images.map((img, idx) => (
+                            <a
+                              key={idx}
+                              href={img}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block"
+                            >
+                              <img
+                                src={img}
+                                alt={`Review photo ${idx + 1}`}
+                                className="w-24 h-24 object-cover rounded-lg border-2 border-primary/20 hover:border-accent transition-all cursor-pointer shadow-sm hover:shadow-md"
+                                onLoad={() => {
+                                  console.log('✅ Image loaded successfully:', img);
+                                }}
+                                onError={(e) => {
+                                  const imgEl = e.target as HTMLImageElement;
+                                  console.error('❌ Image failed to load:', img);
+                                  console.error('Error event:', e);
+                                  imgEl.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96"%3E%3Crect width="96" height="96" fill="%23f3f4f6"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="12" fill="%239ca3af"%3E❌ Failed%3C/text%3E%3C/svg%3E';
+                                  imgEl.title = `Image failed to load: ${img}`;
+                                }}
+                              />
+                            </a>
+                          ))}
+                        </div>
+                      );
+                    })()}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-primary/40">Aucun avis scrape</p>
+            )}
+          </div>
+
           {/* Metadata */}
           <div className="bg-secondary rounded-lg border border-primary/10 p-6">
             <h3 className="text-lg font-heading font-semibold text-primary mb-4">
@@ -536,6 +775,13 @@ export function DraftDetailView({ draft }: DraftDetailViewProps) {
                   Voir le produit publie
                 </Link>
               )}
+              <button
+                onClick={handleUnpublish}
+                disabled={isPending}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:opacity-50"
+              >
+                {isPending ? "Depublication..." : "Depublier"}
+              </button>
             </>
           )}
 

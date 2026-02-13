@@ -19,6 +19,7 @@ interface ProduitsClientEnhancedProps {
   products: Product[];
   activeCategory: ProductCategory | null;
   searchQuery?: string;
+  ratingsMap?: Record<string, { averageRating: number; totalReviews: number }>;
 }
 
 function CategoryButton({
@@ -57,6 +58,7 @@ export function ProduitsClientEnhanced({
   products,
   activeCategory,
   searchQuery = '',
+  ratingsMap = {},
 }: ProduitsClientEnhancedProps) {
   console.log('🎯 ProduitsClientEnhanced received searchQuery:', searchQuery);
 
@@ -374,6 +376,7 @@ export function ProduitsClientEnhanced({
                 total={displayProducts.length}
                 currentPage={Number(searchParams.get("page")) || 1}
                 columns={3}
+                ratingsMap={ratingsMap}
               />
             </motion.div>
           ) : (
@@ -421,6 +424,7 @@ export function ProduitsClientEnhanced({
               total={displayProducts.length}
               currentPage={Number(searchParams.get("page")) || 1}
               columns={2}
+              ratingsMap={ratingsMap}
             />
           </motion.div>
         ) : (

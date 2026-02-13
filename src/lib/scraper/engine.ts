@@ -4,7 +4,10 @@ import { ScrapedProduct, SourceAdapter } from "@/types/scraper";
 import {
   createScrapedProduct,
   getScrapedProductByUrl,
+  updateScrapedProduct,
 } from "@/lib/scraper/data";
+import { createScrapedReview } from "@/lib/scraper/review-data";
+import { smartSampleReviews, getReviewSampleStats } from "@/lib/scraper/review-sampler";
 import { aliexpressAdapter } from "@/lib/scraper/adapters/aliexpress";
 import { genericAdapter } from "@/lib/scraper/adapters/generic";
 
@@ -20,6 +23,13 @@ const adapters: SourceAdapter[] = [
   aliexpressAdapter, // Specific adapters first
   genericAdapter,    // Generic fallback last
 ];
+
+/**
+ * Get the appropriate adapter for a URL
+ */
+export async function getAdapterForUrl(url: string): Promise<SourceAdapter | null> {
+  return adapters.find((a) => a.canHandle(url)) || null;
+}
 
 // =============================================================================
 // Scraping Engine
@@ -65,6 +75,53 @@ export async function scrapeUrl(url: string): Promise<ScrapedProduct> {
       sentToCuration: false,
       draftId: null,
     });
+
+    // 6. Scrape reviews if adapter supports it
+    if (adapter.supportsReviewScraping && adapter.extractReviews) {
+      try {
+        console.log(`Scraping reviews for ${url}...`);
+        const reviewResults = await adapter.extractReviews(html, url);
+
+        if (reviewResults.length > 0) {
+          // Apply smart sampling strategy (5-25 reviews, authentic distribution)
+          const sampledReviews = smartSampleReviews(reviewResults);
+
+          // Log sampling stats
+          const stats = getReviewSampleStats(sampledReviews);
+          console.log(
+            `Sampled ${stats.total} reviews (avg rating: ${stats.avgRating.toFixed(2)}, ` +
+            `with photos: ${stats.withPhotos}, without: ${stats.withoutPhotos})`
+          );
+
+          // Save each sampled review
+          for (const review of sampledReviews) {
+            await createScrapedReview({
+              scrapedProductId: scraped.id,
+              reviewText: review.text,
+              rating: review.rating,
+              authorName: review.authorName || null,
+              authorCountry: review.authorCountry || null,
+              reviewDate: review.reviewDate || null,
+              reviewImages: review.images || [],
+              originalLanguage: review.originalLanguage || null,
+              translationStatus: 'pending',
+            });
+          }
+
+          // Update product with review count
+          await updateScrapedProduct(scraped.id, {
+            reviewCount: sampledReviews.length,
+          });
+
+          console.log(`Saved ${sampledReviews.length} reviews for product ${scraped.id}`);
+        } else {
+          console.log(`No reviews found for ${url}`);
+        }
+      } catch (reviewError) {
+        // Log error but don't fail the entire scraping operation
+        console.error('Review scraping failed:', reviewError);
+      }
+    }
 
     return scraped;
   } catch (error) {

@@ -4,10 +4,12 @@
  * Path: /admin/analytics/revenue
  */
 
+import { redirect } from 'next/navigation';
 import { getDailyMetrics, DailyMetrics } from '@/lib/analytics-server';
 import RevenueChart from '@/components/admin/RevenueChart';
 import OrderTrends from '@/components/admin/OrderTrends';
 import Link from 'next/link';
+import { requireAdmin } from '@/lib/session';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,6 +19,11 @@ export const metadata = {
 };
 
 export default async function RevenueAnalyticsPage() {
+  try {
+    await requireAdmin();
+  } catch {
+    redirect("/");
+  }
   // Fetch last 30 days of metrics
   const endDate = new Date();
   const startDate = new Date();

@@ -13,6 +13,26 @@ const nextConfig: NextConfig = {
         hostname: "placehold.co",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "ldadposccfoxcjjhmwdj.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+      {
+        protocol: "https",
+        hostname: "ae-pic-a1.aliexpress-media.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "ae01.alicdn.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "ae03.alicdn.com",
+        pathname: "/**",
+      },
     ],
     // Allow SVG images (with security restrictions)
     dangerouslyAllowSVG: true,

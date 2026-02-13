@@ -8,14 +8,17 @@ import { Review, ProductRatingStats } from '@/data/reviews'; // Import types
 export async function getProductReviews(productId: string): Promise<Review[]> {
   const supabase = createAdminClient(); // Public read, no auth needed
 
-  const { data, error } = await supabase
+  const { data, error} = await supabase
     .from('reviews')
     .select(`
       id,
       product_id,
+      user_id,
+      user_name,
       rating,
       comment,
       verified_purchase,
+      review_photos,
       created_at,
       profiles!user_id (
         first_name,
@@ -23,7 +26,21 @@ export async function getProductReviews(productId: string): Promise<Review[]> {
       )
     `)
     .eq('product_id', productId)
+    .eq('status', 'approved') // Only show approved reviews
     .order('created_at', { ascending: false });
+
+  // Sort reviews: photos first, then by date
+  const sorted = (data || []).sort((a: any, b: any) => {
+    const aHasPhotos = a.review_photos && a.review_photos.length > 0;
+    const bHasPhotos = b.review_photos && b.review_photos.length > 0;
+
+    // Reviews with photos come first
+    if (aHasPhotos && !bHasPhotos) return -1;
+    if (!aHasPhotos && bHasPhotos) return 1;
+
+    // If both have photos or both don't, sort by date (already sorted from query)
+    return 0;
+  });
 
   if (error) {
     console.error('Reviews query error:', error.message);
@@ -31,15 +48,35 @@ export async function getProductReviews(productId: string): Promise<Review[]> {
   }
 
   // Transform to Review format
-  return data.map((row: any) => ({
-    id: row.id,
-    productId: row.product_id,
-    authorName: `${row.profiles.first_name} ${row.profiles.last_name.charAt(0)}.`,
-    rating: row.rating,
-    comment: row.comment,
-    date: row.created_at,
-    verifiedPurchase: row.verified_purchase,
-  }));
+  return sorted.map((row: any) => {
+    // Scraped review (no user_id, has user_name)
+    if (!row.user_id && row.user_name) {
+      return {
+        id: row.id,
+        productId: row.product_id,
+        authorName: row.user_name,
+        rating: row.rating,
+        comment: row.comment,
+        date: row.created_at,
+        verifiedPurchase: row.verified_purchase,
+        photos: row.review_photos || [],
+      };
+    }
+
+    // User review (has user_id and profiles)
+    return {
+      id: row.id,
+      productId: row.product_id,
+      authorName: row.profiles
+        ? `${row.profiles.first_name} ${row.profiles.last_name.charAt(0)}.`
+        : 'Anonyme',
+      rating: row.rating,
+      comment: row.comment,
+      date: row.created_at,
+      verifiedPurchase: row.verified_purchase,
+      photos: row.review_photos || [],
+    };
+  });
 }
 
 /**
@@ -75,11 +112,13 @@ export async function createReview({
   userId,
   rating,
   comment,
+  photos = [],
 }: {
   productId: string;
   userId: string;
   rating: number;
   comment: string;
+  photos?: string[];
 }): Promise<Review> {
   const supabase = await createClient(); // User context for RLS
 
@@ -101,6 +140,7 @@ export async function createReview({
       rating,
       comment,
       verified_purchase: verifiedPurchase,
+      review_photos: photos,
     })
     .select(`
       id,
@@ -125,6 +165,194 @@ export async function createReview({
     rating: data.rating,
     comment: data.comment,
     date: data.created_at,
+    verifiedPurchase: data.verified_purchase,
+  };
+}
+
+/**
+ * Get all pending reviews for admin moderation
+ */
+export async function getPendingReviews(): Promise<any[]> {
+  const supabase = createAdminClient();
+
+  const { data, error } = await supabase
+    .from('reviews')
+    .select(`
+      id,
+      product_id,
+      user_id,
+      user_name,
+      rating,
+      comment,
+      verified_purchase,
+      review_photos,
+      created_at,
+      status,
+      products!product_id (
+        name,
+        images
+      ),
+      profiles!user_id (
+        first_name,
+        last_name,
+        email
+      )
+    `)
+    .eq('status', 'pending')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching pending reviews:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+/**
+ * Get all reviews (all statuses) for admin panel
+ */
+export async function getAllReviewsAdmin(): Promise<any[]> {
+  const supabase = createAdminClient();
+
+  const { data, error } = await supabase
+    .from('reviews')
+    .select(`
+      id,
+      product_id,
+      user_id,
+      user_name,
+      rating,
+      comment,
+      verified_purchase,
+      review_photos,
+      created_at,
+      status,
+      products!product_id (
+        name,
+        images
+      ),
+      profiles!user_id (
+        first_name,
+        last_name,
+        email
+      )
+    `)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching all reviews:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+/**
+ * Approve a review
+ */
+export async function approveReview(reviewId: string): Promise<void> {
+  const supabase = createAdminClient();
+
+  const { error } = await supabase
+    .from('reviews')
+    .update({ status: 'approved' })
+    .eq('id', reviewId);
+
+  if (error) throw error;
+}
+
+/**
+ * Reject a review
+ */
+export async function rejectReview(reviewId: string): Promise<void> {
+  const supabase = createAdminClient();
+
+  const { error } = await supabase
+    .from('reviews')
+    .update({ status: 'rejected' })
+    .eq('id', reviewId);
+
+  if (error) throw error;
+}
+
+/**
+ * Delete a review permanently
+ */
+export async function deleteReview(reviewId: string): Promise<void> {
+  const supabase = createAdminClient();
+
+  const { error } = await supabase
+    .from('reviews')
+    .delete()
+    .eq('id', reviewId);
+
+  if (error) throw error;
+}
+
+/**
+ * Toggle verified purchase status
+ */
+export async function toggleVerifiedStatus(reviewId: string, verified: boolean): Promise<void> {
+  const supabase = createAdminClient();
+
+  const { error } = await supabase
+    .from('reviews')
+    .update({ verified_purchase: verified })
+    .eq('id', reviewId);
+
+  if (error) throw error;
+}
+
+/**
+ * Create a scraped review (imported from external source)
+ * Uses admin client and doesn't require user authentication
+ */
+export async function createScrapedReview({
+  productId,
+  userName,
+  rating,
+  comment,
+  verifiedPurchase = true,
+  reviewPhotos = [],
+}: {
+  productId: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  verifiedPurchase?: boolean;
+  reviewPhotos?: string[];
+}): Promise<Review> {
+  const supabase = createAdminClient(); // Admin context to bypass RLS
+
+  const { data, error } = await supabase
+    .from('reviews')
+    .insert({
+      product_id: productId,
+      user_id: null, // Scraped reviews don't have user accounts
+      user_name: userName,
+      rating,
+      comment,
+      verified_purchase: verifiedPurchase,
+      review_photos: reviewPhotos,
+      status: 'approved', // Scraped reviews bypass moderation
+    })
+    .select('id, product_id, user_name, rating, comment, verified_purchase, review_photos, created_at')
+    .single();
+
+  if (error) {
+    console.error('Failed to create scraped review:', error);
+    throw error;
+  }
+
+  return {
+    id: data.id,
+    productId: data.product_id,
+    authorName: data.user_name,
+    rating: data.rating,
+    comment: data.comment,
+    date: data.created_at,
+    photos: data.review_photos || [],
     verifiedPurchase: data.verified_purchase,
   };
 }

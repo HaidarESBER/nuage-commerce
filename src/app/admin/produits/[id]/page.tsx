@@ -4,12 +4,19 @@ import { revalidatePath } from "next/cache";
 import { getProductById, updateProduct } from "@/lib/products";
 import { ProductCategory } from "@/types/product";
 import { ProductForm } from "@/components/admin";
+import { requireAdmin } from "@/lib/session";
 
 interface EditProductPageProps {
   params: Promise<{ id: string }>;
 }
 
 export default async function EditProductPage({ params }: EditProductPageProps) {
+  try {
+    await requireAdmin();
+  } catch {
+    redirect("/");
+  }
+
   const { id } = await params;
   const product = await getProductById(id);
 
@@ -30,6 +37,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
     const compareAtPriceStr = formData.get("compareAtPrice") as string;
     const category = formData.get("category") as ProductCategory;
     const imagesStr = formData.get("images") as string;
+    const stockLevelStr = formData.get("stockLevel") as string;
     const inStock = formData.get("inStock") === "on";
     const featured = formData.get("featured") === "on";
 
@@ -38,6 +46,9 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
     const compareAtPrice = compareAtPriceStr
       ? Math.round(parseFloat(compareAtPriceStr) * 100)
       : undefined;
+
+    // Parse stock level
+    const stockLevel = stockLevelStr ? parseInt(stockLevelStr) : 0;
 
     // Parse images
     const images = imagesStr
@@ -55,6 +66,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
       compareAtPrice,
       category,
       images,
+      stockLevel,
       inStock,
       featured,
     });

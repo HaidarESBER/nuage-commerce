@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { productId, rating, comment } = body;
+    const { productId, rating, comment, photos } = body;
 
     // Validation
     if (!productId || !rating || !comment) {
@@ -54,11 +54,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Comment must be between 10 and 1000 characters' }, { status: 400 });
     }
 
+    // Validate photos array if provided
+    if (photos && (!Array.isArray(photos) || photos.length > 3)) {
+      return NextResponse.json({ error: 'Maximum 3 photos allowed' }, { status: 400 });
+    }
+
     const review = await createReview({
       productId,
       userId: user.id,
       rating: Number(rating),
       comment: comment.trim(),
+      photos: photos || [],
     });
 
     return NextResponse.json({ review }, { status: 201 });

@@ -1,24 +1,31 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { ChevronRight } from "lucide-react";
 import { Container } from "@/components/ui";
 import { AddToCartButton } from "@/components/product/AddToCartButton";
-import { SwipeableGallery } from "@/components/product/SwipeableGallery";
+import { ProductImageGallery } from "@/components/product/ProductImageGallery";
+import { ProductHeader } from "@/components/product/ProductInfoSection/ProductHeader";
+import { BuyBox } from "@/components/product/BuyBox";
 import { ProductReviews } from "@/components/product/ProductReviews";
-import { TrustBadges } from "@/components/ui/TrustBadges";
-import { StockIndicator } from "@/components/product/StockIndicator";
-import { ImageZoom } from "@/components/product/ImageZoom";
-import { WishlistButton } from "@/components/product/WishlistButton";
-import { Product, formatPrice, categoryLabels } from "@/types/product";
+import { ProductSpecs } from "@/components/product/ProductSpecs";
+import { ExpandableSection } from "@/components/product/ProductContent/ExpandableSection";
+import { MobileStickyBar } from "@/components/product/StickyBuyBar/MobileStickyBar";
+import { Product, categoryLabels } from "@/types/product";
 import { Review, ProductRatingStats } from "@/data/reviews";
-import { RelatedProducts } from "@/components/product/RelatedProducts";
-import { RecommendationsSection } from "@/components/product/RecommendationsSection";
-import { UrgencyIndicators } from "@/components/product/UrgencyIndicators";
 import { addToRecentlyViewed } from "@/lib/social-proof";
-import { RecentlyViewed } from "@/components/product/RecentlyViewed";
+import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
+
+// Lazy load below-fold content for better initial page load
+const RelatedProductsSection = lazy(() =>
+  import("@/components/product/RelatedProductsSection").then((mod) => ({
+    default: mod.RelatedProductsSection,
+  }))
+);
 
 interface ProductDetailClientProps {
   product: Product;
@@ -27,18 +34,17 @@ interface ProductDetailClientProps {
   stats: ProductRatingStats | null;
 }
 
-type TabType = "description" | "reviews" | "shipping";
-
 export function ProductDetailClient({ product, allProducts, reviews, stats }: ProductDetailClientProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isZoomOpen, setIsZoomOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<TabType>("description");
-  const [isMobile, setIsMobile] = useState(false);
+  const { addItem } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
-  const hasDiscount =
-    product.compareAtPrice && product.compareAtPrice > product.price;
-  const discountPercentage = hasDiscount
-    ? Math.round(((product.compareAtPrice! - product.price) / product.compareAtPrice!) * 100)
+  const hasDiscount = Boolean(
+    product.compareAtPrice && product.compareAtPrice > product.price
+  );
+  const discountPercentage = hasDiscount && product.compareAtPrice
+    ? Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)
     : 0;
 
   // Track product view
@@ -46,12 +52,8 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
     addToRecentlyViewed(product);
   }, [product]);
 
-  // Consolidated effects for better performance
+  // Keyboard navigation and zoom handling
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isZoomOpen) {
         setIsZoomOpen(false);
@@ -70,17 +72,29 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
       }
     };
 
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
     window.addEventListener("keydown", handleKeyDown);
     document.body.style.overflow = isZoomOpen ? "hidden" : "";
 
     return () => {
-      window.removeEventListener("resize", checkMobile);
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "";
     };
   }, [isZoomOpen, product.images.length]);
+
+  // Handlers for sticky bar
+  const handleAddToCart = () => {
+    if (product.inStock) {
+      addItem(product, 1);
+    }
+  };
+
+  const handleToggleWishlist = () => {
+    if (isInWishlist(product.id)) {
+      removeFromWishlist(product.id, product.name);
+    } else {
+      addToWishlist(product.id, product.name);
+    }
+  };
 
   const openZoom = () => setIsZoomOpen(true);
   const closeZoom = () => setIsZoomOpen(false);
@@ -98,272 +112,203 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
   };
 
   return (
-    <main className="py-6 lg:py-10">
-      <Container size="lg">
-        {/* Breadcrumb */}
-        <nav className="mb-6">
-          <ol className="flex items-center gap-2 text-sm text-muted">
-            <li>
-              <Link href="/produits" className="hover:text-primary transition-colors">
-                Produits
-              </Link>
-            </li>
-            <li>/</li>
-            <li>
-              <Link
-                href={`/produits?categorie=${product.category}`}
-                className="hover:text-primary transition-colors"
-              >
-                {categoryLabels[product.category]}
-              </Link>
-            </li>
-            <li>/</li>
-            <li className="text-primary truncate">{product.name}</li>
-          </ol>
-        </nav>
-
-        {/* Hero Image Section - Clean, High Quality */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="relative mb-8 md:mb-10 max-w-6xl mx-auto"
-        >
-          {/* Sale badge */}
-          {hasDiscount && (
-            <div className="absolute top-4 right-4 bg-error text-white text-sm font-bold px-3 py-1.5 rounded-full z-10 shadow-lg">
-              -{discountPercentage}%
-            </div>
-          )}
-
-          {/* Main Product Image - High Quality Display */}
-          <div className="relative w-full rounded-2xl overflow-hidden bg-gradient-to-br from-[#F7F5F3] to-[#E8E4DF] cursor-pointer group shadow-xl p-6 md:p-8 lg:p-6">
-            <div className="relative w-full aspect-square lg:aspect-[16/9]">
-              <Image
-                src={product.images[selectedImageIndex]}
-                alt={product.name}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
-                className="object-contain hover:scale-105 transition-transform duration-500"
-                priority
-                quality={100}
-                onClick={openZoom}
-              />
-            </div>
-          </div>
-
-          {/* Thumbnail Navigation - Below Image */}
-          {product.images.length > 1 && (
-            <div className="flex justify-center gap-3 mt-4 overflow-x-auto pb-2">
-              {product.images.map((image, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedImageIndex(index)}
-                  className={`
-                    relative w-16 h-16 md:w-20 md:h-20 flex-shrink-0 rounded-lg overflow-hidden
-                    border-2 transition-all duration-300
-                    ${index === selectedImageIndex
-                      ? "border-[#D4A5A5] shadow-lg scale-105"
-                      : "border-border hover:border-muted opacity-70 hover:opacity-100"
-                    }
-                  `}
+    <main className="min-h-screen bg-gradient-to-b from-background to-background-secondary/30">
+      {/* Breadcrumb Section */}
+      <div className="bg-background border-b border-border/50">
+        <Container size="xl">
+          <nav className="py-4">
+            <ol className="flex items-center gap-2 text-sm text-muted">
+              <li>
+                <Link href="/produits" className="hover:text-primary transition-colors font-medium">
+                  Produits
+                </Link>
+              </li>
+              <li><ChevronRight className="w-3.5 h-3.5" /></li>
+              <li>
+                <Link
+                  href={`/produits?categorie=${product.category}`}
+                  className="hover:text-primary transition-colors font-medium"
                 >
-                  <Image
-                    src={image}
-                    alt={`${product.name} - ${index + 1}`}
-                    fill
-                    sizes="80px"
-                    className="object-cover"
-                  />
-                </button>
-              ))}
+                  {categoryLabels[product.category]}
+                </Link>
+              </li>
+              <li><ChevronRight className="w-3.5 h-3.5" /></li>
+              <li className="text-primary font-medium truncate line-clamp-1">{product.name}</li>
+            </ol>
+          </nav>
+        </Container>
+      </div>
+
+      {/* Hero Section - Image + Product Info */}
+      <section className="bg-background py-8 lg:py-10">
+        <Container size="xl">
+          {/* Mobile: Stacked Layout */}
+          <div className="lg:hidden space-y-6">
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <ProductImageGallery
+                images={product.images}
+                productName={product.name}
+                category={product.category}
+                hasDiscount={hasDiscount}
+                discountPercentage={discountPercentage}
+                selectedIndex={selectedImageIndex}
+                onImageSelect={setSelectedImageIndex}
+                onImageClick={openZoom}
+              />
+            </motion.div>
+
+            <div className="space-y-6">
+              <ProductHeader
+                name={product.name}
+                category={product.category}
+                stats={stats}
+              />
+              <div className="border-b border-border/30 pb-6">
+                <p className="font-heading text-base text-primary/90 leading-relaxed font-light tracking-wide">
+                  {product.shortDescription}
+                </p>
+              </div>
+              <BuyBox product={product} />
             </div>
-          )}
-        </motion.div>
-
-        {/* Product Info Section - Clean Layout */}
-        <div className="grid lg:grid-cols-[1fr,400px] gap-8 lg:gap-12 mb-12 md:mb-16">
-          {/* Left: Product Details */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-          >
-            {/* Product Title */}
-            <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl text-primary mb-4 font-light tracking-wide">
-              {product.name}
-            </h1>
-
-            {/* Rating & Category */}
-            <div className="flex flex-wrap items-center gap-4 mb-6 pb-6 border-b border-border">
-              {stats && stats.averageRating > 0 && (
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <svg
-                        key={i}
-                        className={`w-5 h-5 ${
-                          i < Math.floor(stats.averageRating)
-                            ? "text-amber-400 fill-current"
-                            : "text-border"
-                        }`}
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-                        />
-                      </svg>
-                    ))}
-                  </div>
-                  <span className="text-sm text-muted">
-                    {stats.averageRating.toFixed(1)} ({stats.totalReviews} avis)
-                  </span>
-                </div>
-              )}
-              <span className="text-sm tracking-wider uppercase text-[#D4A5A5] font-medium">
-                {categoryLabels[product.category]}
-              </span>
-            </div>
-
-            {/* Short Description */}
-            <p className="text-text text-lg leading-relaxed mb-6">
-              {product.shortDescription}
-            </p>
-          </motion.div>
-
-          {/* Right: Buy Box - Sticky */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="lg:sticky lg:top-6 lg:self-start"
-          >
-            <div className="bg-background-secondary/50 border border-border rounded-2xl p-6 md:p-7">
-              {/* Price */}
-              <div className="mb-6">
-                <div className="flex items-baseline gap-3 mb-1">
-                  <span className="text-4xl md:text-5xl font-bold text-primary">
-                    {formatPrice(product.price)}
-                  </span>
-                  {hasDiscount && (
-                    <span className="text-xl text-muted line-through">
-                      {formatPrice(product.compareAtPrice!)}
-                    </span>
-                  )}
-                </div>
-                <p className="text-sm text-muted">TVA incluse</p>
-              </div>
-
-              {/* Stock & Urgency */}
-              <div className="mb-6 space-y-3 pb-6 border-b border-border">
-                <StockIndicator
-                  inStock={product.inStock}
-                  stockLevel={product.stockLevel}
-                  size="sm"
-                />
-                <UrgencyIndicators product={product} />
-              </div>
-
-              {/* Actions */}
-              <div className="space-y-3 mb-6">
-                <AddToCartButton product={product} />
-                <WishlistButton
-                  productId={product.id}
-                  productName={product.name}
-                  size="md"
-                  showLabel={true}
-                  className="w-full justify-center text-primary hover:text-[#D4A5A5] transition-colors border border-border rounded-lg py-2.5 hover:bg-background-secondary/50"
-                />
-              </div>
-
-              {/* Trust Badges */}
-              <div className="pt-6 border-t border-border">
-                <TrustBadges />
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Tabs Section */}
-        <div className="mb-12 md:mb-16">
-          {/* Tab Navigation */}
-          <div className="border-b border-border mb-8">
-            <nav className="flex justify-center gap-8 lg:gap-12">
-              <button
-                onClick={() => setActiveTab("description")}
-                className={`pb-4 px-2 text-sm lg:text-base font-medium transition-all duration-300 border-b-2 ${
-                  activeTab === "description"
-                    ? "border-amber-400 text-primary"
-                    : "border-transparent text-muted hover:text-primary"
-                }`}
-              >
-                Description
-              </button>
-              <button
-                onClick={() => setActiveTab("reviews")}
-                className={`pb-4 px-2 text-sm lg:text-base font-medium transition-all duration-300 border-b-2 ${
-                  activeTab === "reviews"
-                    ? "border-amber-400 text-primary"
-                    : "border-transparent text-muted hover:text-primary"
-                }`}
-              >
-                Avis {stats && `(${stats.totalReviews})`}
-              </button>
-              <button
-                onClick={() => setActiveTab("shipping")}
-                className={`pb-4 px-2 text-sm lg:text-base font-medium transition-all duration-300 border-b-2 ${
-                  activeTab === "shipping"
-                    ? "border-amber-400 text-primary"
-                    : "border-transparent text-muted hover:text-primary"
-                }`}
-              >
-                Livraison
-              </button>
-            </nav>
           </div>
 
-          {/* Tab Content */}
-          <div className="min-h-[300px] max-w-4xl mx-auto">
-            {activeTab === "description" && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div className="prose prose-lg prose-neutral max-w-none">
-                  <p className="text-text text-lg leading-relaxed whitespace-pre-line">
-                    {product.description}
-                  </p>
+          {/* Desktop: Image LEFT, Info RIGHT - Equal Width */}
+          <div className="hidden lg:flex gap-8 items-start justify-center">
+            {/* Image Gallery - Larger, Highlighted */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="w-[550px] flex-shrink-0"
+            >
+              <ProductImageGallery
+                images={product.images}
+                productName={product.name}
+                category={product.category}
+                hasDiscount={hasDiscount}
+                discountPercentage={discountPercentage}
+                selectedIndex={selectedImageIndex}
+                onImageSelect={setSelectedImageIndex}
+                onImageClick={openZoom}
+              />
+            </motion.div>
+
+            {/* Product Info - To the RIGHT of image, Same Width, Height Constrained */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="w-[550px] flex-shrink-0 space-y-4 flex flex-col"
+              style={{ maxHeight: '550px' }}
+            >
+              {/* Product Header */}
+              <div className="flex-shrink-0">
+                <ProductHeader
+                  name={product.name}
+                  category={product.category}
+                  stats={stats}
+                />
+              </div>
+
+              {/* Short Description */}
+              <div className="border-b border-border/30 pb-4 flex-shrink-0">
+                <p className="font-heading text-base lg:text-lg text-primary/90 leading-relaxed font-light tracking-wide">
+                  {product.shortDescription}
+                </p>
+              </div>
+
+              {/* Buy Box - Scrollable if needed */}
+              <div className="flex-1 min-h-0">
+                <BuyBox product={product} />
+              </div>
+            </motion.div>
+          </div>
+        </Container>
+      </section>
+
+      {/* Product Details Section */}
+      <section className="py-8 lg:py-12 bg-background-secondary/20">
+        <Container size="xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="space-y-6"
+          >
+            {/* Full Description */}
+            <div className="bg-background border border-border/30 rounded-xl p-6 lg:p-8 shadow-sm">
+              <h2 className="font-heading text-xl lg:text-2xl text-primary mb-4 font-light tracking-wide">
+                Description complète
+              </h2>
+              <p className="text-text text-sm lg:text-base leading-relaxed whitespace-pre-line">
+                {product.description}
+              </p>
+            </div>
+
+            {/* Specifications if available */}
+            {product.specs && product.specs.length > 0 && (
+              <div className="bg-background border border-border/30 rounded-xl p-6 lg:p-8 shadow-sm">
+                <h2 className="font-heading text-xl lg:text-2xl text-primary mb-4 font-light tracking-wide">
+                  Caractéristiques techniques
+                </h2>
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+                  {product.specs.map((spec, index) => (
+                    <div key={index} className="flex flex-col space-y-1">
+                      <span className="text-xs text-muted uppercase tracking-wider">
+                        {spec.label}
+                      </span>
+                      <span className="text-sm font-medium text-primary">
+                        {spec.value}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-              </motion.div>
+              </div>
             )}
+          </motion.div>
+        </Container>
+      </section>
 
-            {activeTab === "reviews" && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                className="max-w-3xl mx-auto"
-              >
-                <ProductReviews reviews={reviews} stats={stats} />
-              </motion.div>
-            )}
+      {/* Additional Content Section - Reviews & Shipping */}
+      <section className="py-12 lg:py-16 bg-background-secondary/20">
+        <Container size="xl">
 
-            {activeTab === "shipping" && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-8"
-              >
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="flex gap-4">
-                    <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+          {/* Content Grid */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="grid lg:grid-cols-2 gap-6"
+          >
+            {/* Reviews Card */}
+            <div className="bg-background border border-border/30 rounded-xl p-6 lg:p-8 shadow-md hover:shadow-lg transition-shadow">
+              <div className="flex items-center justify-between mb-5">
+                <h2 className="font-heading text-xl lg:text-2xl text-primary font-light tracking-wide">
+                  Avis clients
+                </h2>
+                {stats && stats.totalReviews > 0 && (
+                  <span className="bg-accent/10 text-accent px-3 py-1 rounded-full text-xs lg:text-sm font-medium">
+                    {stats.totalReviews} avis
+                  </span>
+                )}
+              </div>
+              <ProductReviews reviews={reviews} stats={stats} />
+            </div>
+
+            {/* Shipping & Returns Card */}
+            <div className="bg-background border border-border/30 rounded-xl p-6 lg:p-8 shadow-md hover:shadow-lg transition-shadow">
+              <h2 className="font-heading text-xl lg:text-2xl text-primary mb-5 font-light tracking-wide">
+                Livraison & Retours
+              </h2>
+              <div className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="flex gap-4 p-4 bg-background-secondary/30 rounded-xl hover:bg-background-secondary/50 transition-colors">
+                    <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
                       <svg className="w-6 h-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                       </svg>
@@ -375,8 +320,8 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                     </div>
                   </div>
 
-                  <div className="flex gap-4">
-                    <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+                  <div className="flex gap-4 p-4 bg-background-secondary/30 rounded-xl hover:bg-background-secondary/50 transition-colors">
+                    <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
                       <svg className="w-6 h-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
@@ -388,8 +333,8 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                     </div>
                   </div>
 
-                  <div className="flex gap-4">
-                    <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+                  <div className="flex gap-4 p-4 bg-background-secondary/30 rounded-xl hover:bg-background-secondary/50 transition-colors">
+                    <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
                       <svg className="w-6 h-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
                       </svg>
@@ -401,8 +346,8 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                     </div>
                   </div>
 
-                  <div className="flex gap-4">
-                    <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+                  <div className="flex gap-4 p-4 bg-background-secondary/30 rounded-xl hover:bg-background-secondary/50 transition-colors">
+                    <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
                       <svg className="w-6 h-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                       </svg>
@@ -444,23 +389,54 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                     </li>
                   </ul>
                 </div>
-              </motion.div>
-            )}
-          </div>
-        </div>
-      </Container>
+              </div>
+            </div>
+          </motion.div>
+        </Container>
+      </section>
 
-      {/* Related Products Section - Powered by recommendations API */}
-      <RecommendationsSection
-        title="Vous aimerez aussi"
-        productId={product.id}
-        limit={4}
-      />
+      {/* Related Products Section - Lazy loaded */}
+      <Suspense
+        fallback={
+          <section className="mt-16 sm:mt-24 bg-background-secondary py-12">
+            <div className="max-w-7xl mx-auto px-4">
+              <div className="text-center mb-12">
+                <div className="h-10 bg-muted/20 rounded w-64 mx-auto mb-3 animate-pulse" />
+                <div className="h-6 bg-muted/20 rounded w-96 mx-auto animate-pulse" />
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="bg-background-card rounded-xl overflow-hidden border border-border/50 animate-pulse"
+                  >
+                    <div className="aspect-square bg-muted/20" />
+                    <div className="p-5">
+                      <div className="h-6 bg-muted/20 rounded mb-3" />
+                      <div className="h-4 bg-muted/20 rounded w-3/4 mb-4" />
+                      <div className="h-10 bg-muted/20 rounded" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        }
+      >
+        <RelatedProductsSection
+          productId={product.id}
+          category={product.category}
+          allProducts={allProducts}
+          limit={6}
+        />
+      </Suspense>
 
-      {/* Recently viewed products */}
-      <RecentlyViewed
-        allProducts={allProducts}
-        currentProductId={product.id}
+      {/* Mobile Sticky Buy Bar */}
+      <MobileStickyBar
+        product={product}
+        onAddToCart={handleAddToCart}
+        onToggleWishlist={handleToggleWishlist}
+        isInWishlist={isInWishlist(product.id)}
       />
 
       {/* Image Zoom Modal */}

@@ -1,9 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getAllProducts, deleteProduct } from "@/lib/products";
 import { formatPrice, categoryLabels } from "@/types/product";
 import { DeleteButton } from "./DeleteButton";
+import { requireAdmin } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +17,11 @@ async function handleDelete(formData: FormData) {
 }
 
 export default async function AdminProductsPage() {
+  try {
+    await requireAdmin();
+  } catch {
+    redirect("/");
+  }
   const products = await getAllProducts();
 
   return (

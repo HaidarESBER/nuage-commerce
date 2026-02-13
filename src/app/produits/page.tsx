@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { Container } from "@/components/ui";
 import { ProduitsClientEnhanced } from "./ProduitsClientEnhanced";
 import { getAllProducts } from "@/lib/products";
+import { getProductRatingStats } from "@/lib/reviews";
 import {
   ProductCategory,
 } from "@/types/product";
@@ -33,8 +34,19 @@ export default async function ProduitsPage({ searchParams }: ProduitsPageProps) 
     categoryParam && validCategories.includes(categoryParam);
   const activeCategory = isValidCategory ? categoryParam : null;
 
-  // Load products from JSON file
+  // Load products from database
   const products = await getAllProducts();
+
+  // Fetch ratings for all products
+  const ratingsMap = new Map();
+  await Promise.all(
+    products.map(async (product) => {
+      const stats = await getProductRatingStats(product.id);
+      if (stats) {
+        ratingsMap.set(product.id, stats);
+      }
+    })
+  );
 
   return (
     <main className="py-12 lg:py-16">
@@ -43,6 +55,7 @@ export default async function ProduitsPage({ searchParams }: ProduitsPageProps) 
           products={products}
           activeCategory={activeCategory}
           searchQuery={searchQuery}
+          ratingsMap={Object.fromEntries(ratingsMap)}
         />
       </Container>
     </main>

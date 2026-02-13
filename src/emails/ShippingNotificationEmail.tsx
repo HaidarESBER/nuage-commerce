@@ -9,7 +9,6 @@ import {
   Section,
   Text,
   Hr,
-  Button,
 } from "@react-email/components";
 import { Order } from "@/types/order";
 
@@ -43,7 +42,7 @@ export function ShippingNotificationEmail({
           {/* Header */}
           <Section style={header}>
             <Heading style={brandName}>Nuage</Heading>
-            <Text style={tagline}>L'Art de la Détente</Text>
+            <Text style={tagline}>L&apos;Art de la Détente</Text>
           </Section>
 
           {/* Success Message */}
@@ -123,7 +122,7 @@ export function ShippingNotificationEmail({
           {/* Support */}
           <Section style={section}>
             <Text style={text}>
-              <strong>Besoin d'aide ?</strong>
+              <strong>Besoin d&apos;aide ?</strong>
               <br />
               Notre équipe est là pour vous. Répondez simplement à cet email ou
               contactez-nous à support@nuage.fr

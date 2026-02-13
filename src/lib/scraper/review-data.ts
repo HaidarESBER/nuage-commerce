@@ -24,6 +24,7 @@ function toScrapedReview(row: any): ScrapedReview {
     uploadedReviewImages: row.uploaded_review_images || [],
     originalLanguage: row.original_language,
     translatedText: row.translated_text,
+    curatedText: row.curated_text,
     translationStatus: row.translation_status,
     translationError: row.translation_error,
     createdAt: row.created_at,
@@ -48,6 +49,7 @@ function toScrapedReviewRow(data: Partial<ScrapedReview>): Record<string, unknow
   if (data.uploadedReviewImages !== undefined) row.uploaded_review_images = data.uploadedReviewImages;
   if (data.originalLanguage !== undefined) row.original_language = data.originalLanguage;
   if (data.translatedText !== undefined) row.translated_text = data.translatedText;
+  if (data.curatedText !== undefined) row.curated_text = data.curatedText;
   if (data.translationStatus !== undefined) row.translation_status = data.translationStatus;
   if (data.translationError !== undefined) row.translation_error = data.translationError;
 
@@ -142,6 +144,27 @@ export async function updateReviewTranslation(
     .single();
 
   if (error) throw new Error(`Failed to update review translation: ${error.message}`);
+  return toScrapedReview(updated);
+}
+
+/**
+ * Update scraped review with partial data
+ */
+export async function updateScrapedReview(
+  id: string,
+  data: Partial<ScrapedReview>
+): Promise<ScrapedReview> {
+  const supabase = createAdminClient();
+  const row = toScrapedReviewRow(data);
+
+  const { data: updated, error } = await supabase
+    .from("scraped_reviews")
+    .update(row)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw new Error(`Failed to update scraped review: ${error.message}`);
   return toScrapedReview(updated);
 }
 

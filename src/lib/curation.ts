@@ -21,6 +21,7 @@ function toDraft(row: any): ProductDraft {
     rawImages: row.raw_images || [],
     rawSourceUrl: row.raw_source_url,
     rawSourceName: row.raw_source_name,
+    uploadedImages: row.uploaded_images || [],
     aiName: row.ai_name,
     aiDescription: row.ai_description,
     aiShortDescription: row.ai_short_description,
@@ -62,6 +63,7 @@ function toDraftRow(data: Partial<ProductDraft>): Record<string, unknown> {
   if (data.rawImages !== undefined) row.raw_images = data.rawImages;
   if (data.rawSourceUrl !== undefined) row.raw_source_url = data.rawSourceUrl;
   if (data.rawSourceName !== undefined) row.raw_source_name = data.rawSourceName;
+  if (data.uploadedImages !== undefined) row.uploaded_images = data.uploadedImages;
   if (data.aiName !== undefined) row.ai_name = data.aiName;
   if (data.aiDescription !== undefined) row.ai_description = data.aiDescription;
   if (data.aiShortDescription !== undefined) row.ai_short_description = data.aiShortDescription;

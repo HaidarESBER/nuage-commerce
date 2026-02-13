@@ -35,7 +35,7 @@ export function OrderConfirmationEmail({ order }: OrderConfirmationEmailProps) {
           {/* Header */}
           <Section style={header}>
             <Heading style={brandName}>Nuage</Heading>
-            <Text style={tagline}>L'Art de la Détente</Text>
+            <Text style={tagline}>L&apos;Art de la Détente</Text>
           </Section>
 
           {/* Success Message */}

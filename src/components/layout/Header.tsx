@@ -29,19 +29,32 @@ export function Header() {
   const { wishlistItems } = useWishlist();
   const { comparisonItems } = useComparison();
 
-  // Check if user is admin
+  // Check if user is admin - must match middleware logic
   useEffect(() => {
     const checkAdminStatus = async () => {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
 
+      console.log('🔍 Header Admin Check - User ID:', user?.id);
+      console.log('🔍 Header Admin Check - Email:', user?.email);
+
       if (user) {
-        // Check if user has admin role in metadata
-        const isAdminUser = user.user_metadata?.role === 'admin' ||
-                           user.app_metadata?.role === 'admin' ||
-                           user.email?.endsWith('@admin.nuage.fr');
+        // Check profiles.is_admin - same as middleware
+        const { data: profile, error } = await supabase
+          .from("profiles")
+          .select("is_admin")
+          .eq("id", user.id)
+          .single();
+
+        console.log('🔍 Header Admin Check - Profile:', profile);
+        console.log('🔍 Header Admin Check - Error:', error);
+        console.log('🔍 Header Admin Check - is_admin value:', profile?.is_admin);
+
+        const isAdminUser = profile?.is_admin === true;
+        console.log('🔍 Header Admin Check - Final isAdmin:', isAdminUser);
         setIsAdmin(isAdminUser);
       } else {
+        console.log('🔍 Header Admin Check - No user logged in');
         setIsAdmin(false);
       }
     };

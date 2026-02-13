@@ -22,6 +22,7 @@ export interface ProductDraft {
   rawImages: string[];
   rawSourceUrl: string | null;
   rawSourceName: string | null;
+  uploadedImages: string[]; // Processed & uploaded to Supabase Storage
 
   // AI-generated
   aiName: string | null;
@@ -81,5 +82,8 @@ export function getEffectivePrice(draft: ProductDraft): number | null {
 }
 
 export function getEffectiveImages(draft: ProductDraft): string[] {
-  return draft.curatedImages.length > 0 ? draft.curatedImages : draft.rawImages;
+  // Priority: curated > uploaded (processed) > raw (external URLs)
+  if (draft.curatedImages.length > 0) return draft.curatedImages;
+  if (draft.uploadedImages.length > 0) return draft.uploadedImages;
+  return draft.rawImages;
 }

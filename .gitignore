@@ -49,3 +49,12 @@ next-env.d.ts
 
 # Claude Code local settings (may contain sensitive data)
 .claude/settings.local.json
+
+# Database scripts and migrations (contain credentials, run via env vars only)
+/scripts/*.js
+/scripts/*.sql
+*.sql
+
+# Debug files
+debug-screenshot.png
+nul

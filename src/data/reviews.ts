@@ -6,6 +6,7 @@ export interface Review {
   comment: string;
   date: string; // ISO timestamp
   verifiedPurchase: boolean;
+  photos?: string[]; // Customer review photos
 }
 
 export interface ProductRatingStats {

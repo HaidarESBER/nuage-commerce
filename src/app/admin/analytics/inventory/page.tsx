@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { redirect } from 'next/navigation';
+import { requireAdmin } from '@/lib/session';
 import {
   getStockAlerts,
   getInventoryVelocity,
@@ -12,6 +14,12 @@ import RestockRecommendations from "@/components/admin/RestockRecommendations";
 export const dynamic = "force-dynamic";
 
 export default async function InventoryAnalyticsPage() {
+  try {
+    await requireAdmin();
+  } catch {
+    redirect("/");
+  }
+
   // Fetch all inventory data with error handling per source
   let stockAlerts: Awaited<ReturnType<typeof getStockAlerts>>;
   try {

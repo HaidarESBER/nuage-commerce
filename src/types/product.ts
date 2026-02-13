@@ -9,6 +9,11 @@ export type ProductCategory =
   | "charbon"
   | "accessoire";
 
+export interface ProductSpec {
+  label: string;
+  value: string;
+}
+
 export interface Product {
   id: string;
   slug: string;
@@ -25,6 +30,8 @@ export interface Product {
   /** Stock level: 0 = out of stock, 1-5 = urgent, 6-10 = limited, 11+ = in stock */
   stockLevel?: number;
   featured: boolean;
+  /** Optional product specifications */
+  specs?: ProductSpec[];
 }
 
 /**

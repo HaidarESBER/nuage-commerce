@@ -44,7 +44,7 @@ export async function saveCuratedFields(
  * Approve a draft
  */
 export async function approveDraft(draftId: string) {
-  await updateDraftStatus(draftId, "approved", { reviewedBy: "admin" });
+  await updateDraftStatus(draftId, "approved");
   revalidatePath("/admin/curation");
   revalidatePath(`/admin/curation/${draftId}`);
 }
@@ -55,7 +55,6 @@ export async function approveDraft(draftId: string) {
 export async function rejectDraft(draftId: string, rejectionReason: string) {
   await updateDraftStatus(draftId, "rejected", {
     rejectionReason,
-    reviewedBy: "admin",
   });
   revalidatePath("/admin/curation");
   revalidatePath(`/admin/curation/${draftId}`);
@@ -71,9 +70,10 @@ export async function setInReview(draftId: string) {
 }
 
 /**
- * Reset a draft for re-translation
+ * Translate a draft immediately (reviews + product)
  */
 export async function retranslate(draftId: string) {
+  // Reset AI fields first
   await updateDraft(draftId, {
     aiName: null,
     aiDescription: null,
@@ -86,6 +86,11 @@ export async function retranslate(draftId: string) {
     translationError: null,
     status: "pending_translation" as DraftStatus,
   });
+
+  // Immediately trigger translation (reviews + product)
+  const { translateAndSaveDraft } = await import("@/lib/ai/translate-product");
+  await translateAndSaveDraft(draftId);
+
   revalidatePath("/admin/curation");
   revalidatePath(`/admin/curation/${draftId}`);
 }
@@ -107,6 +112,46 @@ export async function publishDraftAction(draftId: string) {
   revalidatePath(`/admin/curation/${draftId}`);
   revalidatePath("/admin/produits");
   return product;
+}
+
+/**
+ * Unpublish a published draft (delete product, reset draft to approved)
+ */
+export async function unpublishDraftAction(draftId: string) {
+  const draft = await getDraftById(draftId);
+  if (!draft) {
+    throw new Error(`Draft not found: ${draftId}`);
+  }
+
+  if (draft.status !== "published" || !draft.publishedProductId) {
+    throw new Error("Draft is not published");
+  }
+
+  const productIdToDelete = draft.publishedProductId;
+
+  // Get product slug before deleting (for cache invalidation)
+  const { getProductById } = await import("@/lib/products");
+  const product = await getProductById(productIdToDelete);
+
+  // FIRST: Reset draft to clear the foreign key reference
+  await updateDraft(draftId, {
+    status: "approved",
+    publishedProductId: null,
+    publishedAt: null,
+  });
+
+  // THEN: Delete the published product (now that foreign key is cleared)
+  const { deleteProduct } = await import("@/lib/products");
+  await deleteProduct(productIdToDelete);
+
+  // Revalidate all relevant paths
+  revalidatePath("/admin/curation");
+  revalidatePath(`/admin/curation/${draftId}`);
+  revalidatePath("/admin/produits");
+  revalidatePath("/produits"); // Product listing page
+  if (product?.slug) {
+    revalidatePath(`/produits/${product.slug}`); // Specific product page
+  }
 }
 
 /**

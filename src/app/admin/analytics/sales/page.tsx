@@ -1,3 +1,5 @@
+import { redirect } from 'next/navigation';
+import { requireAdmin } from '@/lib/session';
 import {
   getRevenueByCategory,
   getTopSellingProducts,
@@ -22,6 +24,12 @@ function formatCurrency(cents: number): string {
 }
 
 export default async function SalesAnalyticsPage() {
+  try {
+    await requireAdmin();
+  } catch {
+    redirect("/");
+  }
+
   // Fetch data from analytics helpers with graceful error handling
   let categoryRevenue: CategoryRevenue[] = [];
   let topSellers: TopSellingProduct[] = [];

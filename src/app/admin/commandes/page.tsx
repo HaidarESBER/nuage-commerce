@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { redirect } from 'next/navigation';
+import { requireAdmin } from '@/lib/session';
 import { getAllOrders } from "@/lib/orders";
 import { formatPrice } from "@/types/product";
 import { OrderStatusBadge } from "@/components/admin";
@@ -7,6 +9,12 @@ import { formatDate } from "@/lib/date-utils";
 export const dynamic = "force-dynamic";
 
 export default async function AdminOrdersPage() {
+  try {
+    await requireAdmin();
+  } catch {
+    redirect("/");
+  }
+
   const orders = await getAllOrders();
 
   return (

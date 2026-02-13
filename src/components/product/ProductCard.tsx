@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { OptimizedImage } from "@/components/ui/OptimizedImage";
 import { motion } from "framer-motion";
@@ -10,7 +10,6 @@ import { useComparison } from "@/contexts/ComparisonContext";
 import { StarRatingDisplay } from "@/components/product/StarRating";
 import { StockIndicator } from "@/components/product/StockIndicator";
 import { WishlistButton } from "@/components/product/WishlistButton";
-import { getProductRatingStats } from "@/data/reviews";
 import { QuickViewModal } from "./QuickViewModal";
 import { isTrending } from "@/lib/social-proof";
 import { TrendingBadge } from "./TrendingBadge";
@@ -19,6 +18,8 @@ interface ProductCardProps {
   product: Product;
   /** Use priority loading for above-the-fold images */
   priority?: boolean;
+  /** Product rating statistics from database */
+  ratingStats?: { averageRating: number; totalReviews: number } | null;
 }
 
 /**
@@ -34,13 +35,12 @@ interface ProductCardProps {
  * @example
  * <ProductCard product={product} priority={true} />
  */
-export function ProductCard({ product, priority = false }: ProductCardProps) {
+export function ProductCard({ product, priority = false, ratingStats }: ProductCardProps) {
   const { addItem } = useCart();
   const { addToComparison, isInComparison } = useComparison();
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const [showCompareToast, setShowCompareToast] = useState(false);
   const hasDiscount = product.compareAtPrice && product.compareAtPrice > product.price;
-  const ratingStats = useMemo(() => getProductRatingStats(product.id), [product.id]);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();

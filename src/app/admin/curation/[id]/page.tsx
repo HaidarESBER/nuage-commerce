@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getDraftById } from "@/lib/curation";
+import { getReviewsByScrapedProduct } from "@/lib/scraper/review-data";
 import { DraftDetailView } from "./DraftDetailView";
 
 export const dynamic = "force-dynamic";
@@ -16,5 +17,10 @@ export default async function DraftDetailPage({ params }: DraftDetailPageProps) 
     redirect("/admin/curation");
   }
 
-  return <DraftDetailView draft={draft} />;
+  // Fetch reviews if this draft has a scraped product
+  const reviews = draft.scrapedProductId
+    ? await getReviewsByScrapedProduct(draft.scrapedProductId)
+    : [];
+
+  return <DraftDetailView draft={draft} reviews={reviews} />;
 }

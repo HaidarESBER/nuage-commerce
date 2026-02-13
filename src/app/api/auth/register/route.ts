@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       // Map Supabase error messages to French
-      if (error.message.includes("already registered")) {
+      if (error.message.includes("already registered") || error.message.includes("User already registered")) {
         return NextResponse.json(
           { error: "Un compte existe deja avec cette adresse email" },
           { status: 400 }
@@ -60,9 +60,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Wait a moment for the trigger to create the profile
+    await new Promise(resolve => setTimeout(resolve, 500));
+
     // Update profile with first_name and last_name
-    // The handle_new_user trigger creates the profile row, but with empty names
-    await supabase
+    const { error: updateError } = await supabase
       .from("profiles")
       .update({
         first_name: firstName.trim(),
@@ -70,14 +72,25 @@ export async function POST(request: NextRequest) {
       })
       .eq("id", data.user.id);
 
+    if (updateError) {
+      console.error("Error updating profile:", updateError);
+    }
+
+    // Fetch the updated profile
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", data.user.id)
+      .single();
+
     return NextResponse.json({
       success: true,
       user: {
         id: data.user.id,
         email: data.user.email,
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        isAdmin: false,
+        firstName: profile?.first_name || firstName.trim(),
+        lastName: profile?.last_name || lastName.trim(),
+        isAdmin: profile?.is_admin || false,
       },
     });
   } catch (error) {

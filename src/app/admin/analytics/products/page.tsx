@@ -3,10 +3,12 @@
  * Admin dashboard for product performance and search insights
  */
 
+import { redirect } from "next/navigation";
 import { getTopEvents, getTopWishlistedProducts, getProductViewsWithUniqueVisitors, TopEvent } from "@/lib/analytics-server";
 import TopProducts from "@/components/admin/TopProducts";
 import SearchAnalytics from "@/components/admin/SearchAnalytics";
 import Link from "next/link";
+import { requireAdmin } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +18,11 @@ export const metadata = {
 };
 
 export default async function ProductAnalyticsPage() {
+  try {
+    await requireAdmin();
+  } catch {
+    redirect("/");
+  }
   // Fetch top events with error handling
   let viewedProducts: TopEvent[] = [];
   let cartProducts: TopEvent[] = [];

@@ -210,6 +210,32 @@ export async function markSentToCuration(
 }
 
 /**
+ * Delete a scraped product and its associated reviews
+ */
+export async function deleteScrapedProduct(id: string): Promise<void> {
+  const supabase = createAdminClient();
+
+  // Delete reviews first (if table exists)
+  try {
+    await supabase
+      .from("scraped_reviews")
+      .delete()
+      .eq("scraped_product_id", id);
+  } catch (error) {
+    // Table might not exist yet, that's okay
+    console.log('Could not delete reviews (table may not exist):', error);
+  }
+
+  // Delete the product
+  const { error } = await supabase
+    .from("scraped_products")
+    .delete()
+    .eq("id", id);
+
+  if (error) throw new Error(`Failed to delete scraped product: ${error.message}`);
+}
+
+/**
  * Get scraper statistics for admin dashboard
  */
 export async function getScraperStats(): Promise<{

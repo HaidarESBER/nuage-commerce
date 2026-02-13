@@ -12,6 +12,8 @@ interface ProductGridProps {
   currentPage: number;
   /** Number of columns on desktop (default: 3) */
   columns?: 2 | 3 | 4;
+  /** Product ratings map */
+  ratingsMap?: Record<string, { averageRating: number; totalReviews: number }>;
 }
 
 const PRODUCTS_PER_PAGE = 24;
@@ -27,7 +29,7 @@ const PRODUCTS_PER_PAGE = 24;
  * @example
  * <ProductGrid products={products} total={100} currentPage={1} columns={3} />
  */
-export function ProductGrid({ products, total, currentPage, columns = 3 }: ProductGridProps) {
+export function ProductGrid({ products, total, currentPage, columns = 3, ratingsMap = {} }: ProductGridProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -65,6 +67,7 @@ export function ProductGrid({ products, total, currentPage, columns = 3 }: Produ
               product={product}
               // Priority load first 3 images for above-the-fold content
               priority={index < 3}
+              ratingStats={ratingsMap[product.id]}
             />
           ))}
         </div>

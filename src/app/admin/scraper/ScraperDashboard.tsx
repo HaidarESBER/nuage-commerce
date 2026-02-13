@@ -325,6 +325,12 @@ export function ScraperDashboard({
                   Prix
                 </th>
                 <th className="px-4 py-3 text-left text-sm font-medium text-primary/70">
+                  Avis
+                </th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-primary/70">
+                  Images
+                </th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-primary/70">
                   Statut
                 </th>
                 <th className="px-4 py-3 text-left text-sm font-medium text-primary/70">
@@ -361,6 +367,41 @@ export function ScraperDashboard({
                   </td>
                   <td className="px-4 py-3 text-sm text-primary/70">
                     {product.rawPriceText || "-"}
+                  </td>
+                  <td className="px-4 py-3">
+                    {product.reviewCount > 0 ? (
+                      <span className="text-sm text-primary/70">
+                        {product.reviewCount} avis
+                      </span>
+                    ) : (
+                      <span className="text-xs text-primary/40">-</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-col gap-1">
+                      <span
+                        className={`inline-flex items-center px-2 py-0.5 text-xs font-medium rounded ${
+                          product.imageUploadStatus === 'uploaded'
+                            ? 'bg-green-100 text-green-700'
+                            : product.imageUploadStatus === 'failed'
+                            ? 'bg-red-100 text-red-700'
+                            : product.imageUploadStatus === 'uploading'
+                            ? 'bg-blue-100 text-blue-700'
+                            : 'bg-gray-100 text-gray-700'
+                        }`}
+                      >
+                        {product.imageUploadStatus === 'uploaded'
+                          ? 'Uploadees'
+                          : product.imageUploadStatus === 'failed'
+                          ? 'Echec'
+                          : product.imageUploadStatus === 'uploading'
+                          ? 'Upload...'
+                          : 'En attente'}
+                      </span>
+                      <span className="text-xs text-primary/50">
+                        {product.uploadedImageUrls.length}/{product.rawImages.length}
+                      </span>
+                    </div>
                   </td>
                   <td className="px-4 py-3">
                     <span

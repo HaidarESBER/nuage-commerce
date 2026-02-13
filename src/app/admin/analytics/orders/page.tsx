@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { requireAdmin } from '@/lib/session';
 import {
   getOrdersByTimePattern,
   getShippingDistribution,
@@ -11,6 +13,12 @@ import StatusFunnel from '@/components/admin/StatusFunnel';
 export const dynamic = 'force-dynamic';
 
 export default async function OrderAnalyticsPage() {
+  try {
+    await requireAdmin();
+  } catch {
+    redirect("/");
+  }
+
   // Fetch data with error handling
   let timeData = null;
   let shippingData = null;
@@ -165,7 +173,7 @@ export default async function OrderAnalyticsPage() {
               )}
             </li>
             <li>
-              <strong>Taux d'abandon paiement:</strong>{' '}
+              <strong>Taux d&apos;abandon paiement:</strong>{' '}
               <span className={paymentAbandonRate > 20 ? 'text-red-600 font-semibold' : ''}>
                 {paymentAbandonRate.toFixed(1)}%
               </span>

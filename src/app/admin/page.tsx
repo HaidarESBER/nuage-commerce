@@ -1,12 +1,20 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getMetricsSummary, getRealtimeEvents, MetricsSummary } from "@/lib/analytics-server";
 import { ServerAnalyticsEvent } from "@/types/analytics";
 import DashboardKPIs from "@/components/admin/DashboardKPIs";
 import RealtimeActivity from "@/components/admin/RealtimeActivity";
+import { requireAdmin } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
+  // Require admin access - redirects if not admin
+  try {
+    await requireAdmin();
+  } catch {
+    redirect("/");
+  }
   // Fetch analytics data with error handling
   let metricsSummary: MetricsSummary;
   let realtimeEvents: ServerAnalyticsEvent[] = [];
