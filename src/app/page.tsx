@@ -1,5 +1,16 @@
+import type { Metadata } from "next";
 import { getAllProducts } from "@/lib/products";
+import { generateWebSiteSchema, safeJsonLd } from "@/lib/seo";
 import { HomeClient } from "./HomeClient";
+
+export const metadata: Metadata = {
+  title: "Nuage | L'art de la detente - Chicha Premium en France",
+  description:
+    "Boutique en ligne de chichas et accessoires haut de gamme. Chichas, bols, tuyaux, charbon et accessoires de qualite superieure. Livraison en France.",
+  alternates: {
+    canonical: "https://nuage.fr",
+  },
+};
 
 /**
  * Homepage with cinematic video hero and featured products
@@ -8,6 +19,7 @@ import { HomeClient } from "./HomeClient";
  * - Full-screen video hero with smoke reveal effect
  * - Text overlay with shadows (no card background)
  * - Featured products section showcasing premium items
+ * - WebSite schema with SearchAction for Google sitelinks search box
  * - French content throughout
  */
 export default async function Home() {
@@ -15,5 +27,16 @@ export default async function Home() {
   const allProducts = await getAllProducts();
   const featuredProducts = allProducts.filter((p) => p.featured);
 
-  return <HomeClient featuredProducts={featuredProducts} />;
+  const webSiteSchema = generateWebSiteSchema();
+
+  return (
+    <>
+      {/* WebSite Structured Data with SearchAction for Google sitelinks search box */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(webSiteSchema) }}
+      />
+      <HomeClient featuredProducts={featuredProducts} />
+    </>
+  );
 }
