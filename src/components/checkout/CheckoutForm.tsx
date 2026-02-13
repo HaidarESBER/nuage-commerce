@@ -8,6 +8,7 @@ import { ShippingForm } from "./ShippingForm";
 import { ShippingCalculator } from "./ShippingCalculator";
 import { PaymentMethods } from "./PaymentMethods";
 import { OrderSummary } from "./OrderSummary";
+import { DiscountCodeInput, AppliedDiscount } from "./DiscountCodeInput";
 import { CartItem, calculateSubtotal } from "@/types/cart";
 import {
   ShippingAddress,
@@ -34,7 +35,7 @@ type FieldErrors = Partial<Record<keyof ShippingAddress, string>>;
  * - Auto-fill email for logged-in users
  * - Two-column layout on desktop (form + summary)
  * - Stacked on mobile (summary first)
- * - Section-based progression (email → shipping → payment)
+ * - Section-based progression (email -> shipping -> discount -> payment)
  * - Client-side validation
  * - Loading state during submission
  */
@@ -76,12 +77,19 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
   );
   const [shippingCost, setShippingCost] = useState(0);
 
+  // Discount state
+  const [discountCode, setDiscountCode] = useState<AppliedDiscount | null>(null);
+
   const [notes, setNotes] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const cartTotal = calculateSubtotal(items);
+
+  const handleDiscountApplied = useCallback((discount: AppliedDiscount | null) => {
+    setDiscountCode(discount);
+  }, []);
 
   const validateForm = useCallback((): boolean => {
     const newErrors: FieldErrors = {};
@@ -147,6 +155,8 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
         shippingAddress: updatedAddress,
         shippingCost,
         notes: notes.trim() || undefined,
+        discountCode: discountCode?.code,
+        discountAmount: discountCode?.amount,
       });
 
       // If account creation requested, store password in localStorage for future processing
@@ -164,12 +174,17 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
     }
   };
 
+  // Build discount prop for OrderSummary
+  const discountProp = discountCode
+    ? { code: discountCode.code, amount: discountCode.amount, label: discountCode.label }
+    : undefined;
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Order summary on mobile (shown first) */}
         <div className="lg:hidden">
-          <OrderSummary items={items} shippingCost={shippingCost} />
+          <OrderSummary items={items} shippingCost={shippingCost} discount={discountProp} />
         </div>
 
         {/* Shipping form (2/3 width on desktop) */}
@@ -205,7 +220,13 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
             onShippingCostChange={setShippingCost}
           />
 
-          {/* Section 4: Payment */}
+          {/* Section 4: Discount code */}
+          <DiscountCodeInput
+            subtotalCents={cartTotal}
+            onDiscountApplied={handleDiscountApplied}
+          />
+
+          {/* Section 5: Payment */}
           <PaymentMethods />
 
           {/* Notes */}
@@ -370,7 +391,7 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
         {/* Order summary on desktop (1/3 width, right side) */}
         <div className="hidden lg:block">
           <div className="sticky top-24">
-            <OrderSummary items={items} shippingCost={shippingCost} />
+            <OrderSummary items={items} shippingCost={shippingCost} discount={discountProp} />
           </div>
         </div>
       </div>

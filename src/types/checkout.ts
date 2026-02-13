@@ -39,6 +39,8 @@ export interface CheckoutFormData {
   shippingAddress: ShippingAddress;
   shippingCost: number; // in cents
   notes?: string;
+  discountCode?: string;
+  discountAmount?: number; // in cents
 }
 
 /**

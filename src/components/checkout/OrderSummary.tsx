@@ -6,6 +6,7 @@ import { CartItem, calculateSubtotal, formatCartTotal } from "@/types/cart";
 interface OrderSummaryProps {
   items: CartItem[];
   shippingCost?: number; // in cents
+  discount?: { code: string; amount: number; label: string };
 }
 
 /**
@@ -14,12 +15,14 @@ interface OrderSummaryProps {
  * Displays cart items in a compact format with:
  * - Product image, name, quantity, line total
  * - Subtotal
+ * - Discount line (when applied)
  * - Shipping cost (when provided)
  * - Order total
  */
-export function OrderSummary({ items, shippingCost = 0 }: OrderSummaryProps) {
+export function OrderSummary({ items, shippingCost = 0, discount }: OrderSummaryProps) {
   const subtotal = calculateSubtotal(items);
-  const total = subtotal + shippingCost;
+  const discountAmount = discount ? discount.amount : 0;
+  const total = Math.max(0, subtotal - discountAmount + shippingCost);
 
   return (
     <div className="bg-background-card rounded-[--radius-card] p-6">
@@ -86,6 +89,12 @@ export function OrderSummary({ items, shippingCost = 0 }: OrderSummaryProps) {
           <span>Sous-total</span>
           <span>{formatCartTotal(subtotal)}</span>
         </div>
+        {discount && discount.amount > 0 && (
+          <div className="flex justify-between text-sm font-medium text-success">
+            <span>Remise ({discount.code})</span>
+            <span>-{formatCartTotal(discount.amount)}</span>
+          </div>
+        )}
         <div className="flex justify-between text-sm text-muted">
           <span>Livraison</span>
           <span>{shippingCost > 0 ? formatCartTotal(shippingCost) : "Calculer"}</span>
