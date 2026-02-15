@@ -254,7 +254,8 @@ export function Header() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
               onClick={handleNavClick}
-              className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[45]"
+              className="md:hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[999]"
+              style={{ touchAction: 'none' }}
             />
 
             {/* Sliding Menu */}
@@ -263,21 +264,23 @@ export function Header() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="md:hidden fixed top-0 right-0 bottom-0 w-[280px] bg-background-dark/95 backdrop-blur-xl border-l border-white/10 z-50 overflow-y-auto"
+              className="md:hidden fixed top-0 right-0 bottom-0 w-[85vw] max-w-[320px] bg-background-dark border-l border-white/20 z-[1000] overflow-y-auto shadow-2xl"
+              style={{ touchAction: 'pan-y' }}
             >
               {/* Header */}
-              <div className="sticky top-0 bg-background-dark/80 backdrop-blur-xl border-b border-white/10 p-4 flex items-center justify-between">
-                <span className="font-heading text-lg text-white">Menu</span>
+              <div className="sticky top-0 bg-background-dark border-b border-white/10 p-4 flex items-center justify-between z-10">
+                <span className="font-heading text-lg text-white font-bold">Menu</span>
                 <button
                   onClick={handleNavClick}
-                  className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-white transition-colors"
+                  className="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+                  aria-label="Fermer le menu"
                 >
-                  <span className="material-icons text-sm">close</span>
+                  <span className="material-icons text-xl">close</span>
                 </button>
               </div>
 
               {/* Menu Content */}
-              <div className="p-4 flex flex-col gap-1 pb-safe">
+              <div className="p-4 flex flex-col gap-1 pb-safe min-h-screen bg-background-dark">
                 {/* Products */}
                 <Link
                   href="/produits"
