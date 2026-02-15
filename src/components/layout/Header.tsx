@@ -244,43 +244,80 @@ export function Header() {
       </Container>
 
       {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              onClick={handleNavClick}
-              className="md:hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[999]"
-              style={{ touchAction: 'none' }}
-            />
+      {isMenuOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            onClick={handleNavClick}
+            className="md:hidden fixed inset-0 bg-black z-[9998]"
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.85)',
+              zIndex: 9998,
+              touchAction: 'none',
+              WebkitTapHighlightColor: 'transparent',
+            }}
+          />
 
-            {/* Sliding Menu */}
-            <motion.nav
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="md:hidden fixed top-0 right-0 bottom-0 w-[85vw] max-w-[320px] bg-background-dark border-l border-white/20 z-[1000] overflow-y-auto shadow-2xl"
-              style={{ touchAction: 'pan-y' }}
-            >
+          {/* Sliding Menu */}
+          <nav
+            className="md:hidden fixed top-0 right-0 bottom-0 w-[280px] bg-[#0a0a0a] z-[9999] overflow-y-auto"
+            style={{
+              position: 'fixed',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              width: '280px',
+              maxWidth: '85vw',
+              backgroundColor: '#0a0a0a',
+              zIndex: 9999,
+              overflowY: 'auto',
+              WebkitOverflowScrolling: 'touch',
+              boxShadow: '-4px 0 24px rgba(0, 0, 0, 0.5)',
+              borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
+            }}
+          >
               {/* Header */}
-              <div className="sticky top-0 bg-background-dark border-b border-white/10 p-4 flex items-center justify-between z-10">
-                <span className="font-heading text-lg text-white font-bold">Menu</span>
+              <div
+                className="sticky top-0 p-4 flex items-center justify-between border-b"
+                style={{
+                  backgroundColor: '#0a0a0a',
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                  position: 'sticky',
+                  top: 0,
+                  zIndex: 10,
+                }}
+              >
+                <span className="text-lg text-white font-bold" style={{ color: '#ffffff' }}>Menu</span>
                 <button
                   onClick={handleNavClick}
-                  className="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+                  className="w-10 h-10 flex items-center justify-center rounded-full text-white"
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    color: '#ffffff',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
                   aria-label="Fermer le menu"
                 >
-                  <span className="material-icons text-xl">close</span>
+                  <span className="material-icons" style={{ fontSize: '24px' }}>close</span>
                 </button>
               </div>
 
               {/* Menu Content */}
-              <div className="p-4 flex flex-col gap-1 pb-safe min-h-screen bg-background-dark">
+              <div
+                className="p-4 flex flex-col gap-2"
+                style={{
+                  padding: '16px',
+                  minHeight: '100vh',
+                  backgroundColor: '#0a0a0a',
+                  paddingBottom: 'calc(16px + env(safe-area-inset-bottom, 0px))',
+                }}
+              >
                 {/* Products */}
                 <Link
                   href="/produits"
@@ -437,10 +474,10 @@ export function Header() {
                   <span className="text-sm font-medium">Panier</span>
                 </Link>
               </div>
-            </motion.nav>
+            </nav>
           </>
         )}
-      </AnimatePresence>
+
       </header>
 
       {/* Search Overlay */}
