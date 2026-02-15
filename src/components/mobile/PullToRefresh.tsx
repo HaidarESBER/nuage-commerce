@@ -28,6 +28,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
   const [pullDistance, setPullDistance] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const touchStartY = useRef<number>(0);
+  const touchStartX = useRef<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const PULL_THRESHOLD = 80;
@@ -54,6 +55,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
       // Only trigger if at top of page
       if (window.scrollY === 0) {
         touchStartY.current = e.touches[0].clientY;
+        touchStartX.current = e.touches[0].clientX;
       }
     };
 
@@ -62,18 +64,20 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
       if (window.scrollY !== 0 || isRefreshing) return;
 
       const touchY = e.touches[0].clientY;
-      const distance = touchY - touchStartY.current;
+      const touchX = e.touches[0].clientX;
+      const distanceY = touchY - touchStartY.current;
+      const distanceX = Math.abs(touchX - touchStartX.current);
 
-      // Only activate on pull down
-      if (distance > 0) {
+      // Only activate on pull down, and only if it's more vertical than horizontal
+      if (distanceY > 0 && distanceY > distanceX) {
         // Prevent default scroll behavior while pulling
         // Only call preventDefault if the event is cancelable
-        if (distance > 10 && e.cancelable) {
+        if (distanceY > 10 && e.cancelable) {
           e.preventDefault();
         }
 
         // Cap distance at MAX_PULL for visual effect
-        const cappedDistance = Math.min(distance, MAX_PULL);
+        const cappedDistance = Math.min(distanceY, MAX_PULL);
         setPullDistance(cappedDistance);
         setIsPulling(true);
       }

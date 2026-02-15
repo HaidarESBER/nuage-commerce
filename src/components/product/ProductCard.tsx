@@ -69,12 +69,17 @@ export function ProductCard({ product, priority = false, ratingStats, disableAni
     }
   };
 
+  const CardWrapper = disableAnimation ? 'div' : motion.div;
+  const animationProps = disableAnimation ? {} : {
+    initial: { opacity: 0, y: 20 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: "-50px" },
+    transition: { duration: 0.4, ease: [0.21, 0.47, 0.32, 0.98] }
+  };
+
   return (
-    <motion.div
-      initial={disableAnimation ? false : { opacity: 0, y: 20 }}
-      whileInView={disableAnimation ? undefined : { opacity: 1, y: 0 }}
-      viewport={disableAnimation ? undefined : { once: true, margin: "-50px" }}
-      transition={disableAnimation ? undefined : { duration: 0.4, ease: [0.21, 0.47, 0.32, 0.98] }}
+    <CardWrapper
+      {...animationProps}
       className="group glass-card glass-card-hover rounded-xl overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 flex flex-col h-full"
     >
       {/* Image container - Premium display */}
@@ -217,6 +222,6 @@ export function ProductCard({ product, priority = false, ratingStats, disableAni
           Maximum 3 produits pour la comparaison
         </motion.div>
       )}
-    </motion.div>
+    </CardWrapper>
   );
 }
