@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui";
@@ -27,9 +28,14 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const { wishlistItems } = useWishlist();
   const { comparisonItems } = useComparison();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Check if user is admin - must match middleware logic
   useEffect(() => {
@@ -243,15 +249,15 @@ export function Header() {
         </div>
       </Container>
 
-      {/* Mobile Menu Overlay */}
-      {isMenuOpen && (
+      {/* Mobile Menu Overlay - Rendered via Portal */}
+      {mounted && isMenuOpen && createPortal(
         <div style={{
           position: 'fixed',
           top: 0,
           left: 0,
           right: 0,
           bottom: 0,
-          zIndex: 99999,
+          zIndex: 999999,
           display: 'block',
         }}>
           {/* Backdrop */}
@@ -263,7 +269,7 @@ export function Header() {
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              backgroundColor: 'rgba(0, 0, 0, 0.85)',
               zIndex: 1,
             }}
           />
@@ -276,11 +282,12 @@ export function Header() {
               right: 0,
               bottom: 0,
               width: '80%',
-              maxWidth: '300px',
+              maxWidth: '320px',
               backgroundColor: '#0f0f0f',
               zIndex: 2,
               overflowY: 'auto',
-              boxShadow: '-2px 0 10px rgba(0,0,0,0.5)',
+              WebkitOverflowScrolling: 'touch',
+              boxShadow: '-4px 0 20px rgba(0,0,0,0.7)',
             }}
           >
             {/* Menu Header */}
@@ -515,8 +522,9 @@ export function Header() {
                 </Link>
               </div>
             </div>
-          </div>
-        )}
+          </div>,
+        document.body
+      )}
 
       </header>
 
