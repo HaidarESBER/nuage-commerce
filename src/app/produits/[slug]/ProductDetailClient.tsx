@@ -430,35 +430,6 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
             )}
           </div>
 
-          {/* Complementary Products - Mobile */}
-          {complementaryProducts.length > 0 && (
-            <div className="mb-4 bg-gradient-to-br from-primary/10 to-transparent rounded-lg p-3 border border-primary/20">
-              <h3 className="text-sm font-bold mb-1 text-white flex items-center gap-1.5">
-                Complétez votre achat
-                <span className="w-0.5 h-0.5 rounded-full bg-primary animate-pulse"></span>
-              </h3>
-              <p className="text-[10px] text-gray-400 mb-3">Produits fréquemment achetés ensemble</p>
-              <div className="grid grid-cols-2 gap-2 mb-3">
-                {complementaryProducts.slice(0, 4).map((item) => (
-                  <Link
-                    key={item.id}
-                    href={`/produits/${item.slug}`}
-                    className="group bg-background-dark rounded-lg p-2 border border-white/5"
-                  >
-                    <div className="relative w-full aspect-square rounded-lg bg-surface-dark overflow-hidden mb-1.5 group-hover:border-primary/50 transition-colors">
-                      <img src={item.images[0]} alt={item.name} className="w-full h-full object-cover" />
-                      <span className="absolute top-1 left-1 text-[8px] px-1.5 py-0.5 bg-primary/90 text-black font-bold rounded-full uppercase">
-                        {item.category}
-                      </span>
-                    </div>
-                    <p className="text-[10px] font-medium text-white truncate">{item.name}</p>
-                    <p className="text-[9px] text-primary font-bold">{formatPrice(item.price)}</p>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Related Products - Mobile */}
           {relatedProducts.length > 0 && (
             <div className="mb-4">
@@ -490,6 +461,37 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                 Voir plus de produits
                 <span className="material-icons text-sm">arrow_forward</span>
               </Link>
+            </div>
+          )}
+
+          {/* Complementary Products - Mobile */}
+          {complementaryProducts.length > 0 && (
+            <div className="mb-4">
+              <div className="mb-2">
+                <h3 className="text-sm font-bold flex items-center gap-1.5">
+                  Complétez votre achat
+                  <span className="w-0.5 h-0.5 rounded-full bg-primary animate-pulse"></span>
+                </h3>
+                <p className="text-[9px] text-gray-400">Fréquemment achetés ensemble</p>
+              </div>
+              <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 -mx-3 px-3">
+                {complementaryProducts.map((item) => (
+                  <Link
+                    key={item.id}
+                    href={`/produits/${item.slug}`}
+                    className="flex-none w-24 group"
+                  >
+                    <div className="relative w-24 h-24 rounded-lg bg-surface-dark border border-white/5 overflow-hidden mb-1.5 group-hover:border-primary/50 transition-colors">
+                      <img src={item.images[0]} alt={item.name} className="w-full h-full object-cover" />
+                      <span className="absolute top-1 left-1 text-[7px] px-1 py-0.5 bg-primary text-black font-bold rounded-full uppercase">
+                        {item.category}
+                      </span>
+                    </div>
+                    <p className="text-[10px] font-medium text-white truncate">{item.name}</p>
+                    <p className="text-[9px] text-primary font-bold">{formatPrice(item.price)}</p>
+                  </Link>
+                ))}
+              </div>
             </div>
           )}
         </main>
@@ -858,47 +860,6 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
             </section>
           )}
 
-          {/* Complementary Products - Smart Pairing */}
-          {complementaryProducts.length > 0 && (
-            <section className="border-t border-white/5 bg-gradient-to-br from-primary/5 to-transparent py-6 -mx-4 px-4">
-              <div className="max-w-[1920px] mx-auto">
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <h2 className="text-base font-bold uppercase tracking-tight text-white mb-1">
-                      Complétez votre achat
-                    </h2>
-                    <p className="text-xs text-gray-400">Produits fréquemment achetés ensemble</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {complementaryProducts.map((item) => (
-                    <Link
-                      key={item.id}
-                      href={`/produits/${item.slug}`}
-                      className="group cursor-pointer bg-background-dark/50 rounded-lg p-3 border border-white/5 hover:border-primary/30 transition-all"
-                    >
-                      <div className="relative aspect-square rounded-lg bg-background-secondary mb-2 overflow-hidden">
-                        <img
-                          src={item.images[0]}
-                          alt={item.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                        {/* Category badge */}
-                        <span className="absolute top-2 left-2 text-[9px] px-2 py-1 bg-primary/90 text-black font-bold rounded-full uppercase">
-                          {item.category}
-                        </span>
-                      </div>
-                      <h3 className="text-xs font-bold text-white mb-1 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
-                        {item.name}
-                      </h3>
-                      <p className="text-primary font-medium text-sm">{formatPrice(item.price)}</p>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </section>
-          )}
-
           {/* Related Products - Same Category */}
           {relatedProducts.length > 0 && (
             <section className="border-t border-white/5 bg-surface-dark/20 py-6 -mx-4 px-4">
@@ -947,6 +908,47 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                   Voir plus de produits
                   <span className="material-icons text-sm">arrow_forward</span>
                 </Link>
+              </div>
+            </section>
+          )}
+
+          {/* Complementary Products - Complete Your Purchase */}
+          {complementaryProducts.length > 0 && (
+            <section className="border-t border-white/5 bg-surface-dark/20 py-6 -mx-4 px-4">
+              <div className="max-w-[1920px] mx-auto">
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <h2 className="text-base font-bold uppercase tracking-tight text-white">
+                      Complétez votre achat
+                    </h2>
+                    <p className="text-[10px] text-gray-400 mt-0.5">Fréquemment achetés ensemble</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-6 gap-3">
+                  {complementaryProducts.map((item) => (
+                    <Link
+                      key={item.id}
+                      href={`/produits/${item.slug}`}
+                      className="group cursor-pointer"
+                    >
+                      <div className="relative aspect-square rounded-lg bg-background-dark mb-1.5 overflow-hidden border border-white/5 hover:border-primary/30 transition-colors">
+                        <img
+                          src={item.images[0]}
+                          alt={item.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        {/* Category badge */}
+                        <span className="absolute top-1.5 left-1.5 text-[8px] px-1.5 py-0.5 bg-primary text-black font-bold rounded-full uppercase">
+                          {item.category}
+                        </span>
+                      </div>
+                      <h3 className="text-xs font-bold text-white mb-0.5 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
+                        {item.name}
+                      </h3>
+                      <p className="text-primary font-medium text-xs">{formatPrice(item.price)}</p>
+                    </Link>
+                  ))}
+                </div>
               </div>
             </section>
           )}
