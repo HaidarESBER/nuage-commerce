@@ -162,7 +162,7 @@ export function StarterKitsSection() {
 
                   <Link
                     href={`/collections/${kit.id}`}
-                    className="block w-full bg-white text-background-dark hover:bg-primary hover:text-black font-bold py-4 rounded-lg transition-all duration-300 uppercase tracking-widest text-center group-hover:shadow-[0_0_20px_rgba(18,222,38,0.3)]"
+                    className="block w-full bg-white text-background-dark hover:bg-primary hover:text-black font-bold py-4 rounded-lg transition-all duration-300 uppercase tracking-widest text-center"
                   >
                     Add to Collection{" "}
                     <span className="material-icons text-sm align-middle">arrow_forward</span>

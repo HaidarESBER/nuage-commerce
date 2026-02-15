@@ -246,7 +246,7 @@ export default function AboutPage() {
             <div className="flex flex-wrap justify-center gap-4 mt-8">
               <Link
                 href="/produits"
-                className="px-8 py-4 bg-primary text-background-dark font-bold rounded-full hover:bg-white transition-all duration-300 shadow-[0_0_30px_rgba(18,222,38,0.3)] hover:shadow-[0_0_40px_rgba(18,222,38,0.5)]"
+                className="px-8 py-4 bg-primary text-background-dark font-bold rounded-full hover:bg-white transition-all duration-300"
               >
                 Découvrir nos Produits
               </Link>

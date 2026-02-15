@@ -38,6 +38,8 @@ export function ProduitsClientEnhanced({
   const [showOnSale, setShowOnSale] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
+  const [showAddedToast, setShowAddedToast] = useState(false);
+  const [justAddedId, setJustAddedId] = useState<string | null>(null);
   const sortRef = useRef<HTMLDivElement>(null);
 
   const filteredProducts = useMemo(() => {
@@ -166,11 +168,57 @@ export function ProduitsClientEnhanced({
           <li>
             <div className="flex items-center">
               <span className="material-icons text-gray-600 text-xs mx-1">chevron_right</span>
-              <span className="text-primary font-medium">Produits</span>
+              <Link href="/produits" className="hover:text-primary transition-colors">
+                Produits
+              </Link>
             </div>
           </li>
+          {activeCategory && (
+            <li>
+              <div className="flex items-center">
+                <span className="material-icons text-gray-600 text-xs mx-1">chevron_right</span>
+                <Link href={`/produits?category=${activeCategory}`} className="text-primary font-medium hover:text-primary-light transition-colors">
+                  {categoryLabels[activeCategory]}
+                </Link>
+              </div>
+            </li>
+          )}
         </ol>
       </nav>
+
+      {/* Mobile Category Filter Bar - Sticky */}
+      <div className="lg:hidden sticky top-[94px] z-40 -mx-3 sm:-mx-4 mb-4 bg-background-dark/95 backdrop-blur-md border-b border-white/10 shadow-lg">
+        <div className="overflow-x-auto scrollbar-hide">
+          <div className="flex gap-2 px-3 sm:px-4 py-3 min-w-max">
+            {/* Tous button */}
+            <button
+              onClick={() => setSelectedCategories([])}
+              className={`px-4 py-2 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
+                selectedCategories.length === 0
+                  ? "bg-primary text-background-dark"
+                  : "bg-surface-dark/50 text-gray-400 border border-white/10 hover:border-primary/30"
+              }`}
+            >
+              Tous
+            </button>
+
+            {/* Category buttons */}
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => toggleCategory(cat)}
+                className={`px-4 py-2 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
+                  selectedCategories.includes(cat)
+                    ? "bg-primary text-background-dark"
+                    : "bg-surface-dark/50 text-gray-400 border border-white/10 hover:border-primary/30"
+                }`}
+              >
+                {categoryLabels[cat]}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* Page Layout: Sidebar + Grid */}
       <div className="flex flex-col lg:flex-row gap-6">
@@ -539,16 +587,30 @@ export function ProduitsClientEnhanced({
 
                   <div className="mt-auto flex items-center justify-between">
                     <span className="text-sm font-bold text-primary">{formatPrice(product.price)}</span>
-                    <button
+                    <motion.button
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
                         addItem(product, 1);
+                        setJustAddedId(product.id);
+                        setShowAddedToast(true);
+                        setTimeout(() => {
+                          setJustAddedId(null);
+                          setShowAddedToast(false);
+                        }, 2000);
                       }}
-                      className="w-6 h-6 rounded-full bg-primary/20 hover:bg-primary flex items-center justify-center text-primary hover:text-background-dark transition-all"
+                      animate={justAddedId === product.id ? { scale: [1, 1.2, 1] } : {}}
+                      transition={{ duration: 0.3 }}
+                      className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${
+                        justAddedId === product.id
+                          ? "bg-green-500 text-white"
+                          : "bg-primary/20 hover:bg-primary text-primary hover:text-background-dark"
+                      }`}
                     >
-                      <span className="material-icons text-sm">add</span>
-                    </button>
+                      <span className="material-icons text-sm">
+                        {justAddedId === product.id ? "check" : "add"}
+                      </span>
+                    </motion.button>
                   </div>
                 </div>
               </Link>
@@ -585,6 +647,19 @@ export function ProduitsClientEnhanced({
         onResetFilters={resetAllFilters}
         categoryCounts={categoryCounts}
       />
+
+      {/* Toast notification for added to cart - Desktop only */}
+      {showAddedToast && (
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 50 }}
+          className="hidden md:flex fixed bottom-4 right-4 glass-card backdrop-blur-md text-white px-4 py-3 rounded-xl shadow-lg z-50 max-w-sm items-center gap-2"
+        >
+          <span className="material-icons text-primary text-lg">check_circle</span>
+          <span>Produit ajouté au panier</span>
+        </motion.div>
+      )}
     </main>
   );
 }

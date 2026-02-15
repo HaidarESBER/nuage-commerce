@@ -166,7 +166,7 @@ export function InstallPrompt() {
             {/* Logo */}
             <div className="flex-shrink-0 w-8 h-8 bg-primary rounded-md flex items-center justify-center">
               <Image
-                src="/nuagelogonobg11.png"
+                src="/logo.png"
                 alt="Nuage"
                 width={20}
                 height={20}

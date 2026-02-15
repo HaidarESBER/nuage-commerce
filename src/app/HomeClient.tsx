@@ -123,7 +123,7 @@ export function HomeClient({ featuredProducts, ratingsMap = {} }: HomeClientProp
               {/* Desktop: Show primary CTA */}
               <Link
                 href="/produits"
-                className="hidden md:inline-flex px-8 py-3 bg-primary text-background-dark font-bold rounded-full hover:bg-white transition-colors duration-300 shadow-[0_0_20px_rgba(18,222,38,0.3)] text-base"
+                className="hidden md:inline-flex px-8 py-3 bg-primary text-background-dark font-bold rounded-full hover:bg-white transition-colors duration-300 text-base"
               >
                 Voir la Collection
               </Link>

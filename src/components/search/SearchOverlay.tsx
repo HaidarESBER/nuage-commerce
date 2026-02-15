@@ -200,7 +200,7 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
               <Link
                 href="/produits"
                 onClick={onClose}
-                className="inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-3.5 bg-primary hover:bg-primary/90 text-background-dark rounded-full text-sm md:text-base font-bold transition-all shadow-[0_0_20px_rgba(18,222,38,0.3)] hover:shadow-[0_0_30px_rgba(18,222,38,0.5)]"
+                className="inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-3.5 bg-primary hover:bg-primary/90 text-background-dark rounded-full text-sm md:text-base font-bold transition-all"
               >
                 Voir tous les produits
                 <span className="material-icons text-base">arrow_forward</span>

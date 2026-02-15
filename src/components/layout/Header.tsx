@@ -28,6 +28,8 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [showLogo, setShowLogo] = useState(true);
+  const [animationKey, setAnimationKey] = useState(0);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const { wishlistItems } = useWishlist();
@@ -70,6 +72,14 @@ export function Header() {
     checkAdminStatus();
   }, []);
 
+  // Restart animation on page change
+  useEffect(() => {
+    if (mounted) {
+      setShowLogo(true);
+      setAnimationKey(prev => prev + 1);
+    }
+  }, [pathname, mounted]);
+
   // Close menu on navigation
   const handleNavClick = () => {
     setIsMenuOpen(false);
@@ -103,15 +113,49 @@ export function Header() {
         <Container size="lg">
           <div className="flex items-center justify-between h-14 md:h-16 gap-2 md:gap-3">
           {/* Brand */}
-          <Link href="/" className="flex items-center gap-2 flex-shrink-0 group">
-            <img
-              src="/nuagelogonobg1.png"
-              alt="Nuage Logo"
-              className="h-7 md:h-9 w-auto object-contain"
-            />
-            <span className="font-heading text-lg md:text-xl text-white hover:text-primary transition-colors">
-              Nuage
-            </span>
+          <Link href="/" className="flex items-center gap-2 flex-shrink-0 group -ml-2 md:ml-0">
+            <div className="relative h-10 md:h-12 w-32 md:w-36 flex items-center justify-center" style={{ perspective: '1000px' }}>
+              <AnimatePresence mode="wait">
+                {showLogo ? (
+                  <motion.img
+                    key={`logo-${animationKey}`}
+                    src="/logo.png"
+                    alt="Nuage Logo"
+                    className="h-10 md:h-12 w-auto object-contain absolute"
+                    initial={{ rotateY: -90, opacity: 0, scale: 0.5, y: -10 }}
+                    animate={{ rotateY: 0, opacity: 1, scale: 1, y: 0 }}
+                    exit={{ rotateY: 90, opacity: 0, scale: 0.5, y: 10 }}
+                    transition={{ duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
+                    onAnimationComplete={(definition) => {
+                      if (definition.rotateY === 0) {
+                        setTimeout(() => setShowLogo(false), 1500);
+                      }
+                    }}
+                    style={{ transformStyle: 'preserve-3d' }}
+                  />
+                ) : (
+                  <motion.span
+                    key={`text-${animationKey}`}
+                    className="font-heading text-sm md:text-base text-white absolute whitespace-nowrap"
+                    initial={{ rotateY: -90, opacity: 0, scale: 0.5, y: -10 }}
+                    animate={{ rotateY: 0, opacity: 1, scale: 1, y: 0 }}
+                    exit={{ rotateY: 90, opacity: 0, scale: 0.5, y: 10 }}
+                    transition={{ duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
+                    onAnimationComplete={(definition) => {
+                      if (definition.rotateY === 0) {
+                        setTimeout(() => {
+                          setShowLogo(true);
+                          setAnimationKey(prev => prev + 1);
+                        }, 1500);
+                      }
+                    }}
+                    style={{ transformStyle: 'preserve-3d' }}
+                  >
+                    Nuage
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </div>
           </Link>
 
           {/* Desktop Search & Navigation */}
@@ -160,7 +204,7 @@ export function Header() {
                     animate={{ scale: 1 }}
                     exit={{ scale: 0.5 }}
                     transition={{ duration: 0.2, type: "spring", stiffness: 400, damping: 15 }}
-                    className="absolute -top-2 -right-2 bg-primary text-white text-xs font-medium w-5 h-5 rounded-full flex items-center justify-center shadow-[0_0_10px_rgba(18,222,38,0.5)]"
+                    className="absolute -top-2 -right-2 bg-primary text-white text-xs font-medium w-5 h-5 rounded-full flex items-center justify-center"
                   >
                     {wishlistItems.length}
                   </motion.span>

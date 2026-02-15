@@ -42,6 +42,8 @@ export function ProductCard({ product, priority = false, ratingStats, disableAni
   const { addToComparison, isInComparison } = useComparison();
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const [showCompareToast, setShowCompareToast] = useState(false);
+  const [showAddedToast, setShowAddedToast] = useState(false);
+  const [justAdded, setJustAdded] = useState(false);
   const hasDiscount = product.compareAtPrice && product.compareAtPrice > product.price;
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -49,6 +51,12 @@ export function ProductCard({ product, priority = false, ratingStats, disableAni
     e.stopPropagation();
     if (product.inStock) {
       addItem(product);
+      setJustAdded(true);
+      setShowAddedToast(true);
+      setTimeout(() => {
+        setJustAdded(false);
+        setShowAddedToast(false);
+      }, 2000);
     }
   };
 
@@ -132,7 +140,7 @@ export function ProductCard({ product, priority = false, ratingStats, disableAni
 
           {/* Sale badge - elegant design */}
           {hasDiscount && product.inStock && (
-            <div className="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-[0_0_15px_rgba(18,222,38,0.4)]">
+            <div className="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full">
               -{Math.round(((product.compareAtPrice! - product.price) / product.compareAtPrice!) * 100)}%
             </div>
           )}
@@ -188,10 +196,23 @@ export function ProductCard({ product, priority = false, ratingStats, disableAni
           onClick={handleAddToCart}
           disabled={!product.inStock}
           whileHover={{ scale: product.inStock ? 1.02 : 1 }}
-          whileTap={{ scale: product.inStock ? 0.98 : 1 }}
-          className="w-full inline-flex items-center justify-center px-3 py-2 text-xs font-medium bg-primary text-white rounded-full hover:bg-primary-light transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(18,222,38,0.3)] hover:shadow-[0_0_30px_rgba(18,222,38,0.5)] mt-auto"
+          whileTap={{ scale: product.inStock ? 0.95 : 1 }}
+          animate={justAdded ? { scale: [1, 1.05, 1] } : {}}
+          transition={{ duration: 0.3 }}
+          className={`w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed mt-auto ${
+            justAdded
+              ? "bg-green-500 text-white"
+              : "bg-primary text-white hover:bg-primary-light"
+          }`}
         >
-          {product.inStock ? "Ajouter au panier" : "Rupture de stock"}
+          {justAdded ? (
+            <>
+              <span className="material-icons text-sm">check</span>
+              <span>Ajouté</span>
+            </>
+          ) : (
+            product.inStock ? "Ajouter au panier" : "Rupture de stock"
+          )}
         </motion.button>
       </div>
 
@@ -211,6 +232,19 @@ export function ProductCard({ product, priority = false, ratingStats, disableAni
           className="fixed bottom-4 right-4 glass-card backdrop-blur-md text-white px-4 py-3 rounded-xl shadow-lg z-50 max-w-sm"
         >
           Maximum 3 produits pour la comparaison
+        </motion.div>
+      )}
+
+      {/* Toast notification for added to cart - Desktop only */}
+      {showAddedToast && (
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 50 }}
+          className="hidden md:flex fixed bottom-4 right-4 glass-card backdrop-blur-md text-white px-4 py-3 rounded-xl shadow-lg z-50 max-w-sm items-center gap-2"
+        >
+          <span className="material-icons text-primary text-lg">check_circle</span>
+          <span>Produit ajouté au panier</span>
         </motion.div>
       )}
     </>

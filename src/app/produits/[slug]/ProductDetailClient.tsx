@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Product } from "@/types/product";
+import { Product, categoryLabels } from "@/types/product";
 import { Review, ProductRatingStats } from "@/data/reviews";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
@@ -17,6 +18,7 @@ interface ProductDetailClientProps {
 }
 
 export function ProductDetailClient({ product, allProducts, reviews, stats }: ProductDetailClientProps) {
+  const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
@@ -32,6 +34,8 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [mobileReviewsExpanded, setMobileReviewsExpanded] = useState(false);
+  const [showAddedToast, setShowAddedToast] = useState(false);
+  const [justAdded, setJustAdded] = useState(false);
   const { addItem } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
@@ -84,6 +88,19 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
   const handleAddToCart = () => {
     if (product.inStock) {
       addItem(product, quantity);
+      setJustAdded(true);
+      setShowAddedToast(true);
+      setTimeout(() => {
+        setJustAdded(false);
+        setShowAddedToast(false);
+      }, 2000);
+    }
+  };
+
+  const handleBuyNow = () => {
+    if (product.inStock) {
+      addItem(product, quantity);
+      router.push('/commande');
     }
   };
 
@@ -218,6 +235,39 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
     <div className="bg-background-dark min-h-screen text-[0.85rem]">
       {/* MOBILE VERSION */}
       <div className="lg:hidden pt-2">
+        {/* Breadcrumb */}
+        <nav aria-label="Breadcrumb" className="px-3 mb-2 text-[10px] text-gray-400">
+          <ol className="inline-flex items-center space-x-1">
+            <li className="inline-flex items-center">
+              <Link href="/" className="hover:text-primary transition-colors">
+                Accueil
+              </Link>
+            </li>
+            <li>
+              <div className="flex items-center">
+                <span className="material-icons text-gray-600 text-xs mx-1">chevron_right</span>
+                <Link href="/produits" className="hover:text-primary transition-colors">
+                  Produits
+                </Link>
+              </div>
+            </li>
+            <li>
+              <div className="flex items-center">
+                <span className="material-icons text-gray-600 text-xs mx-1">chevron_right</span>
+                <Link href={`/produits?category=${product.category}`} className="text-gray-400 hover:text-primary transition-colors">
+                  {categoryLabels[product.category]}
+                </Link>
+              </div>
+            </li>
+            <li>
+              <div className="flex items-center">
+                <span className="material-icons text-gray-600 text-xs mx-1">chevron_right</span>
+                <span className="text-primary font-medium truncate max-w-[120px]">{product.name}</span>
+              </div>
+            </li>
+          </ol>
+        </nav>
+
         {/* Hero Image */}
         <section
           className="relative h-[45vh] w-full overflow-hidden"
@@ -258,7 +308,7 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                   onClick={() => setSelectedImageIndex(index)}
                   className={`rounded-full transition-all ${
                     index === selectedImageIndex
-                      ? "w-6 h-1 bg-primary shadow-[0_0_10px_rgba(18,222,38,0.5)]"
+                      ? "w-6 h-1 bg-primary"
                       : "w-1.5 h-1 bg-white/30 backdrop-blur-sm"
                   }`}
                 />
@@ -509,33 +559,49 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
         <div className="fixed bottom-0 left-0 right-0 p-3 z-30 bg-background-dark/95 backdrop-blur-xl border-t border-white/5 pb-safe">
           <div className="flex gap-2 items-center">
             {/* Quantity Selector */}
-            <div className="flex items-center bg-surface-dark rounded-full border border-white/10 h-11 md:h-10 px-1 shrink-0">
+            <div className="flex items-center bg-surface-dark rounded-full border border-white/10 h-10 px-1 shrink-0">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="w-11 md:w-8 h-full flex items-center justify-center text-gray-400 hover:text-white"
+                className="w-9 h-full flex items-center justify-center text-gray-400 hover:text-white"
               >
                 <span className="material-icons text-sm">remove</span>
               </button>
               <span className="w-6 text-center text-xs font-medium text-white">{quantity}</span>
               <button
                 onClick={() => setQuantity(quantity + 1)}
-                className="w-11 md:w-8 h-full flex items-center justify-center text-gray-400 hover:text-white"
+                className="w-9 h-full flex items-center justify-center text-gray-400 hover:text-white"
               >
                 <span className="material-icons text-sm">add</span>
               </button>
             </div>
 
             {/* Add to Cart Button */}
-            <button
+            <motion.button
               onClick={handleAddToCart}
               disabled={!product.inStock}
-              className="flex-1 h-10 bg-primary hover:bg-primary-light text-black font-bold text-xs rounded-full flex items-center justify-between px-4 shadow-[0_0_20px_rgba(18,222,38,0.3)] hover:shadow-[0_0_30px_rgba(18,222,38,0.5)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              whileTap={{ scale: product.inStock ? 0.95 : 1 }}
+              animate={justAdded ? { scale: [1, 1.05, 1] } : {}}
+              transition={{ duration: 0.3 }}
+              className={`flex-1 h-10 font-bold text-xs rounded-full flex items-center justify-center gap-1.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+                justAdded
+                  ? "bg-green-500 text-white"
+                  : "bg-primary hover:bg-primary-light text-black"
+              }`}
             >
-              <span>{product.inStock ? "Ajouter au panier" : "Rupture de stock"}</span>
-              {product.inStock && (
-                <span className="opacity-80 text-[10px]">{formatPrice(product.price * quantity)}</span>
-              )}
-            </button>
+              {justAdded && <span className="material-icons text-sm">check</span>}
+              <span>{justAdded ? "Ajouté" : product.inStock ? "Ajouter" : "Rupture"}</span>
+            </motion.button>
+
+            {/* Buy Now Button */}
+            <motion.button
+              onClick={handleBuyNow}
+              disabled={!product.inStock}
+              whileTap={{ scale: product.inStock ? 0.95 : 1 }}
+              className="flex-1 h-10 font-bold text-xs rounded-full bg-primary hover:bg-primary-light text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5"
+            >
+              <span className="material-icons text-sm">bolt</span>
+              <span>Acheter</span>
+            </motion.button>
           </div>
         </div>
       </div>
@@ -558,7 +624,7 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                         onClick={() => setSelectedImageIndex(idx)}
                         className={`relative w-20 h-20 rounded-lg overflow-hidden bg-surface-dark transition-all ${
                           idx === selectedImageIndex
-                            ? "border-2 border-primary shadow-[0_0_12px_rgba(18,222,38,0.6)]"
+                            ? "border-2 border-primary"
                             : "border border-white/10 hover:border-white/30"
                         }`}
                       >
@@ -591,7 +657,7 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                           onClick={() => setSelectedImageIndex(MAX_VISIBLE_THUMBNAILS - 1)}
                           className={`relative w-20 h-20 rounded-lg overflow-hidden bg-surface-dark transition-all ${
                             MAX_VISIBLE_THUMBNAILS - 1 === selectedImageIndex
-                              ? "border-2 border-primary shadow-[0_0_12px_rgba(18,222,38,0.6)]"
+                              ? "border-2 border-primary"
                               : "border border-white/10 hover:border-white/30"
                           }`}
                         >
@@ -628,13 +694,37 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
             <div className="w-1/2 relative">
               <div className="sticky top-16 pb-6 h-fit">
                 {/* Breadcrumb */}
-                <div className="flex items-center gap-1 mb-3 text-[10px] font-medium text-primary/80 uppercase tracking-widest">
-                  <Link href="/produits" className="hover:text-primary transition-colors">
-                    Nuage Collection
-                  </Link>
-                  <span className="w-0.5 h-0.5 bg-primary rounded-full"></span>
-                  <span>{product.category}</span>
-                </div>
+                <nav aria-label="Breadcrumb" className="flex mb-3 text-[10px] text-gray-400">
+                  <ol className="inline-flex items-center space-x-1">
+                    <li className="inline-flex items-center">
+                      <Link href="/" className="hover:text-primary transition-colors">
+                        Accueil
+                      </Link>
+                    </li>
+                    <li>
+                      <div className="flex items-center">
+                        <span className="material-icons text-gray-600 text-xs mx-1">chevron_right</span>
+                        <Link href="/produits" className="hover:text-primary transition-colors">
+                          Produits
+                        </Link>
+                      </div>
+                    </li>
+                    <li>
+                      <div className="flex items-center">
+                        <span className="material-icons text-gray-600 text-xs mx-1">chevron_right</span>
+                        <Link href={`/produits?category=${product.category}`} className="text-gray-400 hover:text-primary transition-colors">
+                          {categoryLabels[product.category]}
+                        </Link>
+                      </div>
+                    </li>
+                    <li>
+                      <div className="flex items-center">
+                        <span className="material-icons text-gray-600 text-xs mx-1">chevron_right</span>
+                        <span className="text-primary font-medium">{product.name}</span>
+                      </div>
+                    </li>
+                  </ol>
+                </nav>
 
                 {/* Title */}
                 <h1 className="text-2xl xl:text-3xl font-bold uppercase tracking-tight text-white mb-2 leading-tight">
@@ -709,11 +799,22 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                     <button
                       onClick={handleAddToCart}
                       disabled={!product.inStock}
-                      className="flex-1 h-9 bg-primary hover:bg-primary-light text-black font-bold text-xs uppercase tracking-wide rounded-full flex items-center justify-center gap-1.5 transition-all hover:scale-[1.02] shadow-[0_0_20px_rgba(18,222,38,0.3)] hover:shadow-[0_0_30px_rgba(18,222,38,0.5)] disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex-1 h-9 bg-primary hover:bg-primary-light text-black font-bold text-xs uppercase tracking-wide rounded-full flex items-center justify-center gap-1.5 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <span>{product.inStock ? "Ajouter au Panier" : "Rupture de stock"}</span>
-                      {product.inStock && <span className="material-icons text-sm">east</span>}
+                      <span>{product.inStock ? "Ajouter" : "Rupture de stock"}</span>
+                      {product.inStock && <span className="material-icons text-sm">shopping_cart</span>}
                     </button>
+
+                    {/* Buy Now Button */}
+                    <motion.button
+                      onClick={handleBuyNow}
+                      disabled={!product.inStock}
+                      whileTap={{ scale: product.inStock ? 0.95 : 1 }}
+                      className="flex-1 h-9 bg-primary hover:bg-primary-light text-black font-bold text-xs uppercase tracking-wide rounded-full flex items-center justify-center gap-1.5 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <span className="material-icons text-sm">bolt</span>
+                      <span>Acheter</span>
+                    </motion.button>
                   </div>
 
                   {/* Secondary Actions */}
@@ -1036,7 +1137,7 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                 onClick={() => setLightboxImageIndex(idx)}
                 className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden transition-all ${
                   idx === lightboxImageIndex
-                    ? "border-2 border-primary shadow-[0_0_12px_rgba(18,222,38,0.6)]"
+                    ? "border-2 border-primary"
                     : "border border-white/30 opacity-60 hover:opacity-100"
                 }`}
               >
@@ -1112,7 +1213,7 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                   onClick={() => setReviewImageLightbox(prev => ({ ...prev, currentIndex: idx }))}
                   className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden transition-all ${
                     idx === reviewImageLightbox.currentIndex
-                      ? "border-2 border-primary shadow-[0_0_12px_rgba(18,222,38,0.6)]"
+                      ? "border-2 border-primary"
                       : "border border-white/30 opacity-60 hover:opacity-100"
                   }`}
                 >
@@ -1132,6 +1233,19 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
             onClick={closeReviewImageLightbox}
           />
         </div>
+      )}
+
+      {/* Toast notification for added to cart - Desktop only */}
+      {showAddedToast && (
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 50 }}
+          className="hidden md:flex fixed bottom-4 right-4 glass-card backdrop-blur-md text-white px-4 py-3 rounded-xl shadow-lg z-[9999] max-w-sm items-center gap-2"
+        >
+          <span className="material-icons text-primary text-lg">check_circle</span>
+          <span>Produit ajouté au panier</span>
+        </motion.div>
       )}
 
       <style jsx global>{`

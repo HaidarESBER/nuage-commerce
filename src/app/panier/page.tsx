@@ -80,7 +80,7 @@ export default function PanierPage() {
           <p className="text-gray-400 mb-8">Découvrez nos produits et trouvez votre bonheur</p>
           <Link
             href="/produits"
-            className="inline-block px-8 py-4 bg-primary hover:bg-primary-light text-background-dark font-bold rounded-full transition-all shadow-[0_0_20px_rgba(18,222,38,0.3)] hover:shadow-[0_0_30px_rgba(18,222,38,0.5)]"
+            className="inline-block px-8 py-4 bg-primary hover:bg-primary-light text-background-dark font-bold rounded-full transition-all"
           >
             Voir nos produits
           </Link>
@@ -285,7 +285,7 @@ export default function PanierPage() {
 
                 <Link
                   href="/commande"
-                  className="block w-full bg-primary hover:bg-primary-light text-background-dark font-medium py-4 px-6 rounded-lg transition-all transform active:scale-[0.99] shadow-[0_0_20px_rgba(18,222,38,0.3)] hover:shadow-[0_0_25px_rgba(18,222,38,0.5)] text-center"
+                  className="block w-full bg-primary hover:bg-primary-light text-background-dark font-medium py-4 px-6 rounded-lg transition-all transform active:scale-[0.99] text-center"
                 >
                   Procéder au Paiement
                 </Link>

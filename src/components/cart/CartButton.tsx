@@ -41,7 +41,7 @@ export function CartButton({ isHomepage }: { isHomepage?: boolean }) {
 
       {/* Item count badge */}
       {totalItems > 0 && (
-        <span className="absolute -top-1 -right-1 min-w-5 h-5 flex items-center justify-center bg-primary text-white text-xs font-medium rounded-full px-1.5 shadow-[0_0_10px_rgba(18,222,38,0.5)]">
+        <span className="absolute -top-1 -right-1 min-w-5 h-5 flex items-center justify-center bg-primary text-white text-xs font-medium rounded-full px-1.5">
           {totalItems > 99 ? "99+" : totalItems}
         </span>
       )}

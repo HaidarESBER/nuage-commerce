@@ -135,7 +135,7 @@ export default function CheckoutPage() {
           <div className="flex flex-col items-center">
             <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
               currentStep >= 1
-                ? "bg-primary text-background-dark shadow-[0_0_15px_rgba(18,222,38,0.3)]"
+                ? "bg-primary text-background-dark"
                 : "bg-surface-dark border-2 border-white/20 text-gray-400"
             }`}>
               1
@@ -151,7 +151,7 @@ export default function CheckoutPage() {
           <div className="flex flex-col items-center">
             <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
               currentStep >= 2
-                ? "bg-primary text-background-dark shadow-[0_0_15px_rgba(18,222,38,0.3)]"
+                ? "bg-primary text-background-dark"
                 : "bg-surface-dark border-2 border-white/20 text-gray-400"
             }`}>
               2
@@ -167,7 +167,7 @@ export default function CheckoutPage() {
           <div className="flex flex-col items-center">
             <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
               currentStep >= 3
-                ? "bg-primary text-background-dark shadow-[0_0_15px_rgba(18,222,38,0.3)]"
+                ? "bg-primary text-background-dark"
                 : "bg-surface-dark border-2 border-white/20 text-gray-400"
             }`}>
               3
