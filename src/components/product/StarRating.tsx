@@ -2,12 +2,13 @@
 
 interface StarRatingProps {
   rating: number; // 0-5, supports decimals (e.g., 4.3)
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   interactive?: boolean; // For future review submission feature
   onChange?: (rating: number) => void; // For interactive mode
 }
 
 const sizeClasses = {
+  xs: "w-3 h-3",
   sm: "w-4 h-4",
   md: "w-5 h-5",
   lg: "w-6 h-6",
@@ -99,9 +100,10 @@ export function StarRatingDisplay({
 }: {
   rating: number;
   totalReviews: number;
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
 }) {
   const textSizes = {
+    xs: "text-[10px]",
     sm: "text-xs",
     md: "text-sm",
     lg: "text-base",

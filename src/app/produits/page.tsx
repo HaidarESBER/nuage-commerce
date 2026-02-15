@@ -2,13 +2,13 @@ import { Metadata } from "next";
 import { Container } from "@/components/ui";
 import { ProduitsClientEnhanced } from "./ProduitsClientEnhanced";
 import { getAllProducts } from "@/lib/products";
-import { getProductRatingStats } from "@/lib/reviews";
+import { getBatchProductRatingStats } from "@/lib/reviews";
 import {
   ProductCategory,
 } from "@/types/product";
 
 interface ProduitsPageProps {
-  searchParams: Promise<{ categorie?: string; q?: string }>;
+  searchParams: Promise<{ categorie?: string; q?: string; page?: string }>;
 }
 
 const categoryMeta: Record<string, { title: string; description: string }> = {
@@ -68,6 +68,7 @@ export default async function ProduitsPage({ searchParams }: ProduitsPageProps) 
   const params = await searchParams;
   const categoryParam = params.categorie as ProductCategory | undefined;
   const searchQuery = params.q || '';
+  const currentPage = parseInt(params.page || '1', 10);
 
   // Validate category parameter
   const validCategories: ProductCategory[] = [
@@ -84,23 +85,17 @@ export default async function ProduitsPage({ searchParams }: ProduitsPageProps) 
   // Load products from database
   const products = await getAllProducts();
 
-  // Fetch ratings for all products
-  const ratingsMap = new Map();
-  await Promise.all(
-    products.map(async (product) => {
-      const stats = await getProductRatingStats(product.id);
-      if (stats) {
-        ratingsMap.set(product.id, stats);
-      }
-    })
-  );
+  // Fetch ratings for all products in a single batch query (optimized)
+  const productIds = products.map(p => p.id);
+  const ratingsMap = await getBatchProductRatingStats(productIds);
 
   return (
     <ProduitsClientEnhanced
       products={products}
       activeCategory={activeCategory}
       searchQuery={searchQuery}
-      ratingsMap={Object.fromEntries(ratingsMap)}
+      ratingsMap={ratingsMap}
+      initialPage={currentPage}
     />
   );
 }

@@ -105,6 +105,60 @@ export async function getProductRatingStats(productId: string): Promise<ProductR
 }
 
 /**
+ * Batch calculate rating statistics for multiple products (optimized)
+ * Fetches all reviews in a single query to avoid N+1 pattern
+ */
+export async function getBatchProductRatingStats(productIds: string[]): Promise<Record<string, ProductRatingStats>> {
+  const supabase = createAdminClient();
+
+  // Fetch all reviews for all products in a single query
+  const { data, error } = await supabase
+    .from('reviews')
+    .select('product_id, rating')
+    .in('product_id', productIds)
+    .eq('status', 'approved');
+
+  if (error || !data) {
+    console.error('Error fetching batch reviews:', error);
+    return {};
+  }
+
+  // Group reviews by product ID
+  const reviewsByProduct = new Map<string, number[]>();
+
+  for (const row of data) {
+    const existing = reviewsByProduct.get(row.product_id) || [];
+    existing.push(row.rating);
+    reviewsByProduct.set(row.product_id, existing);
+  }
+
+  // Calculate stats for each product
+  const statsMap: Record<string, ProductRatingStats> = {};
+
+  for (const [productId, ratings] of reviewsByProduct) {
+    if (ratings.length === 0) continue;
+
+    const totalReviews = ratings.length;
+    const sumRatings = ratings.reduce((sum, rating) => sum + rating, 0);
+    const averageRating = sumRatings / totalReviews;
+
+    const ratingBreakdown = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    for (const rating of ratings) {
+      ratingBreakdown[rating as keyof typeof ratingBreakdown]++;
+    }
+
+    statsMap[productId] = {
+      productId,
+      averageRating,
+      totalReviews,
+      ratingBreakdown,
+    };
+  }
+
+  return statsMap;
+}
+
+/**
  * Create a new review for a product
  */
 export async function createReview({

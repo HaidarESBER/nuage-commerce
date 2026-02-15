@@ -10,7 +10,7 @@ export function Footer() {
     <footer className="border-t border-white/10 text-white" style={{ backgroundColor: '#85572A' }}>
       <Container size="lg">
         <div className="py-12 md:py-16">
-          {/* Video - Centered and larger */}
+          {/* Video - Centered and larger with lazy loading */}
           <div className="flex justify-center mb-10 md:mb-12">
             <video
               src="/footervid.mp4"
@@ -18,6 +18,7 @@ export function Footer() {
               loop
               muted
               playsInline
+              preload="none"
               className="h-48 md:h-56 lg:h-64 w-auto object-contain"
             />
           </div>

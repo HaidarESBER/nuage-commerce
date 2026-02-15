@@ -30,51 +30,51 @@ export const reviews: Review[] = [
   {
     id: "r1",
     productId: "1",
-    authorName: "Marie D.",
+    authorName: "M***e D.",
     rating: 5,
     comment:
       "Excellent produit, livraison rapide. Le design est vraiment élégant et la qualité est au rendez-vous. Le verre soufflé main fait toute la différence.",
-    date: "2026-01-15T14:30:00Z",
+    date: "2025-11-15T14:30:00Z",
     verifiedPurchase: true,
   },
   {
     id: "r2",
     productId: "1",
-    authorName: "Thomas L.",
+    authorName: "T****s L.",
     rating: 5,
     comment:
       "Superbe chicha, encore plus belle en vrai qu'en photo. La fumée est très douce et agréable. Je recommande sans hésiter.",
-    date: "2026-01-20T09:15:00Z",
+    date: "2025-12-03T09:15:00Z",
     verifiedPurchase: true,
   },
   {
     id: "r3",
     productId: "1",
-    authorName: "Sophie B.",
+    authorName: "S****e B.",
     rating: 4,
     comment:
       "Très bonne qualité, design magnifique. Un peu fragile à manipuler mais c'est normal pour du verre. Attention lors du nettoyage.",
-    date: "2026-01-28T16:45:00Z",
+    date: "2025-10-28T16:45:00Z",
     verifiedPurchase: true,
   },
   {
     id: "r4",
     productId: "1",
-    authorName: "Lucas M.",
+    authorName: "L***s M.",
     rating: 5,
     comment:
       "Parfait pour mon salon, ça fait très classe. La qualité de fumée est vraiment supérieure à mes chichas précédentes.",
-    date: "2026-02-03T11:20:00Z",
+    date: "2025-09-18T11:20:00Z",
     verifiedPurchase: true,
   },
   {
     id: "r5",
     productId: "1",
-    authorName: "Camille R.",
+    authorName: "C*****e R.",
     rating: 4,
     comment:
       "Belle chicha, bon rapport qualité-prix. Le seul bémol c'est qu'elle prend un peu de place mais c'est le prix de la stabilité.",
-    date: "2026-02-07T19:30:00Z",
+    date: "2026-01-08T19:30:00Z",
     verifiedPurchase: true,
   },
 
@@ -82,41 +82,41 @@ export const reviews: Review[] = [
   {
     id: "r6",
     productId: "2",
-    authorName: "Alexandre P.",
+    authorName: "A*******e P.",
     rating: 5,
     comment:
       "Un classique indémodable. Le noir mat est vraiment élégant et facile d'entretien. Très content de mon achat.",
-    date: "2026-01-10T13:00:00Z",
+    date: "2025-08-22T13:00:00Z",
     verifiedPurchase: true,
   },
   {
     id: "r7",
     productId: "2",
-    authorName: "Léa F.",
+    authorName: "L*a F.",
     rating: 4,
     comment:
       "Bonne chicha pour le prix. Simple mais efficace, parfait pour débuter ou pour une utilisation régulière.",
-    date: "2026-01-22T10:30:00Z",
+    date: "2025-11-05T10:30:00Z",
     verifiedPurchase: true,
   },
   {
     id: "r8",
     productId: "2",
-    authorName: "Julien K.",
+    authorName: "J****n K.",
     rating: 5,
     comment:
       "Impeccable ! Livraison soignée, produit conforme. Je l'utilise tous les jours depuis 3 semaines, aucun problème.",
-    date: "2026-02-01T15:45:00Z",
+    date: "2025-12-14T15:45:00Z",
     verifiedPurchase: true,
   },
   {
     id: "r9",
     productId: "2",
-    authorName: "Emma S.",
+    authorName: "E**a S.",
     rating: 3,
     comment:
       "Correct mais j'attendais un peu mieux pour le prix. La fumée est bonne mais le design est assez basique.",
-    date: "2026-02-05T12:10:00Z",
+    date: "2025-07-19T12:10:00Z",
     verifiedPurchase: true,
   },
 
@@ -124,31 +124,31 @@ export const reviews: Review[] = [
   {
     id: "r10",
     productId: "4",
-    authorName: "Antoine V.",
+    authorName: "A*****e V.",
     rating: 5,
     comment:
       "Magnifique travail artisanal. Chaque bol est unique, le mien a de jolies variations de couleur. Excellente rétention de chaleur.",
-    date: "2026-01-18T14:20:00Z",
+    date: "2025-10-11T14:20:00Z",
     verifiedPurchase: true,
   },
   {
     id: "r11",
     productId: "4",
-    authorName: "Chloé M.",
+    authorName: "C***é M.",
     rating: 5,
     comment:
       "J'adore ce bol ! La qualité est vraiment au rendez-vous, ça change des bols industriels. Un peu plus cher mais ça vaut le coup.",
-    date: "2026-01-25T09:50:00Z",
+    date: "2025-09-25T09:50:00Z",
     verifiedPurchase: true,
   },
   {
     id: "r12",
     productId: "4",
-    authorName: "Nicolas H.",
+    authorName: "N*****s H.",
     rating: 4,
     comment:
       "Très bon bol, la céramique garde bien la chaleur. Seul petit défaut: un peu lourd, mais c'est la contrepartie de la qualité.",
-    date: "2026-02-02T16:30:00Z",
+    date: "2026-01-12T16:30:00Z",
     verifiedPurchase: true,
   },
 
@@ -156,21 +156,21 @@ export const reviews: Review[] = [
   {
     id: "r13",
     productId: "7",
-    authorName: "Maxime B.",
+    authorName: "M****e B.",
     rating: 5,
     comment:
       "Super pince, très solide. Le manche anti-chaleur est vraiment pratique, plus de doigts brûlés !",
-    date: "2026-01-12T11:40:00Z",
+    date: "2025-08-07T11:40:00Z",
     verifiedPurchase: true,
   },
   {
     id: "r14",
     productId: "7",
-    authorName: "Sarah L.",
+    authorName: "S***h L.",
     rating: 4,
     comment:
       "Fait le job, bonne prise en main. La longueur est idéale pour manipuler les charbons en sécurité.",
-    date: "2026-01-30T13:25:00Z",
+    date: "2025-11-30T13:25:00Z",
     verifiedPurchase: true,
   },
 ];
@@ -209,6 +209,64 @@ export function getProductRatingStats(productId: string): ProductRatingStats | n
     totalReviews,
     ratingBreakdown,
   };
+}
+
+/**
+ * Batch calculate rating statistics for multiple products (optimized)
+ * Avoids N+1 query pattern by grouping reviews in a single pass
+ */
+export function getBatchProductRatingStats(productIds: string[]): Record<string, ProductRatingStats> {
+  // Group reviews by product in a single pass
+  const reviewsByProduct = new Map<string, Review[]>();
+
+  for (const review of reviews) {
+    if (productIds.includes(review.productId)) {
+      const existing = reviewsByProduct.get(review.productId) || [];
+      existing.push(review);
+      reviewsByProduct.set(review.productId, existing);
+    }
+  }
+
+  // Calculate stats for each product
+  const statsMap: Record<string, ProductRatingStats> = {};
+
+  for (const [productId, productReviews] of reviewsByProduct) {
+    if (productReviews.length === 0) continue;
+
+    const totalReviews = productReviews.length;
+    const sumRatings = productReviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = sumRatings / totalReviews;
+
+    const ratingBreakdown = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    for (const review of productReviews) {
+      ratingBreakdown[review.rating as keyof typeof ratingBreakdown]++;
+    }
+
+    statsMap[productId] = {
+      productId,
+      averageRating,
+      totalReviews,
+      ratingBreakdown,
+    };
+  }
+
+  return statsMap;
+}
+
+/**
+ * Anonymize a name by showing only first and last letters with asterisks in between
+ * Example: "Marie D." becomes "M***e D."
+ */
+export function anonymizeName(name: string): string {
+  return name.split(' ').map(part => {
+    if (part.length <= 2) {
+      return part; // Keep short parts as-is (like "D.")
+    }
+    const first = part[0];
+    const last = part[part.length - 1];
+    const middle = '*'.repeat(part.length - 2);
+    return `${first}${middle}${last}`;
+  }).join(' ');
 }
 
 /**

@@ -52,18 +52,34 @@ export const aliexpressAdapter: SourceAdapter = {
 
     const browser = await chromium.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-blink-features=AutomationControlled',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+      ],
     });
 
-    const page = await browser.newPage();
+    const context = await browser.newContext({
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      viewport: { width: 1920, height: 1080 },
+      locale: 'fr-FR',
+    });
+
+    const page = await context.newPage();
 
     try {
-      // Set user agent to avoid blocking
-      await page.setExtraHTTPHeaders({
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      // Navigate with longer timeout and better wait strategy
+      await page.goto(productUrl, {
+        waitUntil: 'domcontentloaded',
+        timeout: 60000
       });
 
-      await page.goto(productUrl, { waitUntil: 'networkidle', timeout: 45000 });
+      // Wait for page to be ready
+      await page.waitForLoadState('networkidle', { timeout: 30000 }).catch(() => {
+        console.log('[AliExpress] Network idle timeout, continuing anyway...');
+      });
 
       // Log page info
       const pageTitle = await page.title();
@@ -79,12 +95,30 @@ export const aliexpressAdapter: SourceAdapter = {
         console.log('[AliExpress] Could not save screenshot:', e);
       }
 
-      // Wait for main image to load
-      try {
-        await page.waitForSelector('img[class*="magnifier"], img[class*="ImageView"], [class*="image-view"] img', { timeout: 10000 });
-        console.log('[AliExpress] Found main image selector!');
-      } catch {
-        console.log('[AliExpress] Main image selector not found, continuing...');
+      // Wait for main image to load - try multiple selectors
+      const imageSelectors = [
+        'img[class*="magnifier"]',
+        'img[class*="ImageView"]',
+        '[class*="image-view"] img',
+        '[class*="slider"] img',
+        '.gallery img',
+        '.product-image img'
+      ];
+
+      let imageFound = false;
+      for (const selector of imageSelectors) {
+        try {
+          await page.waitForSelector(selector, { timeout: 5000 });
+          console.log(`[AliExpress] Found images with selector: ${selector}`);
+          imageFound = true;
+          break;
+        } catch {
+          continue;
+        }
+      }
+
+      if (!imageFound) {
+        console.log('[AliExpress] No image selectors found, will try extraction anyway...');
       }
 
       // Hover over image area to trigger lazy loading
@@ -278,6 +312,9 @@ export const aliexpressAdapter: SourceAdapter = {
             'div[class*="ImageView"] img',
             'div[class*="gallery"] img',
             '[class*="product-image"] img',
+            '[class*="product-img"] img',
+            '.ae-image-view img',
+            '.images-view-item img',
           ];
 
           for (const selector of fallbackSelectors) {
@@ -292,6 +329,23 @@ export const aliexpressAdapter: SourceAdapter = {
               if (images.length > 0) break;
             }
           }
+        }
+
+        // STRATEGY 4: Last resort - grab all large images on the page
+        if (images.length === 0) {
+          console.log('[Extractor] Still no images, grabbing all large images...');
+          const allImages = document.querySelectorAll('img');
+          allImages.forEach((img) => {
+            const imgEl = img as HTMLImageElement;
+            // Only grab images that are reasonably sized (likely product images)
+            if (imgEl.width >= 200 && imgEl.height >= 200) {
+              const url = getBestImageUrl(imgEl);
+              if (url.includes('aliexpress') || url.includes('alicdn')) {
+                addImage(url);
+              }
+            }
+          });
+          console.log(`[Extractor] Grabbed ${images.length} large images`);
         }
 
         console.log(`[Extractor] Final image count: ${images.length}`);
@@ -320,8 +374,6 @@ export const aliexpressAdapter: SourceAdapter = {
         };
       });
 
-      await browser.close();
-
       console.log(`[AliExpress] Successfully extracted: ${data.title.substring(0, 50)}..., ${data.images.length} images`);
 
       return {
@@ -337,9 +389,11 @@ export const aliexpressAdapter: SourceAdapter = {
         },
       };
     } catch (error) {
-      await browser.close();
       console.error('[AliExpress] Scraping error:', error);
       throw error;
+    } finally {
+      await browser.close();
+      console.log('[AliExpress] Browser closed');
     }
   },
 

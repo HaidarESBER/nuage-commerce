@@ -77,13 +77,13 @@ export function ProductCard({ product, priority = false, ratingStats, disableAni
     }
   };
 
-  const cardClassName = "group glass-card glass-card-hover rounded-xl overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 flex flex-col h-full";
+  const cardClassName = "group glass-card glass-card-hover rounded-lg overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 flex flex-col h-full";
 
   const CardContent = () => (
     <>
       {/* Image container - Premium display */}
       <Link href={`/produits/${product.slug}`} className="block relative">
-        <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-background-secondary to-background p-4">
+        <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-background-secondary to-background p-1.5">
           {/* Trending badge */}
           {isTrending(product) && <TrendingBadge />}
 
@@ -106,12 +106,12 @@ export function ProductCard({ product, priority = false, ratingStats, disableAni
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
           {/* Wishlist button - top right - always visible on mobile */}
-          <div className="absolute top-2 right-2 z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
+          <div className="absolute top-1 right-1 z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
             <WishlistButton
               productId={product.id}
               productName={product.name}
               size="sm"
-              className="bg-white/10 backdrop-blur-md border border-white/20 rounded-full p-1.5 text-white hover:bg-primary hover:border-primary transition-all shadow-lg"
+              className="bg-white/10 backdrop-blur-md border border-white/20 rounded-full p-0.5 text-white hover:bg-primary hover:border-primary transition-all shadow-lg"
             />
           </div>
 
@@ -119,10 +119,10 @@ export function ProductCard({ product, priority = false, ratingStats, disableAni
           <motion.button
             initial={{ opacity: 0, scale: 0.9 }}
             whileHover={{ scale: 1.05 }}
-            className="hidden md:flex absolute inset-0 m-auto w-fit h-fit px-4 py-2 glass-card backdrop-blur-md text-white rounded-full text-xs font-medium shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 items-center gap-1.5 z-10 hover:border-primary/30"
+            className="hidden md:flex absolute inset-0 m-auto w-fit h-fit px-2 py-1 glass-card backdrop-blur-md text-white rounded-full text-[9px] font-medium shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 items-center gap-1 z-10 hover:border-primary/30"
             onClick={handleQuickView}
           >
-            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
             </svg>
@@ -132,7 +132,7 @@ export function ProductCard({ product, priority = false, ratingStats, disableAni
           {/* Out of stock overlay */}
           {!product.inStock && (
             <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center">
-              <span className="text-white font-medium text-sm uppercase tracking-wider">
+              <span className="text-white font-medium text-[9px] uppercase tracking-wider">
                 Rupture de stock
               </span>
             </div>
@@ -140,7 +140,7 @@ export function ProductCard({ product, priority = false, ratingStats, disableAni
 
           {/* Sale badge - elegant design */}
           {hasDiscount && product.inStock && (
-            <div className="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-full">
+            <div className="absolute top-1 left-1 bg-primary text-white text-[8px] font-bold px-1 py-0.5 rounded-full">
               -{Math.round(((product.compareAtPrice! - product.price) / product.compareAtPrice!) * 100)}%
             </div>
           )}
@@ -149,40 +149,40 @@ export function ProductCard({ product, priority = false, ratingStats, disableAni
 
       {/* Reviews section - Below image */}
       {ratingStats && (
-        <div className="px-3 pt-3 pb-2 border-b border-white/10">
+        <div className="px-1.5 pt-1.5 pb-1 border-b border-white/10">
           <div className="flex items-center justify-start">
             <StarRatingDisplay
               rating={ratingStats.averageRating}
               totalReviews={ratingStats.totalReviews}
-              size="sm"
+              size="xs"
             />
           </div>
         </div>
       )}
 
       {/* Content - Premium Layout */}
-      <div className="p-3 flex-1 flex flex-col">
+      <div className="p-1.5 flex-1 flex flex-col">
         {/* Product name */}
         <Link href={`/produits/${product.slug}`}>
-          <h3 className="font-heading text-sm text-white line-clamp-2 mb-2 hover:text-primary transition-colors duration-300 min-h-[2.5rem] leading-tight">
+          <h3 className="font-heading text-[10px] text-white line-clamp-2 mb-1 hover:text-primary transition-colors duration-300 min-h-[1.5rem] leading-tight">
             {product.name}
           </h3>
         </Link>
 
         {/* Price - Prominent display */}
-        <div className="flex items-baseline gap-2 mb-2 pb-2 border-b border-white/10">
-          <span className="text-lg font-bold text-primary">
+        <div className="flex items-baseline gap-1 mb-1 pb-1 border-b border-white/10">
+          <span className="text-xs font-bold text-primary">
             {formatPrice(product.price)}
           </span>
           {hasDiscount && (
-            <span className="text-xs text-text-muted line-through">
+            <span className="text-[8px] text-text-muted line-through">
               {formatPrice(product.compareAtPrice!)}
             </span>
           )}
         </div>
 
         {/* Stock indicator */}
-        <div className="mb-2">
+        <div className="mb-1">
           <StockIndicator
             inStock={product.inStock}
             stockLevel={product.stockLevel}
@@ -199,7 +199,7 @@ export function ProductCard({ product, priority = false, ratingStats, disableAni
           whileTap={{ scale: product.inStock ? 0.95 : 1 }}
           animate={justAdded ? { scale: [1, 1.05, 1] } : {}}
           transition={{ duration: 0.3 }}
-          className={`w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed mt-auto ${
+          className={`w-full inline-flex items-center justify-center gap-1 px-3 py-1.5 text-[10px] font-medium rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed mt-auto ${
             justAdded
               ? "bg-green-500 text-white"
               : "bg-primary text-white hover:bg-primary-light"
@@ -207,7 +207,7 @@ export function ProductCard({ product, priority = false, ratingStats, disableAni
         >
           {justAdded ? (
             <>
-              <span className="material-icons text-sm">check</span>
+              <span className="material-icons text-xs">check</span>
               <span>Ajouté</span>
             </>
           ) : (

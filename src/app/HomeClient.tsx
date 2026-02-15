@@ -113,15 +113,15 @@ export function HomeClient({ featuredProducts, ratingsMap = {} }: HomeClientProp
               <span className="block mt-1 text-amber-200/70 text-xs sm:text-sm">Chaque session devient une expérience inoubliable.</span>
             </p>
             <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
-              {/* Mobile: Only show "Découvrir la Collection" in secondary style */}
+              {/* Mobile: Match category button style */}
               <Link
                 href="/produits"
-                className="md:hidden whitespace-nowrap px-6 py-2.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-semibold rounded-full text-sm shadow-lg shadow-amber-900/50 transition-all hover:shadow-xl hover:shadow-amber-900/70 hover:scale-105"
+                className="md:hidden whitespace-nowrap px-6 py-2.5 bg-white/5 border-2 border-amber-600/30 hover:border-amber-500/60 hover:bg-amber-600/10 text-amber-100 rounded-full text-sm backdrop-blur-sm transition-all font-medium"
               >
                 Découvrir la Collection
               </Link>
 
-              {/* Desktop: Show primary CTA */}
+              {/* Desktop: Beige/Amber gradient */}
               <Link
                 href="/produits"
                 className="hidden md:inline-flex px-8 py-3 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold rounded-full shadow-lg shadow-amber-900/50 transition-all hover:shadow-xl hover:shadow-amber-900/70 hover:scale-105 text-base"
@@ -409,6 +409,72 @@ export function HomeClient({ featuredProducts, ratingsMap = {} }: HomeClientProp
                 <h3 className="text-xs font-bold text-white">Accessoires</h3>
               </div>
             </Link>
+          </div>
+        </section>
+
+        {/* Experience / Brand Section - Notre Histoire */}
+        <section className="py-6 sm:py-10 md:py-12 px-4 md:px-6 relative overflow-hidden w-full">
+          <div className="absolute inset-0 z-0 bg-background-dark"></div>
+
+          <div className="max-w-[1600px] w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8 items-center relative z-10">
+            <div className="order-2 md:order-1">
+              <div className="bg-white/5 p-3 sm:p-6 rounded-lg backdrop-blur-md border border-white/5">
+                <h2 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 sm:mb-4">Sublimez Votre Session</h2>
+                <p className="text-gray-300 mb-2 sm:mb-4 text-[10px] sm:text-sm leading-relaxed">
+                  Nuage n'est pas seulement une boutique ; c'est une destination pour les passionnés. Nous sélectionnons uniquement les
+                  meilleurs matériaux—aluminium aérospatial, cristal bohème et silicone médical—pour garantir que chaque session soit pure, puissante et parfaite.
+                </p>
+                <ul className="space-y-1.5 sm:space-y-2.5 mb-3 sm:mb-6">
+                  <li className="flex items-center gap-1.5 sm:gap-2.5">
+                    <div className="w-5 h-5 sm:w-7 sm:h-7 rounded-full bg-primary/20 flex items-center justify-center text-primary flex-shrink-0">
+                      <span className="material-icons text-[10px] sm:text-xs">check</span>
+                    </div>
+                    <span className="text-white text-[10px] sm:text-sm">Expédition garantie sous 24h</span>
+                  </li>
+                  <li className="flex items-center gap-1.5 sm:gap-2.5">
+                    <div className="w-5 h-5 sm:w-7 sm:h-7 rounded-full bg-primary/20 flex items-center justify-center text-primary flex-shrink-0">
+                      <span className="material-icons text-[10px] sm:text-xs">verified</span>
+                    </div>
+                    <span className="text-white text-[10px] sm:text-sm">Marques Premium Authentiques</span>
+                  </li>
+                  <li className="flex items-center gap-1.5 sm:gap-2.5">
+                    <div className="w-5 h-5 sm:w-7 sm:h-7 rounded-full bg-primary/20 flex items-center justify-center text-primary flex-shrink-0">
+                      <span className="material-icons text-[10px] sm:text-xs">support_agent</span>
+                    </div>
+                    <span className="text-white text-[10px] sm:text-sm">Support Expert Connaisseur</span>
+                  </li>
+                </ul>
+
+                {/* Founders Quote */}
+                <div className="my-3 sm:my-6 pl-2 sm:pl-4 border-l-2 border-primary/30">
+                  <p className="text-gray-300 text-[10px] sm:text-sm italic leading-relaxed mb-1 sm:mb-2">
+                    "Nous avons réalisé que la chicha en Europe était souvent perçue comme une simple distraction, dépouillée de toute sa dimension culturelle et spirituelle. Les produits étaient de qualité médiocre, l'expérience précipitée, la passion absente."
+                  </p>
+                  <p className="text-primary text-[10px] sm:text-xs font-semibold">
+                    — Ali & Haidar, Fondateurs de Nuage
+                  </p>
+                </div>
+
+                <Link
+                  href="/about"
+                  className="text-primary font-bold hover:text-white transition-colors flex items-center gap-1.5 sm:gap-2 group text-xs sm:text-base"
+                >
+                  Lire Notre Histoire{" "}
+                  <span className="material-icons text-xs sm:text-sm group-hover:translate-x-1 transition-transform">
+                    arrow_forward
+                  </span>
+                </Link>
+              </div>
+            </div>
+            <div className="order-1 md:order-2 relative">
+              <div className="relative rounded-xl sm:rounded-2xl overflow-hidden border border-white/10 shadow-2xl aspect-square">
+                <img
+                  src="/history.jpeg"
+                  alt="Notre histoire - Deux frères libanais passionnés par la chicha"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+            </div>
           </div>
         </section>
       </div>

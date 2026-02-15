@@ -35,6 +35,21 @@ export function AccountClient() {
     fetchSession();
   }, []);
 
+  // Re-check session when page becomes visible (handles back button)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && !user) {
+        fetchSession();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [user]);
+
   // Fetch orders when user is set
   useEffect(() => {
     if (user) {
@@ -83,6 +98,7 @@ export function AccountClient() {
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include", // Important: include cookies in request
         body: JSON.stringify({
           email: loginEmail,
           password: loginPassword,
@@ -95,9 +111,15 @@ export function AccountClient() {
         throw new Error(data.error || "Erreur lors de la connexion");
       }
 
+      // Set user immediately for UX
       setUser(data.user);
       setLoginEmail("");
       setLoginPassword("");
+
+      // Re-fetch session after a brief delay to ensure cookies are set
+      setTimeout(() => {
+        fetchSession();
+      }, 500);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Une erreur est survenue");
     } finally {
@@ -114,6 +136,7 @@ export function AccountClient() {
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include", // Important: include cookies in request
         body: JSON.stringify({
           email: registerEmail,
           password: registerPassword,
@@ -128,11 +151,17 @@ export function AccountClient() {
         throw new Error(data.error || "Erreur lors de l'inscription");
       }
 
+      // Set user immediately for UX
       setUser(data.user);
       setRegisterEmail("");
       setRegisterPassword("");
       setRegisterFirstName("");
       setRegisterLastName("");
+
+      // Re-fetch session after a brief delay to ensure cookies are set
+      setTimeout(() => {
+        fetchSession();
+      }, 500);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Une erreur est survenue");
     } finally {
@@ -142,7 +171,10 @@ export function AccountClient() {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/auth/logout", { method: "POST" });
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
       setUser(null);
       setOrders([]);
     } catch (error) {

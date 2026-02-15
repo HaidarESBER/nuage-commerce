@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { LoginData } from "@/types/user";
-import { createClient } from "@/lib/supabase/server";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,7 +16,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = await createClient();
+    const cookieStore = await cookies();
+    const response = NextResponse.json({ success: false });
+
+    // Create Supabase client with proper cookie handling
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              cookieStore.set(name, value, options);
+              response.cookies.set(name, value, options);
+            });
+          },
+        },
+      }
+    );
 
     // Sign in with Supabase Auth
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -44,6 +65,7 @@ export async function POST(request: NextRequest) {
       .eq("id", data.user.id)
       .single();
 
+    // Return response with cookies properly set
     return NextResponse.json({
       success: true,
       user: {
@@ -53,6 +75,8 @@ export async function POST(request: NextRequest) {
         lastName: profile?.last_name || "",
         isAdmin: profile?.is_admin || false,
       },
+    }, {
+      headers: response.headers,
     });
   } catch (error) {
     console.error("Login error:", error);

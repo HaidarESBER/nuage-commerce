@@ -48,6 +48,21 @@ export default function ProfilePage() {
     fetchProfile();
   }, []);
 
+  // Re-check session when page becomes visible (handles back button)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && !user) {
+        fetchProfile();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [user]);
+
   // Fetch orders when user is set
   useEffect(() => {
     if (user) {
@@ -57,7 +72,9 @@ export default function ProfilePage() {
 
   const fetchProfile = async () => {
     try {
-      const response = await fetch("/api/profile");
+      const response = await fetch("/api/profile", {
+        credentials: "include",
+      });
       const data = await response.json();
 
       if (response.status === 401) {
@@ -93,7 +110,9 @@ export default function ProfilePage() {
     if (!user) return;
 
     try {
-      const response = await fetch(`/api/orders/by-email?email=${encodeURIComponent(user.email)}`);
+      const response = await fetch(`/api/orders/by-email?email=${encodeURIComponent(user.email)}`, {
+        credentials: "include",
+      });
 
       if (!response.ok) {
         throw new Error("Erreur lors de la récupération des commandes");
@@ -136,6 +155,7 @@ export default function ProfilePage() {
       const response = await fetch("/api/profile", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           firstName,
           lastName,
@@ -176,6 +196,7 @@ export default function ProfilePage() {
       const response = await fetch("/api/profile/password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           currentPassword,
           newPassword,
@@ -211,6 +232,7 @@ export default function ProfilePage() {
       const response = await fetch("/api/profile", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           preferences,
         }),

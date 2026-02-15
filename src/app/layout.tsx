@@ -7,6 +7,7 @@ import { Header, Footer } from "@/components/layout";
 import { FloatingCartButton } from "@/components/mobile/FloatingCartButton";
 import { InstallPrompt } from "@/components/mobile/InstallPrompt";
 import { ExitIntentModal } from "@/components/marketing/ExitIntentModal";
+import { SupportChat } from "@/components/chat/SupportChat";
 import { WebVitalsReporter } from "@/components/analytics/WebVitalsReporter";
 import { AnalyticsScripts } from "@/components/analytics/AnalyticsScripts";
 import { HealthWarning } from "@/components/legal/HealthWarning";
@@ -85,6 +86,7 @@ export default function RootLayout({
               <FloatingCartButton />
               <InstallPrompt />
               <ExitIntentModal />
+              <SupportChat />
             </ComparisonProvider>
           </WishlistProvider>
         </CartProvider>

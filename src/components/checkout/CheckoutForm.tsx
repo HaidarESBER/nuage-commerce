@@ -53,7 +53,9 @@ export function CheckoutForm({ items, onSubmit }: CheckoutFormProps) {
   useEffect(() => {
     const fetchSession = async () => {
       try {
-        const response = await fetch("/api/auth/session");
+        const response = await fetch("/api/auth/session", {
+          credentials: "include",
+        });
         const data = await response.json();
 
         if (data.user) {

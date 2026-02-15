@@ -123,6 +123,8 @@ export async function POST(request: NextRequest) {
     const userAgent = request.headers.get("user-agent") || null;
 
     // Insert event using admin client (bypasses RLS)
+    // Note: Old events are automatically cleaned up by the /api/cron/cleanup-analytics job
+    // which runs daily and removes events older than 90 days
     const adminClient = createAdminClient();
     await adminClient.from("analytics_events").insert({
       event_type: eventType,

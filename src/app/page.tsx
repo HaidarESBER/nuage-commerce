@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getAllProducts } from "@/lib/products";
-import { getProductRatingStats } from "@/lib/reviews";
+import { getBatchProductRatingStats } from "@/lib/reviews";
 import { generateWebSiteSchema, safeJsonLd } from "@/lib/seo";
 import { HomeClient } from "./HomeClient";
 
@@ -27,16 +27,9 @@ export default async function Home() {
   // Load products from JSON file
   const allProducts = await getAllProducts();
 
-  // Fetch ratings for all products
-  const ratingsMap = new Map();
-  await Promise.all(
-    allProducts.map(async (product) => {
-      const stats = await getProductRatingStats(product.id);
-      if (stats) {
-        ratingsMap.set(product.id, stats);
-      }
-    })
-  );
+  // Fetch ratings for all products in a single batch query (optimized)
+  const productIds = allProducts.map(p => p.id);
+  const ratingsMap = await getBatchProductRatingStats(productIds);
 
   const webSiteSchema = generateWebSiteSchema();
 
@@ -49,7 +42,7 @@ export default async function Home() {
       />
       <HomeClient
         featuredProducts={allProducts}
-        ratingsMap={Object.fromEntries(ratingsMap)}
+        ratingsMap={ratingsMap}
       />
     </>
   );

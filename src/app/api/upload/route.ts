@@ -6,19 +6,22 @@ export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();
 
-    // Check if user is authenticated (admin OR regular user)
+    // Get authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    // If not authenticated, try admin check
-    let isAdmin = false;
+    // Require authentication
     if (authError || !user) {
-      try {
-        await requireAdmin();
-        isAdmin = true;
-      } catch {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    // Check if user is admin
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("is_admin")
+      .eq("id", user.id)
+      .single();
+
+    const isAdmin = profile?.is_admin || false;
 
     const formData = await request.formData();
 
@@ -59,9 +62,9 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Generate unique filename
+      // Generate unique filename with cryptographically secure randomness
       const fileExt = file.name.split(".").pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const fileName = `${Date.now()}-${crypto.randomUUID()}.${fileExt}`;
 
       // Different paths: admin=products/, user=review-photos/
       const folder = isAdmin ? "products" : `review-photos/${user?.id || 'admin'}`;

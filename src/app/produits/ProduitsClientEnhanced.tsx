@@ -16,6 +16,7 @@ interface ProduitsClientEnhancedProps {
   activeCategory: ProductCategory | null;
   searchQuery?: string;
   ratingsMap?: Record<string, { averageRating: number; totalReviews: number }>;
+  initialPage?: number;
 }
 
 export function ProduitsClientEnhanced({
@@ -23,6 +24,7 @@ export function ProduitsClientEnhanced({
   activeCategory,
   searchQuery = '',
   ratingsMap = {},
+  initialPage = 1,
 }: ProduitsClientEnhancedProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -40,7 +42,10 @@ export function ProduitsClientEnhanced({
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [showAddedToast, setShowAddedToast] = useState(false);
   const [justAddedId, setJustAddedId] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(initialPage);
   const sortRef = useRef<HTMLDivElement>(null);
+
+  const PRODUCTS_PER_PAGE = 12;
 
   const filteredProducts = useMemo(() => {
     let result = products;
@@ -154,6 +159,41 @@ export function ProduitsClientEnhanced({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Pagination calculations
+  const totalProducts = filteredProducts.length;
+  const totalPages = Math.ceil(totalProducts / PRODUCTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+  const endIndex = startIndex + PRODUCTS_PER_PAGE;
+  const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+
+  // Handle page change
+  const handlePageChange = (newPage: number) => {
+    if (newPage < 1 || newPage > totalPages) return;
+
+    setCurrentPage(newPage);
+
+    // Update URL with new page number
+    const params = new URLSearchParams(searchParams.toString());
+    if (newPage === 1) {
+      params.delete('page');
+    } else {
+      params.set('page', newPage.toString());
+    }
+
+    const newUrl = params.toString() ? `/produits?${params.toString()}` : '/produits';
+    router.push(newUrl, { scroll: true });
+
+    // Scroll to top of products
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    if (currentPage > 1) {
+      setCurrentPage(1);
+    }
+  }, [selectedCategories, priceRange, sortOption, searchQuery, showInStock, showFeatured, showOnSale]);
 
   return (
     <main className="flex-grow pb-6 px-3 sm:px-4 lg:px-5 max-w-[1920px] mx-auto w-full text-[0.85rem]">
@@ -466,7 +506,12 @@ export function ProduitsClientEnhanced({
               <h1 className="text-xl font-bold text-white">
                 {activeCategory ? categoryLabels[activeCategory] : "Produits"}
               </h1>
-              <p className="text-xs text-gray-400 mt-0.5">{filteredProducts.length} résultats</p>
+              <p className="text-xs text-gray-400 mt-0.5">
+                {totalProducts > 0
+                  ? `Affichage de ${startIndex + 1}-${Math.min(endIndex, totalProducts)} sur ${totalProducts} résultats`
+                  : '0 résultats'
+                }
+              </p>
             </div>
 
             <div className="flex items-center gap-2">
@@ -534,7 +579,7 @@ export function ProduitsClientEnhanced({
 
           {/* Products Grid - Clean & Simple */}
           <div className="grid grid-cols-1 min-[360px]:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7 gap-2 min-[360px]:gap-3">
-            {filteredProducts.map((product) => (
+            {paginatedProducts.map((product) => (
               <Link
                 key={product.id}
                 href={`/produits/${product.slug}`}
@@ -616,6 +661,68 @@ export function ProduitsClientEnhanced({
               </Link>
             ))}
           </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 mt-8">
+              {/* Previous button */}
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-3 py-2 rounded-lg text-xs font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-surface-dark/50 text-white border border-white/10 hover:border-primary/30 disabled:hover:border-white/10"
+              >
+                <span className="material-icons text-sm">chevron_left</span>
+              </button>
+
+              {/* Page numbers */}
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                  // Show first page, last page, current page, and pages around current
+                  const showPage =
+                    page === 1 ||
+                    page === totalPages ||
+                    (page >= currentPage - 1 && page <= currentPage + 1);
+
+                  // Show ellipsis
+                  const showEllipsisBefore = page === currentPage - 2 && currentPage > 3;
+                  const showEllipsisAfter = page === currentPage + 2 && currentPage < totalPages - 2;
+
+                  if (showEllipsisBefore || showEllipsisAfter) {
+                    return (
+                      <span key={`ellipsis-${page}`} className="px-2 text-gray-400">
+                        ...
+                      </span>
+                    );
+                  }
+
+                  if (!showPage) return null;
+
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`min-w-[32px] h-8 px-2 rounded-lg text-xs font-medium transition-all ${
+                        page === currentPage
+                          ? 'bg-primary text-black'
+                          : 'bg-surface-dark/50 text-white border border-white/10 hover:border-primary/30'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Next button */}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-3 py-2 rounded-lg text-xs font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-surface-dark/50 text-white border border-white/10 hover:border-primary/30 disabled:hover:border-white/10"
+              >
+                <span className="material-icons text-sm">chevron_right</span>
+              </button>
+            </div>
+          )}
 
           {filteredProducts.length === 0 && (
             <div className="flex flex-col items-center justify-center py-32">
