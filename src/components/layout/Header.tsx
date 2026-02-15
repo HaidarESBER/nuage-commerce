@@ -245,127 +245,160 @@ export function Header() {
 
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
-        <>
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 99999,
+          display: 'block',
+        }}>
           {/* Backdrop */}
           <div
             onClick={handleNavClick}
-            className="md:hidden fixed inset-0 bg-black z-[9998]"
             style={{
-              position: 'fixed',
+              position: 'absolute',
               top: 0,
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.85)',
-              zIndex: 9998,
-              touchAction: 'none',
-              WebkitTapHighlightColor: 'transparent',
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              zIndex: 1,
             }}
           />
 
-          {/* Sliding Menu */}
-          <nav
-            className="md:hidden fixed top-0 right-0 bottom-0 w-[280px] bg-[#0a0a0a] z-[9999] overflow-y-auto"
+          {/* Menu Panel */}
+          <div
             style={{
-              position: 'fixed',
+              position: 'absolute',
               top: 0,
               right: 0,
               bottom: 0,
-              width: '280px',
-              maxWidth: '85vw',
-              backgroundColor: '#0a0a0a',
-              zIndex: 9999,
+              width: '80%',
+              maxWidth: '300px',
+              backgroundColor: '#0f0f0f',
+              zIndex: 2,
               overflowY: 'auto',
-              WebkitOverflowScrolling: 'touch',
-              boxShadow: '-4px 0 24px rgba(0, 0, 0, 0.5)',
-              borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: '-2px 0 10px rgba(0,0,0,0.5)',
             }}
           >
-              {/* Header */}
-              <div
-                className="sticky top-0 p-4 flex items-center justify-between border-b"
+            {/* Menu Header */}
+            <div style={{
+              padding: '20px',
+              borderBottom: '1px solid #333',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              backgroundColor: '#0f0f0f',
+            }}>
+              <span style={{ color: 'white', fontSize: '18px', fontWeight: 'bold' }}>Menu</span>
+              <button
+                onClick={handleNavClick}
                 style={{
-                  backgroundColor: '#0a0a0a',
-                  borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-                  position: 'sticky',
-                  top: 0,
-                  zIndex: 10,
+                  width: '40px',
+                  height: '40px',
+                  backgroundColor: '#333',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '50%',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
-                <span className="text-lg text-white font-bold" style={{ color: '#ffffff' }}>Menu</span>
-                <button
-                  onClick={handleNavClick}
-                  className="w-10 h-10 flex items-center justify-center rounded-full text-white"
-                  style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                    color: '#ffffff',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                  aria-label="Fermer le menu"
-                >
-                  <span className="material-icons" style={{ fontSize: '24px' }}>close</span>
-                </button>
-              </div>
+                ×
+              </button>
+            </div>
 
-              {/* Menu Content */}
-              <div
-                className="p-4 flex flex-col gap-2"
-                style={{
-                  padding: '16px',
-                  minHeight: '100vh',
-                  backgroundColor: '#0a0a0a',
-                  paddingBottom: 'calc(16px + env(safe-area-inset-bottom, 0px))',
-                }}
-              >
+            {/* Menu Items */}
+            <div style={{ padding: '20px' }}>
                 {/* Products */}
                 <Link
                   href="/produits"
                   onClick={handleNavClick}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
-                    pathname === "/produits"
-                      ? "bg-primary/20 text-primary border border-primary/30"
-                      : "text-white hover:bg-white/5"
-                  }`}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    padding: '14px 16px',
+                    borderRadius: '8px',
+                    backgroundColor: pathname === "/produits" ? 'rgba(18, 222, 38, 0.15)' : 'transparent',
+                    color: pathname === "/produits" ? '#12de26' : '#fff',
+                    textDecoration: 'none',
+                    marginBottom: '4px',
+                    border: pathname === "/produits" ? '1px solid rgba(18, 222, 38, 0.3)' : '1px solid transparent',
+                  }}
                 >
-                  <span className="material-icons text-lg">inventory_2</span>
-                  <span className="text-sm font-medium">Tous les Produits</span>
+                  <span style={{ fontSize: '15px', fontWeight: '600' }}>Tous les Produits</span>
                 </Link>
 
-                {/* Categories Submenu */}
-                <div className="ml-3 pl-3 border-l border-white/10 mt-1 mb-2 flex flex-col gap-0.5">
+                {/* Categories */}
+                <div style={{ marginLeft: '20px', marginBottom: '16px' }}>
                   <Link
                     href="/produits?categorie=chicha"
                     onClick={handleNavClick}
-                    className="px-3 py-1.5 text-xs text-text-muted hover:text-primary transition-colors rounded-lg hover:bg-white/5"
+                    style={{
+                      display: 'block',
+                      padding: '8px 12px',
+                      color: '#aaa',
+                      textDecoration: 'none',
+                      fontSize: '13px',
+                    }}
                   >
                     {categoryLabels.chicha}
                   </Link>
                   <Link
                     href="/produits?categorie=bol"
                     onClick={handleNavClick}
-                    className="px-3 py-1.5 text-xs text-text-muted hover:text-primary transition-colors rounded-lg hover:bg-white/5"
+                    style={{
+                      display: 'block',
+                      padding: '8px 12px',
+                      color: '#aaa',
+                      textDecoration: 'none',
+                      fontSize: '13px',
+                    }}
                   >
                     {categoryLabels.bol}
                   </Link>
                   <Link
                     href="/produits?categorie=tuyau"
                     onClick={handleNavClick}
-                    className="px-3 py-1.5 text-xs text-text-muted hover:text-primary transition-colors rounded-lg hover:bg-white/5"
+                    style={{
+                      display: 'block',
+                      padding: '8px 12px',
+                      color: '#aaa',
+                      textDecoration: 'none',
+                      fontSize: '13px',
+                    }}
                   >
                     {categoryLabels.tuyau}
                   </Link>
                   <Link
                     href="/produits?categorie=charbon"
                     onClick={handleNavClick}
-                    className="px-3 py-1.5 text-xs text-text-muted hover:text-primary transition-colors rounded-lg hover:bg-white/5"
+                    style={{
+                      display: 'block',
+                      padding: '8px 12px',
+                      color: '#aaa',
+                      textDecoration: 'none',
+                      fontSize: '13px',
+                    }}
                   >
                     {categoryLabels.charbon}
                   </Link>
                   <Link
                     href="/produits?categorie=accessoire"
                     onClick={handleNavClick}
-                    className="px-3 py-1.5 text-xs text-text-muted hover:text-primary transition-colors rounded-lg hover:bg-white/5"
+                    style={{
+                      display: 'block',
+                      padding: '8px 12px',
+                      color: '#aaa',
+                      textDecoration: 'none',
+                      fontSize: '13px',
+                    }}
                   >
                     {categoryLabels.accessoire}
                   </Link>
@@ -375,107 +408,114 @@ export function Header() {
                 <Link
                   href="/blog"
                   onClick={handleNavClick}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
-                    pathname.startsWith("/blog")
-                      ? "bg-primary/20 text-primary border border-primary/30"
-                      : "text-white hover:bg-white/5"
-                  }`}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '14px 16px',
+                    borderRadius: '8px',
+                    backgroundColor: pathname.startsWith("/blog") ? 'rgba(18, 222, 38, 0.15)' : 'transparent',
+                    color: pathname.startsWith("/blog") ? '#12de26' : '#fff',
+                    textDecoration: 'none',
+                    marginBottom: '4px',
+                    border: pathname.startsWith("/blog") ? '1px solid rgba(18, 222, 38, 0.3)' : '1px solid transparent',
+                  }}
                 >
-                  <span className="material-icons text-lg">article</span>
-                  <span className="text-sm font-medium">Blog</span>
+                  <span style={{ fontSize: '15px', fontWeight: '600' }}>Blog</span>
                 </Link>
 
                 {/* Wishlist */}
                 <Link
                   href="/compte/wishlist"
                   onClick={handleNavClick}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
-                    pathname === "/compte/wishlist"
-                      ? "bg-primary/20 text-primary border border-primary/30"
-                      : "text-white hover:bg-white/5"
-                  }`}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '14px 16px',
+                    borderRadius: '8px',
+                    backgroundColor: pathname === "/compte/wishlist" ? 'rgba(18, 222, 38, 0.15)' : 'transparent',
+                    color: pathname === "/compte/wishlist" ? '#12de26' : '#fff',
+                    textDecoration: 'none',
+                    marginBottom: '4px',
+                    border: pathname === "/compte/wishlist" ? '1px solid rgba(18, 222, 38, 0.3)' : '1px solid transparent',
+                  }}
                 >
-                  <span className="material-icons text-lg">favorite</span>
-                  <div className="flex items-center gap-2 flex-1">
-                    <span className="text-sm font-medium">Favoris</span>
-                    {wishlistItems.length > 0 && (
-                      <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">
-                        {wishlistItems.length}
-                      </span>
-                    )}
-                  </div>
+                  <span style={{ fontSize: '15px', fontWeight: '600' }}>Favoris</span>
+                  {wishlistItems.length > 0 && (
+                    <span style={{
+                      fontSize: '12px',
+                      backgroundColor: 'rgba(18, 222, 38, 0.2)',
+                      color: '#12de26',
+                      padding: '2px 8px',
+                      borderRadius: '12px',
+                    }}>
+                      {wishlistItems.length}
+                    </span>
+                  )}
                 </Link>
-
-                {/* Comparison */}
-                {comparisonItems.length > 0 && (
-                  <Link
-                    href="/comparaison"
-                    onClick={handleNavClick}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
-                      pathname === "/comparaison"
-                        ? "bg-primary/20 text-primary border border-primary/30"
-                        : "text-white hover:bg-white/5"
-                    }`}
-                  >
-                    <span className="material-icons text-lg">compare</span>
-                    <div className="flex items-center gap-2 flex-1">
-                      <span className="text-sm font-medium">Comparer</span>
-                      <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">
-                        {comparisonItems.length}
-                      </span>
-                    </div>
-                  </Link>
-                )}
 
                 {/* Profile */}
                 <Link
                   href="/compte/profil"
                   onClick={handleNavClick}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
-                    pathname.startsWith("/compte")
-                      ? "bg-primary/20 text-primary border border-primary/30"
-                      : "text-white hover:bg-white/5"
-                  }`}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '14px 16px',
+                    borderRadius: '8px',
+                    backgroundColor: pathname.startsWith("/compte") && pathname !== "/compte/wishlist" ? 'rgba(18, 222, 38, 0.15)' : 'transparent',
+                    color: pathname.startsWith("/compte") && pathname !== "/compte/wishlist" ? '#12de26' : '#fff',
+                    textDecoration: 'none',
+                    marginBottom: '4px',
+                    border: pathname.startsWith("/compte") && pathname !== "/compte/wishlist" ? '1px solid rgba(18, 222, 38, 0.3)' : '1px solid transparent',
+                  }}
                 >
-                  <span className="material-icons text-lg">person</span>
-                  <span className="text-sm font-medium">Mon Profil</span>
+                  <span style={{ fontSize: '15px', fontWeight: '600' }}>Mon Profil</span>
                 </Link>
 
-                {/* Admin link - only visible to admins */}
                 {isAdmin && (
                   <Link
                     href="/admin"
                     onClick={handleNavClick}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
-                      pathname.startsWith("/admin")
-                        ? "bg-primary/20 text-primary border border-primary/30"
-                        : "text-white hover:bg-white/5"
-                    }`}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '14px 16px',
+                      borderRadius: '8px',
+                      backgroundColor: pathname.startsWith("/admin") ? 'rgba(18, 222, 38, 0.15)' : 'transparent',
+                      color: pathname.startsWith("/admin") ? '#12de26' : '#fff',
+                      textDecoration: 'none',
+                      marginBottom: '4px',
+                      border: pathname.startsWith("/admin") ? '1px solid rgba(18, 222, 38, 0.3)' : '1px solid transparent',
+                    }}
                   >
-                    <Settings className="w-5 h-5" />
-                    <span className="text-sm font-medium">Admin Panel</span>
+                    <span style={{ fontSize: '15px', fontWeight: '600' }}>Admin Panel</span>
                   </Link>
                 )}
 
-                {/* Divider */}
-                <div className="h-px bg-white/10 my-2"></div>
+                <div style={{ height: '1px', backgroundColor: '#333', margin: '20px 0' }} />
 
                 {/* Cart */}
                 <Link
                   href="/panier"
                   onClick={handleNavClick}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
-                    pathname === "/panier"
-                      ? "bg-primary/20 text-primary border border-primary/30"
-                      : "text-white hover:bg-white/5"
-                  }`}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '14px 16px',
+                    borderRadius: '8px',
+                    backgroundColor: pathname === "/panier" ? 'rgba(18, 222, 38, 0.15)' : 'transparent',
+                    color: pathname === "/panier" ? '#12de26' : '#fff',
+                    textDecoration: 'none',
+                    marginBottom: '4px',
+                    border: pathname === "/panier" ? '1px solid rgba(18, 222, 38, 0.3)' : '1px solid transparent',
+                  }}
                 >
-                  <span className="material-icons text-lg">shopping_cart</span>
-                  <span className="text-sm font-medium">Panier</span>
+                  <span style={{ fontSize: '15px', fontWeight: '600' }}>Panier</span>
                 </Link>
               </div>
-            </nav>
-          </>
+            </div>
+          </div>
         )}
 
       </header>
