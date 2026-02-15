@@ -69,19 +69,10 @@ export function ProductCard({ product, priority = false, ratingStats, disableAni
     }
   };
 
-  const CardWrapper = disableAnimation ? 'div' : motion.div;
-  const animationProps = disableAnimation ? {} : {
-    initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-50px" },
-    transition: { duration: 0.4, ease: [0.21, 0.47, 0.32, 0.98] }
-  };
+  const cardClassName = "group glass-card glass-card-hover rounded-xl overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 flex flex-col h-full";
 
-  return (
-    <CardWrapper
-      {...animationProps}
-      className="group glass-card glass-card-hover rounded-xl overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 flex flex-col h-full"
-    >
+  const CardContent = () => (
+    <>
       {/* Image container - Premium display */}
       <Link href={`/produits/${product.slug}`} className="block relative">
         <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-background-secondary to-background p-4">
@@ -222,6 +213,22 @@ export function ProductCard({ product, priority = false, ratingStats, disableAni
           Maximum 3 produits pour la comparaison
         </motion.div>
       )}
-    </CardWrapper>
+    </>
+  );
+
+  return disableAnimation ? (
+    <div className={cardClassName}>
+      <CardContent />
+    </div>
+  ) : (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.4, ease: [0.21, 0.47, 0.32, 0.98] }}
+      className={cardClassName}
+    >
+      <CardContent />
+    </motion.div>
   );
 }
