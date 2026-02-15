@@ -300,6 +300,7 @@ export function HomeClient({ featuredProducts, ratingsMap = {} }: HomeClientProp
                             product={product}
                             priority={false}
                             ratingStats={ratingsMap[product.id] || null}
+                            disableAnimation={true}
                           />
                         </div>
                       ))}
