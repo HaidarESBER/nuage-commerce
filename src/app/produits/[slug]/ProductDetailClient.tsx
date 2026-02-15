@@ -474,7 +474,7 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                 </h3>
                 <p className="text-[9px] text-gray-400">Fréquemment achetés ensemble</p>
               </div>
-              <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 -mx-3 px-3">
+              <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 -mx-3 px-3 mb-3">
                 {complementaryProducts.map((item) => (
                   <Link
                     key={item.id}
@@ -492,6 +492,15 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                   </Link>
                 ))}
               </div>
+
+              {/* Voir plus button */}
+              <Link
+                href="/produits"
+                className="w-full flex items-center justify-center gap-2 py-2.5 bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30 rounded-lg text-xs font-medium transition-all"
+              >
+                Voir plus de produits
+                <span className="material-icons text-sm">arrow_forward</span>
+              </Link>
             </div>
           )}
         </main>
@@ -923,6 +932,15 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                     </h2>
                     <p className="text-[10px] text-gray-400 mt-0.5">Fréquemment achetés ensemble</p>
                   </div>
+                  <Link
+                    href="/produits"
+                    className="hidden sm:flex items-center gap-1 text-primary hover:text-white transition-colors text-xs group"
+                  >
+                    Voir plus
+                    <span className="material-icons text-sm group-hover:translate-x-1 transition-transform">
+                      arrow_forward
+                    </span>
+                  </Link>
                 </div>
                 <div className="grid grid-cols-6 gap-3">
                   {complementaryProducts.map((item) => (
@@ -949,6 +967,15 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                     </Link>
                   ))}
                 </div>
+
+                {/* Mobile: Full-width button */}
+                <Link
+                  href="/produits"
+                  className="sm:hidden mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30 font-medium rounded-full text-sm transition-all"
+                >
+                  Voir plus de produits
+                  <span className="material-icons text-sm">arrow_forward</span>
+                </Link>
               </div>
             </section>
           )}
