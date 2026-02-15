@@ -294,7 +294,7 @@ export function Header() {
             </div>
 
             {/* Menu Content */}
-            <div className="p-4 flex flex-col gap-1 pb-safe"
+            <div className="p-4 flex flex-col gap-1 pb-safe">
                 {/* Products */}
                 <Link
                   href="/produits"
