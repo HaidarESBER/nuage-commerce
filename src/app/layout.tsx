@@ -9,7 +9,6 @@ import { InstallPrompt } from "@/components/mobile/InstallPrompt";
 import { ExitIntentModal } from "@/components/marketing/ExitIntentModal";
 import { WebVitalsReporter } from "@/components/analytics/WebVitalsReporter";
 import { AnalyticsScripts } from "@/components/analytics/AnalyticsScripts";
-import { UTMCapturer } from "@/components/analytics/UTMCapturer";
 import { HealthWarning } from "@/components/legal/HealthWarning";
 import { CookieConsent } from "@/components/legal/CookieConsent";
 import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
@@ -54,6 +53,10 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <head>
+        {/* Material Icons */}
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+
         {/* Organization Structured Data */}
         <script
           type="application/ld+json"
@@ -64,7 +67,6 @@ export default function RootLayout({
         <WebVitalsReporter />
         <AnalyticsScripts />
         <ServiceWorkerRegister />
-        <UTMCapturer />
 
         {/* Legal Components - MANDATORY for compliance */}
         <CookieConsent />

@@ -70,8 +70,8 @@ export function NewsletterForm({ variant = "footer" }: NewsletterFormProps) {
   const isFooter = variant === "footer";
 
   const inputClasses = isFooter
-    ? "bg-transparent border border-background/30 text-background placeholder:text-background/50 focus:border-accent focus:ring-accent/30"
-    : "bg-white border border-primary/20 text-primary placeholder:text-primary/50 focus:border-accent focus:ring-accent/30";
+    ? "bg-transparent border border-background/30 text-background placeholder:text-text-muted focus:border-accent focus:ring-accent/30"
+    : "bg-white border border-primary/20 text-primary placeholder:text-text-muted focus:border-accent focus:ring-accent/30";
 
   const buttonClasses =
     "bg-accent hover:bg-accent/90 text-white font-medium transition-colors duration-200";

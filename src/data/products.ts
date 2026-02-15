@@ -16,6 +16,10 @@ export const products: Product[] = [
     images: [
       "/chicha.jpg",
       "/chicha.jpg",
+      "/bowl.jpg",
+      "/hose.webp",
+      "/coal.webp",
+      "/chicha.jpg",
     ],
     category: "chicha",
     inStock: true,

@@ -34,7 +34,9 @@ export function FloatingCartButton() {
 
   // Pages where FAB should be hidden
   const hiddenPages = ["/panier", "/commande"];
-  const shouldHide = hiddenPages.some((page) => pathname.startsWith(page));
+  // Also hide on product detail pages (e.g., /produits/[slug])
+  const isProductDetailPage = pathname.startsWith("/produits/") && pathname !== "/produits";
+  const shouldHide = hiddenPages.some((page) => pathname.startsWith(page)) || isProductDetailPage;
 
   // Detect mobile viewport
   useEffect(() => {

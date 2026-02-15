@@ -44,10 +44,10 @@ export function CartItem({ item }: CartItemProps) {
   return (
     <motion.div
       layout
-      className="flex flex-col sm:flex-row gap-4 py-4 border-b border-background-secondary last:border-b-0"
+      className="flex flex-col sm:flex-row gap-4 py-4 border-b border-white/10 last:border-b-0"
     >
       {/* Product image */}
-      <div className="relative w-20 h-20 flex-shrink-0 bg-background-secondary rounded-[--radius-card] overflow-hidden">
+      <div className="relative w-20 h-20 flex-shrink-0 bg-background-secondary rounded-xl overflow-hidden">
         <Image
           src={product.images[0]}
           alt={product.name}
@@ -61,10 +61,10 @@ export function CartItem({ item }: CartItemProps) {
       <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-4">
         {/* Name and price */}
         <div className="flex-1 min-w-0">
-          <h3 className="font-heading text-primary text-base line-clamp-1">
+          <h3 className="font-heading text-white text-base line-clamp-1">
             {product.name}
           </h3>
-          <p className="text-muted text-sm mt-1">
+          <p className="text-text-muted text-sm mt-1">
             {formatPrice(product.price)}
           </p>
         </div>
@@ -74,12 +74,12 @@ export function CartItem({ item }: CartItemProps) {
           <motion.button
             onClick={handleDecrease}
             whileTap={{ scale: 0.95 }}
-            className="w-8 h-8 flex items-center justify-center border border-primary rounded-[--radius-button] text-primary hover:bg-primary hover:text-background transition-colors"
+            className="w-11 h-11 md:w-8 md:h-8 flex items-center justify-center border border-white/20 rounded-full text-white hover:bg-primary hover:text-white hover:border-primary transition-colors"
             aria-label="Diminuer la quantité"
           >
-            <span className="text-lg leading-none">-</span>
+            <span className="text-lg leading-none">−</span>
           </motion.button>
-          <div className="w-8 text-center font-medium text-primary overflow-hidden relative h-6">
+          <div className="w-8 text-center font-medium text-white overflow-hidden relative h-6">
             <AnimatePresence mode="popLayout" initial={false}>
               <motion.span
                 key={quantity}
@@ -96,7 +96,7 @@ export function CartItem({ item }: CartItemProps) {
           <motion.button
             onClick={handleIncrease}
             whileTap={{ scale: 0.95 }}
-            className="w-8 h-8 flex items-center justify-center border border-primary rounded-[--radius-button] text-primary hover:bg-primary hover:text-background transition-colors"
+            className="w-11 h-11 md:w-8 md:h-8 flex items-center justify-center border border-white/20 rounded-full text-white hover:bg-primary hover:text-white hover:border-primary transition-colors"
             aria-label="Augmenter la quantité"
           >
             <span className="text-lg leading-none">+</span>
@@ -105,7 +105,7 @@ export function CartItem({ item }: CartItemProps) {
 
         {/* Line total */}
         <div className="text-right sm:w-24">
-          <p className="font-medium text-primary">
+          <p className="font-medium text-white">
             {formatPrice(product.price * quantity)}
           </p>
         </div>
@@ -113,7 +113,7 @@ export function CartItem({ item }: CartItemProps) {
         {/* Remove button */}
         <button
           onClick={handleRemove}
-          className="text-muted hover:text-error transition-colors sm:ml-2"
+          className="text-text-muted hover:text-error transition-colors sm:ml-2"
           aria-label="Supprimer du panier"
         >
           <svg

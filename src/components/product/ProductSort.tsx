@@ -129,14 +129,14 @@ export function ProductSort({ sortOption, onSortChange }: ProductSortProps) {
       {/* Dropdown Trigger */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-2 px-3 py-1.5 border border-border rounded-lg text-xs md:text-sm font-light hover:bg-background-secondary transition-colors"
+        className="inline-flex items-center gap-2 px-4 py-2 bg-surface-dark border border-white/20 rounded-lg text-sm font-medium text-white hover:bg-surface-dark/80 hover:border-primary/50 transition-all backdrop-blur-sm shadow-sm"
       >
-        <span className="hidden sm:inline text-muted">Trier:</span>
-        <span>{currentOption.label}</span>
+        <span className="hidden sm:inline text-text-muted">Trier par:</span>
+        <span className="text-primary">{currentOption.label}</span>
         <motion.svg
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}
-          className="w-3 h-3 md:w-4 md:h-4 text-muted"
+          className="w-4 h-4 text-text-muted"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -158,7 +158,7 @@ export function ProductSort({ sortOption, onSortChange }: ProductSortProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute right-0 mt-2 w-56 bg-background-card border border-primary/20 rounded-[--radius-card] shadow-lg overflow-hidden z-50"
+            className="absolute right-0 mt-2 w-56 glass-card backdrop-blur-md rounded-xl shadow-2xl shadow-primary/10 overflow-hidden z-50"
           >
             <div className="py-2">
               {sortOptions.map((option, index) => (
@@ -168,13 +168,13 @@ export function ProductSort({ sortOption, onSortChange }: ProductSortProps) {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
                   onClick={() => handleOptionClick(option.value)}
-                  className="w-full px-4 py-2 flex items-center gap-3 hover:bg-background-secondary transition-colors text-left"
+                  className="w-full px-4 py-2 flex items-center gap-3 hover:bg-white/10 transition-colors text-left"
                 >
                   {/* Checkmark Icon */}
                   <div className="w-5 h-5 flex items-center justify-center">
                     {option.value === sortOption && (
                       <svg
-                        className="w-4 h-4 text-accent"
+                        className="w-4 h-4 text-primary"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"

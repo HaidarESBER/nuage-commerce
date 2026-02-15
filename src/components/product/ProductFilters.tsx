@@ -144,18 +144,18 @@ function FilterSection({
   children: React.ReactNode;
 }) {
   return (
-    <div className="border-b border-primary/10 last:border-b-0">
+    <div className="border-b border-white/10 last:border-b-0">
       <button
         onClick={onToggle}
         className="w-full flex items-center justify-between py-4 text-left group"
       >
-        <h3 className="font-heading text-lg text-primary group-hover:text-accent transition-colors">
+        <h3 className="font-heading text-lg text-white group-hover:text-primary transition-colors">
           {title}
         </h3>
         <motion.svg
           animate={{ rotate: isExpanded ? 180 : 0 }}
           transition={{ duration: 0.2 }}
-          className="w-5 h-5 text-muted"
+          className="w-5 h-5 text-text-muted"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -241,17 +241,17 @@ export function ProductFilters({
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3 }}
-      className="bg-background-card rounded-[--radius-card] p-6"
+      className="glass-card rounded-xl p-6"
     >
       {/* Header */}
       <div className="mb-6">
-        <h2 className="font-heading text-2xl text-primary mb-2">Filtres</h2>
+        <h2 className="font-heading text-2xl text-white mb-2">Filtres</h2>
         {hasActiveFilters && (
           <motion.button
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             onClick={onResetFilters}
-            className="text-sm text-accent hover:underline"
+            className="text-sm text-primary hover:underline"
           >
             Réinitialiser les filtres
           </motion.button>
@@ -265,23 +265,49 @@ export function ProductFilters({
         onToggle={() => toggleSection("category")}
       >
         <div className="space-y-3">
-          {categories.map((category) => (
-            <label
-              key={category}
-              className="flex items-center gap-3 cursor-pointer group"
-            >
-              <input
-                type="checkbox"
-                checked={filters.categories.includes(category)}
-                onChange={() => onToggleCategory(category)}
-                className="w-4 h-4 rounded border-primary/30 text-accent focus:ring-accent focus:ring-offset-0"
-              />
-              <span className="text-sm text-primary group-hover:text-accent transition-colors flex-1">
-                {categoryLabels[category]}
-              </span>
-              <span className="text-xs text-muted">({categoryCounts[category]})</span>
-            </label>
-          ))}
+          {categories.map((category) => {
+            const isChecked = filters.categories.includes(category);
+            return (
+              <label
+                key={category}
+                className="flex items-center gap-3 cursor-pointer group"
+              >
+                <div className="relative flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={() => onToggleCategory(category)}
+                    className="sr-only peer"
+                  />
+                  <div className={`w-5 h-5 rounded border-2 transition-all ${
+                    isChecked
+                      ? 'bg-primary border-primary'
+                      : 'border-white/30 group-hover:border-primary/50'
+                  }`}>
+                    {isChecked && (
+                      <svg
+                        className="w-full h-full text-background-dark p-0.5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={3}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
+                  </div>
+                </div>
+                <span className="text-sm text-white group-hover:text-primary transition-colors flex-1">
+                  {categoryLabels[category]}
+                </span>
+                <span className="text-xs text-text-muted">({categoryCounts[category]})</span>
+              </label>
+            );
+          })}
         </div>
       </FilterSection>
 
@@ -293,7 +319,7 @@ export function ProductFilters({
       >
         <div className="space-y-4">
           {/* Price Range Display */}
-          <div className="text-center text-sm text-primary font-medium">
+          <div className="text-center text-sm text-white font-medium">
             {formatPrice(filters.priceRange[0])} - {formatPrice(filters.priceRange[1])}
           </div>
 
@@ -312,7 +338,7 @@ export function ProductFilters({
                   onSetPriceRange([newMin, filters.priceRange[1]]);
                 }
               }}
-              className="absolute w-full h-2 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-accent [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-background [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-accent [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-background [&::-moz-range-thumb]:border-0"
+              className="absolute w-full h-2 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-background [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-background [&::-moz-range-thumb]:border-0"
             />
             {/* Max Slider */}
             <input
@@ -327,12 +353,12 @@ export function ProductFilters({
                   onSetPriceRange([filters.priceRange[0], newMax]);
                 }
               }}
-              className="absolute w-full h-2 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-accent [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-background [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-accent [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-background [&::-moz-range-thumb]:border-0"
+              className="absolute w-full h-2 bg-transparent appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-background [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-background [&::-moz-range-thumb]:border-0"
             />
             {/* Track */}
-            <div className="absolute top-1/2 w-full h-1 -translate-y-1/2 bg-primary/20 rounded-full pointer-events-none">
+            <div className="absolute top-1/2 w-full h-1 -translate-y-1/2 bg-white/20 rounded-full pointer-events-none">
               <div
-                className="absolute h-full bg-accent rounded-full"
+                className="absolute h-full bg-primary rounded-full"
                 style={{
                   left: `${((filters.priceRange[0] - priceRangeLimits.min) / (priceRangeLimits.max - priceRangeLimits.min)) * 100}%`,
                   right: `${100 - ((filters.priceRange[1] - priceRangeLimits.min) / (priceRangeLimits.max - priceRangeLimits.min)) * 100}%`,
@@ -342,7 +368,7 @@ export function ProductFilters({
           </div>
 
           {/* Min/Max Labels */}
-          <div className="flex justify-between text-xs text-muted">
+          <div className="flex justify-between text-xs text-text-muted">
             <span>{formatPrice(priceRangeLimits.min)}</span>
             <span>{formatPrice(priceRangeLimits.max)}</span>
           </div>
@@ -356,13 +382,36 @@ export function ProductFilters({
         onToggle={() => toggleSection("stock")}
       >
         <label className="flex items-center gap-3 cursor-pointer group">
-          <input
-            type="checkbox"
-            checked={filters.inStockOnly}
-            onChange={onToggleInStockOnly}
-            className="w-4 h-4 rounded border-primary/30 text-accent focus:ring-accent focus:ring-offset-0"
-          />
-          <span className="text-sm text-primary group-hover:text-accent transition-colors">
+          <div className="relative flex items-center">
+            <input
+              type="checkbox"
+              checked={filters.inStockOnly}
+              onChange={onToggleInStockOnly}
+              className="sr-only peer"
+            />
+            <div className={`w-5 h-5 rounded border-2 transition-all ${
+              filters.inStockOnly
+                ? 'bg-primary border-primary'
+                : 'border-white/30 group-hover:border-primary/50'
+            }`}>
+              {filters.inStockOnly && (
+                <svg
+                  className="w-full h-full text-background-dark p-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={3}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              )}
+            </div>
+          </div>
+          <span className="text-sm text-white group-hover:text-primary transition-colors">
             En stock uniquement
           </span>
         </label>

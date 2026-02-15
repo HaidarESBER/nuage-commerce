@@ -48,17 +48,17 @@ export function CartSummary() {
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="mx-auto text-muted"
+              className="mx-auto text-text-muted"
             >
               <circle cx="8" cy="21" r="1" />
               <circle cx="19" cy="21" r="1" />
               <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
             </svg>
           </motion.div>
-          <h2 className="font-heading text-xl text-primary mb-2">
+          <h2 className="font-heading text-xl text-white mb-2">
             Votre panier est vide
           </h2>
-          <p className="text-muted mb-6">
+          <p className="text-text-muted mb-6">
             Découvrez nos produits et trouvez votre bonheur
           </p>
           <Link href="/produits">
@@ -74,24 +74,24 @@ export function CartSummary() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.3 }}
-          className="bg-background-card rounded-[--radius-card] p-6"
+          className="glass-card rounded-xl p-6 sticky top-24"
         >
-          <h2 className="font-heading text-xl text-primary mb-6">
+          <h2 className="font-heading text-xl text-white mb-6">
             Resume de la commande
           </h2>
 
           {/* Summary details */}
           <div className="space-y-3 mb-6">
-            <div className="flex justify-between text-muted">
+            <div className="flex justify-between text-text-muted">
               <span>Articles ({totalItems})</span>
               <span>{formatCartTotal(subtotal)}</span>
             </div>
-            <div className="flex justify-between text-muted">
+            <div className="flex justify-between text-text-muted">
               <span>Livraison</span>
               <span>Calcule a la commande</span>
             </div>
-            <hr className="border-background-secondary" />
-            <div className="flex justify-between font-medium text-primary text-lg">
+            <hr className="border-white/10" />
+            <div className="flex justify-between font-medium text-white text-lg">
               <span>Sous-total</span>
               <span>{formatCartTotal(subtotal)}</span>
             </div>
@@ -106,7 +106,7 @@ export function CartSummary() {
             </Link>
             <Link
               href="/produits"
-              className="block text-center text-primary hover:text-accent transition-colors text-sm"
+              className="block text-center text-white hover:text-primary transition-colors text-sm"
             >
               Continuer mes achats
             </Link>

@@ -96,15 +96,11 @@ export default async function ProduitsPage({ searchParams }: ProduitsPageProps) 
   );
 
   return (
-    <main className="py-12 lg:py-16">
-      <Container size="lg">
-        <ProduitsClientEnhanced
-          products={products}
-          activeCategory={activeCategory}
-          searchQuery={searchQuery}
-          ratingsMap={Object.fromEntries(ratingsMap)}
-        />
-      </Container>
-    </main>
+    <ProduitsClientEnhanced
+      products={products}
+      activeCategory={activeCategory}
+      searchQuery={searchQuery}
+      ratingsMap={Object.fromEntries(ratingsMap)}
+    />
   );
 }

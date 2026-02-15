@@ -125,22 +125,22 @@ export function UrgencyIndicators({ product }: UrgencyIndicatorsProps) {
           className="mb-4"
         >
           {urgencyType === "time-limited" && (
-            <div className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-error/10 to-error/5 border border-error/20 rounded-[--radius-button]">
-              <ClockIcon className="w-5 h-5 text-error" />
-              <span className="text-sm font-medium text-error">
+            <div className="flex items-center gap-2 px-4 py-2.5 glass-card backdrop-blur-sm border-primary/20 rounded-full">
+              <ClockIcon className="w-5 h-5 text-primary" />
+              <span className="text-sm font-medium text-primary">
                 Offre limitée : encore {timeRemaining}
               </span>
             </div>
           )}
 
           {urgencyType === "social-proof" && (
-            <div className="flex items-center gap-2 px-4 py-2.5 bg-background-secondary border border-muted/20 rounded-[--radius-button]">
-              <EyeIcon className="w-5 h-5 text-accent" />
-              <span className="text-sm text-primary">
+            <div className="flex items-center gap-2 px-4 py-2.5 glass-card backdrop-blur-sm rounded-full">
+              <EyeIcon className="w-5 h-5 text-primary" />
+              <span className="text-sm text-white">
                 <motion.span
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, type: "tween" }}
-                  className="inline-block font-medium"
+                  className="inline-block font-medium text-primary"
                 >
                   {viewerCount}
                 </motion.span>{" "}
@@ -150,11 +150,11 @@ export function UrgencyIndicators({ product }: UrgencyIndicatorsProps) {
           )}
 
           {urgencyType === "recent-purchase" && (
-            <div className="flex items-center gap-2 px-4 py-2.5 bg-background-secondary border border-muted/20 rounded-[--radius-button]">
-              <ShoppingBagIcon className="w-5 h-5 text-accent" />
-              <span className="text-sm text-primary">
+            <div className="flex items-center gap-2 px-4 py-2.5 glass-card backdrop-blur-sm rounded-full">
+              <ShoppingBagIcon className="w-5 h-5 text-primary" />
+              <span className="text-sm text-white">
                 Dernière commande : il y a{" "}
-                <span className="font-medium">{minutesAgo} minutes</span>
+                <span className="font-medium text-primary">{minutesAgo} minutes</span>
               </span>
             </div>
           )}

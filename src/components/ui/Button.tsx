@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes, forwardRef } from "react";
 
-type ButtonVariant = "primary" | "secondary";
+type ButtonVariant = "primary" | "secondary" | "glass";
 type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -11,32 +11,36 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-primary text-background hover:bg-accent hover:text-primary transition-colors",
+    "bg-primary text-white hover:bg-primary-light transition-all shadow-[0_0_20px_rgba(18,222,38,0.3)] hover:shadow-[0_0_30px_rgba(18,222,38,0.5)]",
   secondary:
-    "bg-transparent border border-primary text-primary hover:bg-primary hover:text-background transition-colors",
+    "bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-primary/50 transition-all backdrop-blur-sm",
+  glass:
+    "bg-surface-glass backdrop-blur-md border border-white/5 text-white hover:bg-surface-hover hover:border-primary/30 transition-all",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: "px-4 py-2 text-sm",
-  md: "px-6 py-3 text-base",
-  lg: "px-8 py-4 text-lg",
+  sm: "px-4 py-2 text-sm rounded-full",
+  md: "px-6 py-3 text-base rounded-full",
+  lg: "px-8 py-4 text-lg rounded-full font-bold",
 };
 
 /**
- * Button component with brand styling
+ * Button component with luxury dark mode styling
  *
  * Variants:
- * - primary: Solid button with brand charcoal background
- * - secondary: Outline button with charcoal border
+ * - primary: Wine red button with glow effect
+ * - secondary: Transparent with subtle glass effect
+ * - glass: Glassmorphic button with backdrop blur
  *
  * Sizes:
  * - sm: Small, compact padding
  * - md: Default medium size
- * - lg: Large, prominent padding
+ * - lg: Large, prominent with bold text
  *
  * @example
  * <Button variant="primary" size="md">Ajouter au panier</Button>
  * <Button variant="secondary">En savoir plus</Button>
+ * <Button variant="glass">Aperçu rapide</Button>
  */
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
@@ -44,7 +48,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-medium tracking-wide rounded-[--radius-button] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
+      "inline-flex items-center justify-center font-medium tracking-wide focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
 
     return (
       <button

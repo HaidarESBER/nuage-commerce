@@ -1,31 +1,19 @@
-import { Inter, Cormorant_Garamond } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 
 /**
- * Body font - Inter
- * Clean, modern sans-serif optimized for screens.
- * Used for: body text, navigation, buttons, small headings (H4+)
+ * Primary font - Space Grotesk
+ * Modern, bold sans-serif with luxury appeal.
+ * Used for: body text, headings, navigation, all typography
+ * Provides a consistent, premium aesthetic across the entire site.
  */
-export const bodyFont = Inter({
+export const primaryFont = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-space-grotesk",
   display: "swap",
-  weight: ["400", "500"],
-});
-
-/**
- * Heading font - Cormorant Garamond
- * Elegant serif with French typography heritage.
- * Light, airy letterforms echo the "cloud" concept of Nuage brand.
- * Used for: H1-H3 headings, brand moments
- */
-export const headingFont = Cormorant_Garamond({
-  subsets: ["latin"],
-  variable: "--font-cormorant",
-  display: "swap",
-  weight: ["500", "600"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 /**
  * Combined font variables for applying to HTML element
  */
-export const fontVariables = `${bodyFont.variable} ${headingFont.variable}`;
+export const fontVariables = primaryFont.variable;

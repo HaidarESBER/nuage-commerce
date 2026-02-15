@@ -43,7 +43,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="bg-primary text-background">
+    <footer className="bg-background-secondary border-t border-white/10 text-white">
       {/* Main footer content */}
       <motion.div
         className="py-12"
@@ -64,10 +64,10 @@ export function Footer() {
                 <img
                   src="/nuagelogonobg1.png"
                   alt="Nuage Logo"
-                  className="h-20 w-auto object-contain brightness-0 invert"
+                  className="h-12 md:h-16 lg:h-20 w-auto object-contain"
                 />
               </motion.div>
-              <p className="text-background/80">L&apos;art de la detente</p>
+              <p className="text-text-muted">L&apos;art de la detente</p>
             </motion.div>
 
             {/* Column 2 - Navigation */}
@@ -78,13 +78,13 @@ export function Footer() {
               <nav className="flex flex-col gap-2">
                 <Link href="/" className="group inline-block w-fit">
                   <motion.span
-                    className="relative text-background/80 transition-colors duration-200 group-hover:text-background"
-                    whileHover={{ y: -1, filter: "brightness(1.1)" }}
+                    className="relative text-text-muted transition-colors duration-200 group-hover:text-primary"
+                    whileHover={{ y: -1 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
                   >
                     Accueil
                     <motion.span
-                      className="absolute bottom-0 left-0 h-px bg-background"
+                      className="absolute bottom-0 left-0 h-px bg-primary"
                       initial={{ width: "0%" }}
                       whileHover={{ width: "100%" }}
                       transition={{ duration: 0.3 }}
@@ -93,13 +93,13 @@ export function Footer() {
                 </Link>
                 <Link href="/produits" className="group inline-block w-fit">
                   <motion.span
-                    className="relative text-background/80 transition-colors duration-200 group-hover:text-background"
-                    whileHover={{ y: -1, filter: "brightness(1.1)" }}
+                    className="relative text-text-muted transition-colors duration-200 group-hover:text-primary"
+                    whileHover={{ y: -1 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
                   >
                     Produits
                     <motion.span
-                      className="absolute bottom-0 left-0 h-px bg-background"
+                      className="absolute bottom-0 left-0 h-px bg-primary"
                       initial={{ width: "0%" }}
                       whileHover={{ width: "100%" }}
                       transition={{ duration: 0.3 }}
@@ -108,28 +108,13 @@ export function Footer() {
                 </Link>
                 <Link href="/blog" className="group inline-block w-fit">
                   <motion.span
-                    className="relative text-background/80 transition-colors duration-200 group-hover:text-background"
-                    whileHover={{ y: -1, filter: "brightness(1.1)" }}
+                    className="relative text-text-muted transition-colors duration-200 group-hover:text-primary"
+                    whileHover={{ y: -1 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
                   >
                     Blog
                     <motion.span
-                      className="absolute bottom-0 left-0 h-px bg-background"
-                      initial={{ width: "0%" }}
-                      whileHover={{ width: "100%" }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  </motion.span>
-                </Link>
-                <Link href="/panier" className="group inline-block w-fit">
-                  <motion.span
-                    className="relative text-background/80 transition-colors duration-200 group-hover:text-background"
-                    whileHover={{ y: -1, filter: "brightness(1.1)" }}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
-                  >
-                    Panier
-                    <motion.span
-                      className="absolute bottom-0 left-0 h-px bg-background"
+                      className="absolute bottom-0 left-0 h-px bg-primary"
                       initial={{ width: "0%" }}
                       whileHover={{ width: "100%" }}
                       transition={{ duration: 0.3 }}
@@ -138,13 +123,13 @@ export function Footer() {
                 </Link>
                 <Link href="/suivi" className="group inline-block w-fit">
                   <motion.span
-                    className="relative text-background/80 transition-colors duration-200 group-hover:text-background"
-                    whileHover={{ y: -1, filter: "brightness(1.1)" }}
+                    className="relative text-text-muted transition-colors duration-200 group-hover:text-primary"
+                    whileHover={{ y: -1 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
                   >
                     Suivre ma commande
                     <motion.span
-                      className="absolute bottom-0 left-0 h-px bg-background"
+                      className="absolute bottom-0 left-0 h-px bg-primary"
                       initial={{ width: "0%" }}
                       whileHover={{ width: "100%" }}
                       transition={{ duration: 0.3 }}
@@ -163,15 +148,31 @@ export function Footer() {
                 {/* PWA Install Button */}
                 <PWAInstallButton variant="link" />
 
+                <Link href="/panier" className="group inline-block w-fit">
+                  <motion.span
+                    className="relative text-text-muted transition-colors duration-200 group-hover:text-primary"
+                    whileHover={{ y: -1 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                  >
+                    Panier
+                    <motion.span
+                      className="absolute bottom-0 left-0 h-px bg-primary"
+                      initial={{ width: "0%" }}
+                      whileHover={{ width: "100%" }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  </motion.span>
+                </Link>
+
                 <Link href="/mentions-legales" className="group inline-block w-fit">
                   <motion.span
-                    className="relative text-background/80 transition-colors duration-200 group-hover:text-background"
-                    whileHover={{ y: -1, filter: "brightness(1.1)" }}
+                    className="relative text-text-muted transition-colors duration-200 group-hover:text-primary"
+                    whileHover={{ y: -1 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
                   >
                     Mentions légales
                     <motion.span
-                      className="absolute bottom-0 left-0 h-px bg-background"
+                      className="absolute bottom-0 left-0 h-px bg-primary"
                       initial={{ width: "0%" }}
                       whileHover={{ width: "100%" }}
                       transition={{ duration: 0.3 }}
@@ -180,13 +181,13 @@ export function Footer() {
                 </Link>
                 <Link href="/cgv" className="group inline-block w-fit">
                   <motion.span
-                    className="relative text-background/80 transition-colors duration-200 group-hover:text-background"
-                    whileHover={{ y: -1, filter: "brightness(1.1)" }}
+                    className="relative text-text-muted transition-colors duration-200 group-hover:text-primary"
+                    whileHover={{ y: -1 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
                   >
                     CGV
                     <motion.span
-                      className="absolute bottom-0 left-0 h-px bg-background"
+                      className="absolute bottom-0 left-0 h-px bg-primary"
                       initial={{ width: "0%" }}
                       whileHover={{ width: "100%" }}
                       transition={{ duration: 0.3 }}
@@ -195,13 +196,13 @@ export function Footer() {
                 </Link>
                 <Link href="/contact" className="group inline-block w-fit">
                   <motion.span
-                    className="relative text-background/80 transition-colors duration-200 group-hover:text-background"
-                    whileHover={{ y: -1, filter: "brightness(1.1)" }}
+                    className="relative text-text-muted transition-colors duration-200 group-hover:text-primary"
+                    whileHover={{ y: -1 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
                   >
                     Contact
                     <motion.span
-                      className="absolute bottom-0 left-0 h-px bg-background"
+                      className="absolute bottom-0 left-0 h-px bg-primary"
                       initial={{ width: "0%" }}
                       whileHover={{ width: "100%" }}
                       transition={{ duration: 0.3 }}
@@ -215,14 +216,14 @@ export function Footer() {
       </motion.div>
 
       {/* Newsletter section */}
-      <div className="border-t border-background/20">
+      <div className="border-t border-white/10">
         <Container size="lg">
           <div className="py-8 flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-8">
             <div className="text-center md:text-left flex-shrink-0">
-              <h4 className="font-medium text-sm uppercase tracking-wide mb-1">
+              <h4 className="font-medium text-sm uppercase tracking-wide mb-1 text-white">
                 Restez informe
               </h4>
-              <p className="text-background/70 text-sm max-w-xs">
+              <p className="text-text-muted text-sm max-w-xs">
                 Recevez nos offres exclusives et nouveautes directement dans votre boite mail.
               </p>
             </div>
@@ -234,9 +235,9 @@ export function Footer() {
       </div>
 
       {/* Copyright bar */}
-      <div className="py-4 border-t border-background/20">
+      <div className="py-4 border-t border-white/10">
         <Container size="lg">
-          <p className="text-sm text-background/60 text-center">
+          <p className="text-sm text-text-muted text-center">
             &copy; {currentYear} Nuage. Tous droits réservés.
           </p>
         </Container>

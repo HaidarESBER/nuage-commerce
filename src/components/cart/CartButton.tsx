@@ -19,11 +19,7 @@ export function CartButton({ isHomepage }: { isHomepage?: boolean }) {
   return (
     <Link
       href="/panier"
-      className={`relative inline-flex items-center justify-center p-2 transition-colors ${
-        isHomepage
-          ? "text-white/90 hover:text-white drop-shadow"
-          : "text-primary hover:text-accent"
-      }`}
+      className="relative inline-flex items-center justify-center p-2 text-white/90 hover:text-primary transition-colors"
       aria-label={`Panier${totalItems > 0 ? ` (${totalItems} articles)` : ""}`}
     >
       {/* Cart icon */}
@@ -45,7 +41,7 @@ export function CartButton({ isHomepage }: { isHomepage?: boolean }) {
 
       {/* Item count badge */}
       {totalItems > 0 && (
-        <span className="absolute -top-1 -right-1 min-w-5 h-5 flex items-center justify-center bg-accent text-primary text-xs font-medium rounded-full px-1.5">
+        <span className="absolute -top-1 -right-1 min-w-5 h-5 flex items-center justify-center bg-primary text-white text-xs font-medium rounded-full px-1.5 shadow-[0_0_10px_rgba(18,222,38,0.5)]">
           {totalItems > 99 ? "99+" : totalItems}
         </span>
       )}

@@ -35,7 +35,7 @@ export function ShippingForm({ address, onChange, errors }: ShippingFormProps) {
 
   return (
     <div className="space-y-4">
-      <h2 className="font-heading text-xl text-primary mb-4">
+      <h2 className="font-heading text-xl text-white mb-4">
         Adresse de livraison
       </h2>
 
@@ -44,7 +44,7 @@ export function ShippingForm({ address, onChange, errors }: ShippingFormProps) {
         <div>
           <label
             htmlFor="firstName"
-            className="block text-sm font-medium text-primary mb-1"
+            className="block text-sm font-medium text-white mb-1"
           >
             Prénom *
           </label>
@@ -53,11 +53,11 @@ export function ShippingForm({ address, onChange, errors }: ShippingFormProps) {
             id="firstName"
             value={address.firstName}
             onChange={(e) => handleChange("firstName", e.target.value)}
-            className={`w-full px-4 py-3 rounded-[--radius-button] border ${
+            className={`w-full px-4 py-3 rounded-lg border ${
               errors.firstName
-                ? "border-red-500 focus:ring-red-500"
-                : "border-background-secondary focus:ring-accent"
-            } bg-background text-primary focus:outline-none focus:ring-2`}
+                ? "border-error focus:ring-error"
+                : "border-white/10 focus:ring-primary"
+            } bg-white/5 text-white placeholder-text-muted focus:outline-none focus:ring-2 focus:bg-white/10 backdrop-blur-sm transition-all`}
             placeholder="Jean"
           />
           {errors.firstName && (
@@ -68,7 +68,7 @@ export function ShippingForm({ address, onChange, errors }: ShippingFormProps) {
         <div>
           <label
             htmlFor="lastName"
-            className="block text-sm font-medium text-primary mb-1"
+            className="block text-sm font-medium text-white mb-1"
           >
             Nom *
           </label>
@@ -77,11 +77,11 @@ export function ShippingForm({ address, onChange, errors }: ShippingFormProps) {
             id="lastName"
             value={address.lastName}
             onChange={(e) => handleChange("lastName", e.target.value)}
-            className={`w-full px-4 py-3 rounded-[--radius-button] border ${
+            className={`w-full px-4 py-3 rounded-lg border ${
               errors.lastName
-                ? "border-red-500 focus:ring-red-500"
-                : "border-background-secondary focus:ring-accent"
-            } bg-background text-primary focus:outline-none focus:ring-2`}
+                ? "border-error focus:ring-error"
+                : "border-white/10 focus:ring-primary"
+            } bg-white/5 text-white placeholder-text-muted focus:outline-none focus:ring-2 focus:bg-white/10 backdrop-blur-sm transition-all`}
             placeholder="Dupont"
           />
           {errors.lastName && (
@@ -95,7 +95,7 @@ export function ShippingForm({ address, onChange, errors }: ShippingFormProps) {
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-primary mb-1"
+            className="block text-sm font-medium text-white mb-1"
           >
             Email *
           </label>
@@ -119,7 +119,7 @@ export function ShippingForm({ address, onChange, errors }: ShippingFormProps) {
         <div>
           <label
             htmlFor="phone"
-            className="block text-sm font-medium text-primary mb-1"
+            className="block text-sm font-medium text-white mb-1"
           >
             Téléphone *
           </label>
@@ -173,7 +173,7 @@ export function ShippingForm({ address, onChange, errors }: ShippingFormProps) {
         <div>
           <label
             htmlFor="city"
-            className="block text-sm font-medium text-primary mb-1"
+            className="block text-sm font-medium text-white mb-1"
           >
             Ville *
           </label>
@@ -197,7 +197,7 @@ export function ShippingForm({ address, onChange, errors }: ShippingFormProps) {
         <div>
           <label
             htmlFor="postalCode"
-            className="block text-sm font-medium text-primary mb-1"
+            className="block text-sm font-medium text-white mb-1"
           >
             Code postal *
           </label>

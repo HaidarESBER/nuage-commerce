@@ -138,20 +138,6 @@ export async function POST(request: NextRequest) {
 
         console.log('Webhook: Order confirmed:', orderId)
 
-        // Track referral conversion
-        // Retrieve visitor ID from order metadata if it was stored during checkout
-        if (session.metadata?.visitor_id) {
-          const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-          await fetch(`${siteUrl}/api/referral/convert`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              visitorId: session.metadata.visitor_id,
-              orderId: orderId,
-            }),
-          }).catch(err => console.error('Failed to track referral conversion:', err))
-        }
-
         // Send confirmation email
         const { data: orderData } = await supabase
           .from('orders')

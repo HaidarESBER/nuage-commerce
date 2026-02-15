@@ -13,7 +13,6 @@ interface CheckoutRequestBody {
   shippingAddress: ShippingAddress
   shippingCost: number
   notes?: string
-  visitorId?: string
   discountCode?: string
   discountAmount?: number
 }
@@ -21,7 +20,7 @@ interface CheckoutRequestBody {
 export async function POST(request: NextRequest) {
   try {
     const body: CheckoutRequestBody = await request.json()
-    const { items, shippingAddress, shippingCost, notes, visitorId, discountCode } = body
+    const { items, shippingAddress, shippingCost, notes, discountCode } = body
 
     // Validate required fields
     if (!items || items.length === 0) {
@@ -148,7 +147,6 @@ export async function POST(request: NextRequest) {
       metadata: {
         orderId: order.id,
         orderNumber: order.orderNumber,
-        ...(visitorId && { visitor_id: visitorId }),
         ...(validatedDiscountCode ? { discountCode: validatedDiscountCode, discountAmount: String(serverDiscountAmount) } : {}),
       },
       locale: 'fr',

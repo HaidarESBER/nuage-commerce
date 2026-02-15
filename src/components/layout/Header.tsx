@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui";
 import { CartButton } from "@/components/cart";
 import { HeaderSearch } from "@/components/layout/HeaderSearch";
+import { SearchOverlay } from "@/components/search/SearchOverlay";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useComparison } from "@/contexts/ComparisonContext";
 import { motion, AnimatePresence } from "framer-motion";
@@ -24,6 +25,7 @@ import { Settings } from "lucide-react";
  */
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const pathname = usePathname();
   const { wishlistItems } = useWishlist();
@@ -67,59 +69,70 @@ export function Header() {
     setIsMenuOpen(false);
   };
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen]);
+
   // Homepage has transparent header - video shows through
   const isHomepage = pathname === "/";
 
   return (
-    <header
-      className={`sticky top-0 z-50 transition-colors duration-300 ${
-        isHomepage
-          ? "bg-black/30 backdrop-blur-md border-b border-white/10"
-          : "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-background-secondary"
-      }`}
-    >
-      <Container size="lg">
-        <div className="flex items-center justify-between h-16 gap-4">
+    <>
+      {/* Promotional Banner */}
+      <div className="bg-primary text-background-dark py-1 md:py-1.5 text-center text-[10px] md:text-xs font-semibold tracking-wide z-50 sticky top-0">
+        LIVRAISON OFFERTE DÈS 80€ D'ACHAT — EXPÉDITION SOUS 24H
+      </div>
+
+      {/* Main Header */}
+      <header className="sticky top-[30px] z-40 glass-header transition-all duration-300 border-b border-white/5">
+        <Container size="lg">
+          <div className="flex items-center justify-between h-14 md:h-16 gap-2 md:gap-3">
           {/* Brand */}
-          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+          <Link href="/" className="flex items-center gap-2 flex-shrink-0 group">
             <img
               src="/nuagelogonobg1.png"
               alt="Nuage Logo"
-              className="h-12 w-auto object-contain"
+              className="h-7 md:h-9 w-auto object-contain"
             />
-            <span
-              className={`font-heading text-2xl transition-colors ${
-                isHomepage ? "text-white drop-shadow-lg" : "text-primary"
-              }`}
-            >
+            <span className="font-heading text-lg md:text-xl text-white hover:text-primary transition-colors">
               Nuage
             </span>
           </Link>
 
-          {/* Search Bar - Desktop */}
-          <div className="hidden md:block flex-1 max-w-md">
-            <HeaderSearch isHomepage={isHomepage} />
-          </div>
+          {/* Desktop Search & Navigation */}
+          <div className="hidden md:flex items-center gap-3 flex-grow justify-end text-[0.85rem]">
+            {/* Inline Search Bar */}
+            <div className="relative max-w-sm w-full">
+              <span className="absolute left-2.5 top-1/2 -translate-y-1/2 material-icons text-gray-500 text-xs">
+                search
+              </span>
+              <input
+                type="text"
+                placeholder="Rechercher..."
+                onFocus={() => setIsSearchOpen(true)}
+                className="w-full bg-surface-dark/50 border border-white/10 rounded-full text-xs text-white placeholder-gray-500 focus:border-primary focus:outline-none py-1.5 pl-8 pr-3"
+              />
+            </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6 flex-shrink-0">
+            <nav className="flex items-center gap-4">
             <Link
               href="/produits"
-              className={`text-sm font-medium transition-colors ${
-                isHomepage
-                  ? "text-white/90 hover:text-white drop-shadow"
-                  : "text-primary hover:text-accent"
-              }`}
+              className="text-xs font-medium text-white/90 hover:text-primary transition-colors"
             >
               Produits
             </Link>
             <Link
               href="/blog"
-              className={`text-sm font-medium transition-colors ${
-                isHomepage
-                  ? "text-white/90 hover:text-white drop-shadow"
-                  : "text-primary hover:text-accent"
-              }`}
+              className="text-xs font-medium text-white/90 hover:text-primary transition-colors"
             >
               Blog
             </Link>
@@ -127,11 +140,7 @@ export function Header() {
             {/* Wishlist button */}
             <Link
               href="/compte/wishlist"
-              className={`relative transition-colors ${
-                isHomepage
-                  ? "text-white/90 hover:text-white drop-shadow"
-                  : "text-primary hover:text-accent"
-              }`}
+              className="relative text-white/90 hover:text-primary transition-colors"
               aria-label={`Favoris (${wishlistItems.length} produit${wishlistItems.length > 1 ? 's' : ''})`}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -145,7 +154,7 @@ export function Header() {
                     animate={{ scale: 1 }}
                     exit={{ scale: 0.5 }}
                     transition={{ duration: 0.2, type: "spring", stiffness: 400, damping: 15 }}
-                    className="absolute -top-2 -right-2 bg-accent text-background text-xs font-medium w-5 h-5 rounded-full flex items-center justify-center"
+                    className="absolute -top-2 -right-2 bg-primary text-white text-xs font-medium w-5 h-5 rounded-full flex items-center justify-center shadow-[0_0_10px_rgba(18,222,38,0.5)]"
                   >
                     {wishlistItems.length}
                   </motion.span>
@@ -157,7 +166,7 @@ export function Header() {
             {comparisonItems.length > 0 && (
               <Link
                 href="/comparaison"
-                className="text-sm font-medium text-primary hover:text-accent transition-colors flex items-center gap-1"
+                className="text-sm font-medium text-white/90 hover:text-primary transition-colors flex items-center gap-1"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
@@ -169,11 +178,7 @@ export function Header() {
             {/* Account button */}
             <Link
               href="/compte/profil"
-              className={`transition-colors ${
-                isHomepage
-                  ? "text-white/90 hover:text-white drop-shadow"
-                  : "text-primary hover:text-accent"
-              }`}
+              className="text-white/90 hover:text-primary transition-colors"
               aria-label="Mon profil"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -185,11 +190,7 @@ export function Header() {
             {isAdmin && (
               <Link
                 href="/admin"
-                className={`transition-colors flex items-center gap-1 ${
-                  isHomepage
-                    ? "text-white/90 hover:text-white drop-shadow"
-                    : "text-primary hover:text-accent"
-                }`}
+                className="text-white/90 hover:text-primary transition-colors flex items-center gap-1"
                 aria-label="Admin Panel"
                 title="Admin Panel"
               >
@@ -198,47 +199,24 @@ export function Header() {
             )}
 
             <CartButton isHomepage={isHomepage} />
-          </nav>
+            </nav>
+          </div>
 
           {/* Mobile Navigation Controls */}
-          <div className="flex md:hidden items-center gap-4">
-            {/* Wishlist button */}
-            <Link
-              href="/compte/wishlist"
-              className={`relative transition-colors ${
-                isHomepage
-                  ? "text-white/90 hover:text-white drop-shadow"
-                  : "text-primary hover:text-accent"
-              }`}
-              aria-label={`Favoris (${wishlistItems.length} produit${wishlistItems.length > 1 ? 's' : ''})`}
+          <div className="flex md:hidden items-center gap-3">
+            {/* Search button */}
+            <button
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              className="text-white/90 hover:text-primary transition-colors"
+              aria-label="Rechercher"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-              </svg>
-              {wishlistItems.length > 0 && (
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={wishlistItems.length}
-                    initial={{ scale: 0.5 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0.5 }}
-                    transition={{ duration: 0.2, type: "spring", stiffness: 400, damping: 15 }}
-                    className="absolute -top-2 -right-2 bg-accent text-background text-xs font-medium w-5 h-5 rounded-full flex items-center justify-center"
-                  >
-                    {wishlistItems.length}
-                  </motion.span>
-                </AnimatePresence>
-              )}
-            </Link>
+              <span className="material-icons text-xl">search</span>
+            </button>
 
             <CartButton isHomepage={isHomepage} />
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`p-2 transition-colors ${
-                isHomepage
-                  ? "text-white/90 hover:text-white drop-shadow"
-                  : "text-primary hover:text-accent"
-              }`}
+              className="p-2 text-white/90 hover:text-primary transition-colors"
               aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
               aria-expanded={isMenuOpen}
             >
@@ -266,128 +244,204 @@ export function Header() {
       </Container>
 
       {/* Mobile Menu Overlay */}
-      <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ${
-          isMenuOpen ? "max-h-[500px]" : "max-h-0"
-        }`}
-      >
-        <nav className="bg-background border-b border-background-secondary overflow-y-auto">
-          <Container size="lg">
-            <div className="py-4 flex flex-col gap-4">
-              <Link
-                href="/produits"
-                onClick={handleNavClick}
-                className={`text-base font-medium transition-colors ${
-                  pathname === "/produits"
-                    ? "text-accent"
-                    : "text-primary hover:text-accent"
-                }`}
-              >
-                Tous les Produits
-              </Link>
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={handleNavClick}
+              className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[45]"
+            />
 
-              {/* Categories */}
-              <div className="pl-4 flex flex-col gap-3 border-l-2 border-border">
-                <Link
-                  href="/produits?categorie=chicha"
+            {/* Sliding Menu */}
+            <motion.nav
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="md:hidden fixed top-0 right-0 bottom-0 w-[280px] bg-background-dark/95 backdrop-blur-xl border-l border-white/10 z-50 overflow-y-auto"
+            >
+              {/* Header */}
+              <div className="sticky top-0 bg-background-dark/80 backdrop-blur-xl border-b border-white/10 p-4 flex items-center justify-between">
+                <span className="font-heading text-lg text-white">Menu</span>
+                <button
                   onClick={handleNavClick}
-                  className="text-sm font-light text-muted hover:text-primary transition-colors"
+                  className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-white transition-colors"
                 >
-                  {categoryLabels.chicha}
-                </Link>
-                <Link
-                  href="/produits?categorie=bol"
-                  onClick={handleNavClick}
-                  className="text-sm font-light text-muted hover:text-primary transition-colors"
-                >
-                  {categoryLabels.bol}
-                </Link>
-                <Link
-                  href="/produits?categorie=tuyau"
-                  onClick={handleNavClick}
-                  className="text-sm font-light text-muted hover:text-primary transition-colors"
-                >
-                  {categoryLabels.tuyau}
-                </Link>
-                <Link
-                  href="/produits?categorie=charbon"
-                  onClick={handleNavClick}
-                  className="text-sm font-light text-muted hover:text-primary transition-colors"
-                >
-                  {categoryLabels.charbon}
-                </Link>
-                <Link
-                  href="/produits?categorie=accessoire"
-                  onClick={handleNavClick}
-                  className="text-sm font-light text-muted hover:text-primary transition-colors"
-                >
-                  {categoryLabels.accessoire}
-                </Link>
+                  <span className="material-icons text-sm">close</span>
+                </button>
               </div>
 
-              <Link
-                href="/blog"
-                onClick={handleNavClick}
-                className={`text-base font-medium transition-colors ${
-                  pathname.startsWith("/blog")
-                    ? "text-accent"
-                    : "text-primary hover:text-accent"
-                }`}
-              >
-                Blog
-              </Link>
-              <Link
-                href="/favoris"
-                onClick={handleNavClick}
-                className={`text-base font-medium transition-colors ${
-                  pathname === "/favoris"
-                    ? "text-accent"
-                    : "text-primary hover:text-accent"
-                }`}
-              >
-                Favoris {wishlistItems.length > 0 && `(${wishlistItems.length})`}
-              </Link>
-              <Link
-                href="/compte/profil"
-                onClick={handleNavClick}
-                className={`text-base font-medium transition-colors ${
-                  pathname.startsWith("/compte")
-                    ? "text-accent"
-                    : "text-primary hover:text-accent"
-                }`}
-              >
-                Mon Profil
-              </Link>
-              {/* Admin link - only visible to admins */}
-              {isAdmin && (
+              {/* Menu Content */}
+              <div className="p-4 flex flex-col gap-1 pb-safe">
+                {/* Products */}
                 <Link
-                  href="/admin"
+                  href="/produits"
                   onClick={handleNavClick}
-                  className={`text-base font-medium transition-colors flex items-center gap-2 ${
-                    pathname.startsWith("/admin")
-                      ? "text-accent"
-                      : "text-primary hover:text-accent"
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                    pathname === "/produits"
+                      ? "bg-primary/20 text-primary border border-primary/30"
+                      : "text-white hover:bg-white/5"
                   }`}
                 >
-                  <Settings className="w-5 h-5" />
-                  Admin Panel
+                  <span className="material-icons text-lg">inventory_2</span>
+                  <span className="text-sm font-medium">Tous les Produits</span>
                 </Link>
-              )}
-              <Link
-                href="/panier"
-                onClick={handleNavClick}
-                className={`text-base font-medium transition-colors ${
-                  pathname === "/panier"
-                    ? "text-accent"
-                    : "text-primary hover:text-accent"
-                }`}
-              >
-                Panier
-              </Link>
-            </div>
-          </Container>
-        </nav>
-      </div>
-    </header>
+
+                {/* Categories Submenu */}
+                <div className="ml-3 pl-3 border-l border-white/10 mt-1 mb-2 flex flex-col gap-0.5">
+                  <Link
+                    href="/produits?categorie=chicha"
+                    onClick={handleNavClick}
+                    className="px-3 py-1.5 text-xs text-text-muted hover:text-primary transition-colors rounded-lg hover:bg-white/5"
+                  >
+                    {categoryLabels.chicha}
+                  </Link>
+                  <Link
+                    href="/produits?categorie=bol"
+                    onClick={handleNavClick}
+                    className="px-3 py-1.5 text-xs text-text-muted hover:text-primary transition-colors rounded-lg hover:bg-white/5"
+                  >
+                    {categoryLabels.bol}
+                  </Link>
+                  <Link
+                    href="/produits?categorie=tuyau"
+                    onClick={handleNavClick}
+                    className="px-3 py-1.5 text-xs text-text-muted hover:text-primary transition-colors rounded-lg hover:bg-white/5"
+                  >
+                    {categoryLabels.tuyau}
+                  </Link>
+                  <Link
+                    href="/produits?categorie=charbon"
+                    onClick={handleNavClick}
+                    className="px-3 py-1.5 text-xs text-text-muted hover:text-primary transition-colors rounded-lg hover:bg-white/5"
+                  >
+                    {categoryLabels.charbon}
+                  </Link>
+                  <Link
+                    href="/produits?categorie=accessoire"
+                    onClick={handleNavClick}
+                    className="px-3 py-1.5 text-xs text-text-muted hover:text-primary transition-colors rounded-lg hover:bg-white/5"
+                  >
+                    {categoryLabels.accessoire}
+                  </Link>
+                </div>
+
+                {/* Blog */}
+                <Link
+                  href="/blog"
+                  onClick={handleNavClick}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                    pathname.startsWith("/blog")
+                      ? "bg-primary/20 text-primary border border-primary/30"
+                      : "text-white hover:bg-white/5"
+                  }`}
+                >
+                  <span className="material-icons text-lg">article</span>
+                  <span className="text-sm font-medium">Blog</span>
+                </Link>
+
+                {/* Wishlist */}
+                <Link
+                  href="/compte/wishlist"
+                  onClick={handleNavClick}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                    pathname === "/compte/wishlist"
+                      ? "bg-primary/20 text-primary border border-primary/30"
+                      : "text-white hover:bg-white/5"
+                  }`}
+                >
+                  <span className="material-icons text-lg">favorite</span>
+                  <div className="flex items-center gap-2 flex-1">
+                    <span className="text-sm font-medium">Favoris</span>
+                    {wishlistItems.length > 0 && (
+                      <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">
+                        {wishlistItems.length}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+
+                {/* Comparison */}
+                {comparisonItems.length > 0 && (
+                  <Link
+                    href="/comparaison"
+                    onClick={handleNavClick}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                      pathname === "/comparaison"
+                        ? "bg-primary/20 text-primary border border-primary/30"
+                        : "text-white hover:bg-white/5"
+                    }`}
+                  >
+                    <span className="material-icons text-lg">compare</span>
+                    <div className="flex items-center gap-2 flex-1">
+                      <span className="text-sm font-medium">Comparer</span>
+                      <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">
+                        {comparisonItems.length}
+                      </span>
+                    </div>
+                  </Link>
+                )}
+
+                {/* Profile */}
+                <Link
+                  href="/compte/profil"
+                  onClick={handleNavClick}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                    pathname.startsWith("/compte")
+                      ? "bg-primary/20 text-primary border border-primary/30"
+                      : "text-white hover:bg-white/5"
+                  }`}
+                >
+                  <span className="material-icons text-lg">person</span>
+                  <span className="text-sm font-medium">Mon Profil</span>
+                </Link>
+
+                {/* Admin link - only visible to admins */}
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    onClick={handleNavClick}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                      pathname.startsWith("/admin")
+                        ? "bg-primary/20 text-primary border border-primary/30"
+                        : "text-white hover:bg-white/5"
+                    }`}
+                  >
+                    <Settings className="w-5 h-5" />
+                    <span className="text-sm font-medium">Admin Panel</span>
+                  </Link>
+                )}
+
+                {/* Divider */}
+                <div className="h-px bg-white/10 my-2"></div>
+
+                {/* Cart */}
+                <Link
+                  href="/panier"
+                  onClick={handleNavClick}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                    pathname === "/panier"
+                      ? "bg-primary/20 text-primary border border-primary/30"
+                      : "text-white hover:bg-white/5"
+                  }`}
+                >
+                  <span className="material-icons text-lg">shopping_cart</span>
+                  <span className="text-sm font-medium">Panier</span>
+                </Link>
+              </div>
+            </motion.nav>
+          </>
+        )}
+      </AnimatePresence>
+      </header>
+
+      {/* Search Overlay */}
+      <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+    </>
   );
 }

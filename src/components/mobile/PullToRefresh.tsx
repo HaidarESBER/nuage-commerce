@@ -67,7 +67,8 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
       // Only activate on pull down
       if (distance > 0) {
         // Prevent default scroll behavior while pulling
-        if (distance > 10) {
+        // Only call preventDefault if the event is cancelable
+        if (distance > 10 && e.cancelable) {
           e.preventDefault();
         }
 
@@ -120,7 +121,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
   const indicatorScale = Math.min(pullDistance / PULL_THRESHOLD, 1);
 
   return (
-    <div ref={containerRef} className="relative">
+    <div ref={containerRef} className="relative w-full overflow-x-hidden">
       {/* Pull-to-refresh indicator */}
       <AnimatePresence>
         {(isPulling || isRefreshing) && isMobile && (
