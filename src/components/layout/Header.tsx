@@ -126,10 +126,8 @@ export function Header() {
                     animate={{ rotateY: 0, opacity: 1, scale: 1, y: 0 }}
                     exit={{ rotateY: 90, opacity: 0, scale: 0.5, y: 10 }}
                     transition={{ duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
-                    onAnimationComplete={(definition) => {
-                      if (definition.rotateY === 0) {
-                        setTimeout(() => setShowLogo(false), 1500);
-                      }
+                    onAnimationComplete={() => {
+                      setTimeout(() => setShowLogo(false), 1500);
                     }}
                     style={{ transformStyle: 'preserve-3d' }}
                   />
@@ -141,13 +139,11 @@ export function Header() {
                     animate={{ rotateY: 0, opacity: 1, scale: 1, y: 0 }}
                     exit={{ rotateY: 90, opacity: 0, scale: 0.5, y: 10 }}
                     transition={{ duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
-                    onAnimationComplete={(definition) => {
-                      if (definition.rotateY === 0) {
-                        setTimeout(() => {
-                          setShowLogo(true);
-                          setAnimationKey(prev => prev + 1);
-                        }, 1500);
-                      }
+                    onAnimationComplete={() => {
+                      setTimeout(() => {
+                        setShowLogo(true);
+                        setAnimationKey(prev => prev + 1);
+                      }, 1500);
                     }}
                     style={{ transformStyle: 'preserve-3d' }}
                   >
