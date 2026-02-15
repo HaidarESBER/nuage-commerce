@@ -9,6 +9,7 @@ import { Review, ProductRatingStats } from "@/data/reviews";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { formatPrice } from "@/types/product";
+import { ReviewSubmitModal } from "@/components/product/ReviewSubmitModal";
 
 interface ProductDetailClientProps {
   product: Product;
@@ -36,6 +37,7 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
   const [mobileReviewsExpanded, setMobileReviewsExpanded] = useState(false);
   const [showAddedToast, setShowAddedToast] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const { addItem } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
@@ -842,12 +844,13 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
           </div>
 
           {/* Reviews Section - Collapsible & Compact */}
-          {sortedReviews.length > 0 && (
-            <section id="reviews" className="mt-4 mb-4">
+          <section id="reviews" className="mt-4 mb-4">
+            {/* Header with Toggle and Write Review Button */}
+            <div className="flex gap-2 mb-2">
               {/* Toggle Button - Thinner */}
               <button
                 onClick={() => setReviewsExpanded(!reviewsExpanded)}
-                className="w-full px-2.5 py-1.5 bg-background-card hover:bg-background-card/80 rounded-lg border border-white/10 transition-all flex items-center justify-between group"
+                className="flex-1 px-2.5 py-1.5 bg-background-card hover:bg-background-card/80 rounded-lg border border-white/10 transition-all flex items-center justify-between group"
               >
                 <div className="flex items-center gap-1.5">
                   <h2 className="text-[10px] font-light text-white">Avis</h2>
@@ -870,6 +873,19 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                   expand_more
                 </span>
               </button>
+
+              {/* Write Review Button */}
+              <button
+                onClick={() => setIsReviewModalOpen(true)}
+                className="px-3 py-1.5 bg-primary hover:bg-primary-light text-black text-[10px] font-medium rounded-lg transition-all flex items-center gap-1"
+              >
+                <span className="material-icons text-xs">edit</span>
+                <span className="hidden sm:inline">Écrire un avis</span>
+                <span className="sm:hidden">Avis</span>
+              </button>
+            </div>
+
+            {sortedReviews.length > 0 && (
 
               {/* Reviews Content */}
               {reviewsExpanded && (
@@ -967,8 +983,8 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                   </div>
                 </div>
               )}
-            </section>
-          )}
+            )}
+          </section>
 
           {/* Related Products - Same Category */}
           {relatedProducts.length > 0 && (
@@ -1247,6 +1263,14 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
           <span>Produit ajouté au panier</span>
         </motion.div>
       )}
+
+      {/* Review Submit Modal */}
+      <ReviewSubmitModal
+        isOpen={isReviewModalOpen}
+        onClose={() => setIsReviewModalOpen(false)}
+        productId={product.id}
+        productName={product.name}
+      />
 
       <style jsx global>{`
         .no-scrollbar::-webkit-scrollbar {
