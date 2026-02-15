@@ -115,21 +115,21 @@ export function Header() {
           </Link>
 
           {/* Desktop Search & Navigation */}
-          <div className="hidden md:flex items-center gap-3 flex-grow justify-end text-[0.85rem]">
+          <div className="hidden md:flex items-center gap-4 flex-grow justify-end">
             {/* Inline Search Bar */}
             <div className="relative max-w-sm w-full">
-              <span className="absolute left-2.5 top-1/2 -translate-y-1/2 material-icons text-gray-500 text-xs">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 material-icons text-gray-400 text-base">
                 search
               </span>
               <input
                 type="text"
                 placeholder="Rechercher..."
                 onFocus={() => setIsSearchOpen(true)}
-                className="w-full bg-surface-dark/50 border border-white/10 rounded-full text-xs text-white placeholder-gray-500 focus:border-primary focus:outline-none py-1.5 pl-8 pr-3"
+                className="w-full h-10 bg-surface-dark/50 border border-white/10 rounded-full text-sm text-white placeholder-gray-400 focus:border-primary focus:outline-none pl-10 pr-4"
               />
             </div>
 
-            <nav className="flex items-center gap-4">
+            <nav className="flex items-center gap-4 h-10">
             <Link
               href="/produits"
               className="text-xs font-medium text-white/90 hover:text-primary transition-colors"
@@ -251,161 +251,98 @@ export function Header() {
 
       {/* Mobile Menu Overlay - Rendered via Portal */}
       {mounted && isMenuOpen && createPortal(
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 999999,
-          display: 'block',
-        }}>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 999999,
+          }}
+        >
           {/* Backdrop */}
           <div
             onClick={handleNavClick}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.85)',
-              zIndex: 1,
-            }}
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
           />
 
-          {/* Menu Panel */}
-          <div
+          {/* Sliding Menu Panel */}
+          <motion.nav
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+            className="absolute top-0 right-0 bottom-0 w-[280px] bg-background-dark/98 backdrop-blur-xl border-l border-white/10 overflow-y-auto shadow-2xl"
             style={{
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              bottom: 0,
-              width: '80%',
-              maxWidth: '320px',
-              backgroundColor: '#0f0f0f',
-              zIndex: 2,
-              overflowY: 'auto',
               WebkitOverflowScrolling: 'touch',
-              boxShadow: '-4px 0 20px rgba(0,0,0,0.7)',
             }}
           >
             {/* Menu Header */}
-            <div style={{
-              padding: '20px',
-              borderBottom: '1px solid #333',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              backgroundColor: '#0f0f0f',
-            }}>
-              <span style={{ color: 'white', fontSize: '18px', fontWeight: 'bold' }}>Menu</span>
+            <div className="sticky top-0 bg-background-dark/95 backdrop-blur-xl border-b border-white/10 p-4 flex items-center justify-between z-10">
+              <span className="font-heading text-lg text-white font-bold">Menu</span>
               <button
                 onClick={handleNavClick}
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  backgroundColor: '#333',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '50%',
-                  fontSize: '24px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+                aria-label="Fermer le menu"
               >
-                ×
+                <span className="material-icons text-xl">close</span>
               </button>
             </div>
 
-            {/* Menu Items */}
-            <div style={{ padding: '20px' }}>
+            {/* Menu Content */}
+            <div className="p-4 flex flex-col gap-1 pb-safe"
                 {/* Products */}
                 <Link
                   href="/produits"
                   onClick={handleNavClick}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    padding: '14px 16px',
-                    borderRadius: '8px',
-                    backgroundColor: pathname === "/produits" ? 'rgba(18, 222, 38, 0.15)' : 'transparent',
-                    color: pathname === "/produits" ? '#12de26' : '#fff',
-                    textDecoration: 'none',
-                    marginBottom: '4px',
-                    border: pathname === "/produits" ? '1px solid rgba(18, 222, 38, 0.3)' : '1px solid transparent',
-                  }}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                    pathname === "/produits"
+                      ? "bg-primary/20 text-primary border border-primary/30"
+                      : "text-white hover:bg-white/5"
+                  }`}
                 >
-                  <span style={{ fontSize: '15px', fontWeight: '600' }}>Tous les Produits</span>
+                  <span className="material-icons text-lg">inventory_2</span>
+                  <span className="text-sm font-medium">Tous les Produits</span>
                 </Link>
 
-                {/* Categories */}
-                <div style={{ marginLeft: '20px', marginBottom: '16px' }}>
+                {/* Categories Submenu */}
+                <div className="ml-3 pl-3 border-l border-white/10 mt-1 mb-2 flex flex-col gap-0.5">
                   <Link
                     href="/produits?categorie=chicha"
                     onClick={handleNavClick}
-                    style={{
-                      display: 'block',
-                      padding: '8px 12px',
-                      color: '#aaa',
-                      textDecoration: 'none',
-                      fontSize: '13px',
-                    }}
+                    className="px-3 py-1.5 text-xs text-text-muted hover:text-primary transition-colors rounded-lg hover:bg-white/5"
                   >
                     {categoryLabels.chicha}
                   </Link>
                   <Link
                     href="/produits?categorie=bol"
                     onClick={handleNavClick}
-                    style={{
-                      display: 'block',
-                      padding: '8px 12px',
-                      color: '#aaa',
-                      textDecoration: 'none',
-                      fontSize: '13px',
-                    }}
+                    className="px-3 py-1.5 text-xs text-text-muted hover:text-primary transition-colors rounded-lg hover:bg-white/5"
                   >
                     {categoryLabels.bol}
                   </Link>
                   <Link
                     href="/produits?categorie=tuyau"
                     onClick={handleNavClick}
-                    style={{
-                      display: 'block',
-                      padding: '8px 12px',
-                      color: '#aaa',
-                      textDecoration: 'none',
-                      fontSize: '13px',
-                    }}
+                    className="px-3 py-1.5 text-xs text-text-muted hover:text-primary transition-colors rounded-lg hover:bg-white/5"
                   >
                     {categoryLabels.tuyau}
                   </Link>
                   <Link
                     href="/produits?categorie=charbon"
                     onClick={handleNavClick}
-                    style={{
-                      display: 'block',
-                      padding: '8px 12px',
-                      color: '#aaa',
-                      textDecoration: 'none',
-                      fontSize: '13px',
-                    }}
+                    className="px-3 py-1.5 text-xs text-text-muted hover:text-primary transition-colors rounded-lg hover:bg-white/5"
                   >
                     {categoryLabels.charbon}
                   </Link>
                   <Link
                     href="/produits?categorie=accessoire"
                     onClick={handleNavClick}
-                    style={{
-                      display: 'block',
-                      padding: '8px 12px',
-                      color: '#aaa',
-                      textDecoration: 'none',
-                      fontSize: '13px',
-                    }}
+                    className="px-3 py-1.5 text-xs text-text-muted hover:text-primary transition-colors rounded-lg hover:bg-white/5"
                   >
                     {categoryLabels.accessoire}
                   </Link>
@@ -415,114 +352,107 @@ export function Header() {
                 <Link
                   href="/blog"
                   onClick={handleNavClick}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '14px 16px',
-                    borderRadius: '8px',
-                    backgroundColor: pathname.startsWith("/blog") ? 'rgba(18, 222, 38, 0.15)' : 'transparent',
-                    color: pathname.startsWith("/blog") ? '#12de26' : '#fff',
-                    textDecoration: 'none',
-                    marginBottom: '4px',
-                    border: pathname.startsWith("/blog") ? '1px solid rgba(18, 222, 38, 0.3)' : '1px solid transparent',
-                  }}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                    pathname.startsWith("/blog")
+                      ? "bg-primary/20 text-primary border border-primary/30"
+                      : "text-white hover:bg-white/5"
+                  }`}
                 >
-                  <span style={{ fontSize: '15px', fontWeight: '600' }}>Blog</span>
+                  <span className="material-icons text-lg">article</span>
+                  <span className="text-sm font-medium">Blog</span>
                 </Link>
 
                 {/* Wishlist */}
                 <Link
                   href="/compte/wishlist"
                   onClick={handleNavClick}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '14px 16px',
-                    borderRadius: '8px',
-                    backgroundColor: pathname === "/compte/wishlist" ? 'rgba(18, 222, 38, 0.15)' : 'transparent',
-                    color: pathname === "/compte/wishlist" ? '#12de26' : '#fff',
-                    textDecoration: 'none',
-                    marginBottom: '4px',
-                    border: pathname === "/compte/wishlist" ? '1px solid rgba(18, 222, 38, 0.3)' : '1px solid transparent',
-                  }}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                    pathname === "/compte/wishlist"
+                      ? "bg-primary/20 text-primary border border-primary/30"
+                      : "text-white hover:bg-white/5"
+                  }`}
                 >
-                  <span style={{ fontSize: '15px', fontWeight: '600' }}>Favoris</span>
-                  {wishlistItems.length > 0 && (
-                    <span style={{
-                      fontSize: '12px',
-                      backgroundColor: 'rgba(18, 222, 38, 0.2)',
-                      color: '#12de26',
-                      padding: '2px 8px',
-                      borderRadius: '12px',
-                    }}>
-                      {wishlistItems.length}
-                    </span>
-                  )}
+                  <span className="material-icons text-lg">favorite</span>
+                  <div className="flex items-center gap-2 flex-1">
+                    <span className="text-sm font-medium">Favoris</span>
+                    {wishlistItems.length > 0 && (
+                      <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">
+                        {wishlistItems.length}
+                      </span>
+                    )}
+                  </div>
                 </Link>
+
+                {/* Comparison */}
+                {comparisonItems.length > 0 && (
+                  <Link
+                    href="/comparaison"
+                    onClick={handleNavClick}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                      pathname === "/comparaison"
+                        ? "bg-primary/20 text-primary border border-primary/30"
+                        : "text-white hover:bg-white/5"
+                    }`}
+                  >
+                    <span className="material-icons text-lg">compare</span>
+                    <div className="flex items-center gap-2 flex-1">
+                      <span className="text-sm font-medium">Comparer</span>
+                      <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">
+                        {comparisonItems.length}
+                      </span>
+                    </div>
+                  </Link>
+                )}
 
                 {/* Profile */}
                 <Link
                   href="/compte/profil"
                   onClick={handleNavClick}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '14px 16px',
-                    borderRadius: '8px',
-                    backgroundColor: pathname.startsWith("/compte") && pathname !== "/compte/wishlist" ? 'rgba(18, 222, 38, 0.15)' : 'transparent',
-                    color: pathname.startsWith("/compte") && pathname !== "/compte/wishlist" ? '#12de26' : '#fff',
-                    textDecoration: 'none',
-                    marginBottom: '4px',
-                    border: pathname.startsWith("/compte") && pathname !== "/compte/wishlist" ? '1px solid rgba(18, 222, 38, 0.3)' : '1px solid transparent',
-                  }}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                    pathname.startsWith("/compte") && pathname !== "/compte/wishlist"
+                      ? "bg-primary/20 text-primary border border-primary/30"
+                      : "text-white hover:bg-white/5"
+                  }`}
                 >
-                  <span style={{ fontSize: '15px', fontWeight: '600' }}>Mon Profil</span>
+                  <span className="material-icons text-lg">person</span>
+                  <span className="text-sm font-medium">Mon Profil</span>
                 </Link>
 
+                {/* Admin link */}
                 {isAdmin && (
                   <Link
                     href="/admin"
                     onClick={handleNavClick}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      padding: '14px 16px',
-                      borderRadius: '8px',
-                      backgroundColor: pathname.startsWith("/admin") ? 'rgba(18, 222, 38, 0.15)' : 'transparent',
-                      color: pathname.startsWith("/admin") ? '#12de26' : '#fff',
-                      textDecoration: 'none',
-                      marginBottom: '4px',
-                      border: pathname.startsWith("/admin") ? '1px solid rgba(18, 222, 38, 0.3)' : '1px solid transparent',
-                    }}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                      pathname.startsWith("/admin")
+                        ? "bg-primary/20 text-primary border border-primary/30"
+                        : "text-white hover:bg-white/5"
+                    }`}
                   >
-                    <span style={{ fontSize: '15px', fontWeight: '600' }}>Admin Panel</span>
+                    <Settings className="w-5 h-5" />
+                    <span className="text-sm font-medium">Admin Panel</span>
                   </Link>
                 )}
 
-                <div style={{ height: '1px', backgroundColor: '#333', margin: '20px 0' }} />
+                {/* Divider */}
+                <div className="h-px bg-white/10 my-2"></div>
 
                 {/* Cart */}
                 <Link
                   href="/panier"
                   onClick={handleNavClick}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '14px 16px',
-                    borderRadius: '8px',
-                    backgroundColor: pathname === "/panier" ? 'rgba(18, 222, 38, 0.15)' : 'transparent',
-                    color: pathname === "/panier" ? '#12de26' : '#fff',
-                    textDecoration: 'none',
-                    marginBottom: '4px',
-                    border: pathname === "/panier" ? '1px solid rgba(18, 222, 38, 0.3)' : '1px solid transparent',
-                  }}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                    pathname === "/panier"
+                      ? "bg-primary/20 text-primary border border-primary/30"
+                      : "text-white hover:bg-white/5"
+                  }`}
                 >
-                  <span style={{ fontSize: '15px', fontWeight: '600' }}>Panier</span>
+                  <span className="material-icons text-lg">shopping_cart</span>
+                  <span className="text-sm font-medium">Panier</span>
                 </Link>
               </div>
-            </div>
-          </div>,
+            </motion.nav>
+          </motion.div>,
         document.body
       )}
 
