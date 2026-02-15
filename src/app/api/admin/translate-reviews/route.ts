@@ -1,12 +1,16 @@
 import { NextResponse } from "next/server";
 import { batchTranslateReviews } from "@/lib/ai/translate-reviews";
+import { requireAdmin } from "@/lib/session";
 
 /**
  * Admin endpoint to manually trigger review translation
- * No auth required in development for easy testing
+ * Requires admin authentication
  */
 export async function POST() {
   try {
+    // Verify admin access (defense-in-depth)
+    await requireAdmin();
+
     // Translate up to 20 pending reviews
     const result = await batchTranslateReviews(20);
 
@@ -23,6 +27,15 @@ export async function POST() {
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("[Admin translate-reviews] Error:", message);
+
+    if (error instanceof Error &&
+        (error.message === 'Authentication required' || error.message === 'Admin access required')) {
+      return NextResponse.json(
+        { error: message },
+        { status: 403 }
+      );
+    }
+
     return NextResponse.json(
       { success: false, error: message },
       { status: 500 }

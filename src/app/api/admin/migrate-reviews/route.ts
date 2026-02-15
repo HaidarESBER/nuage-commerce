@@ -1,10 +1,14 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { requireAdmin } from '@/lib/session';
 
 export async function POST() {
-  const supabase = createAdminClient();
-
   try {
+    // Verify admin access (defense-in-depth)
+    await requireAdmin();
+
+    const supabase = createAdminClient();
+
     // Add status column if it doesn't exist
     const { error } = await supabase.rpc('exec_sql', {
       sql_query: `
@@ -25,6 +29,15 @@ export async function POST() {
     return NextResponse.json({ success: true, message: 'Migration completed successfully' });
   } catch (error) {
     console.error('Migration error:', error);
+
+    if (error instanceof Error &&
+        (error.message === 'Authentication required' || error.message === 'Admin access required')) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: 403 }
+      );
+    }
+
     return NextResponse.json(
       { error: 'Failed to run migration' },
       { status: 500 }

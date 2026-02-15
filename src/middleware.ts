@@ -34,6 +34,7 @@ export async function middleware(request: NextRequest) {
 
   // Protect admin API routes
   if (
+    pathname.startsWith("/api/admin") ||
     pathname.startsWith("/api/update-order-tracking") ||
     pathname.startsWith("/api/send-order-email") ||
     pathname.startsWith("/api/send-shipping-email")
