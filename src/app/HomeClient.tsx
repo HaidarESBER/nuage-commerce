@@ -99,23 +99,24 @@ export function HomeClient({ featuredProducts, ratingsMap = {} }: HomeClientProp
 
           {/* Hero Content */}
           <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-            <span className="inline-block py-1 px-3 rounded-full bg-primary/20 text-primary border border-primary/30 text-[10px] sm:text-xs font-semibold tracking-wider mb-3 sm:mb-4 uppercase backdrop-blur-md">
-              Nouvelle Collection P/E 24
+            <span className="inline-block py-1.5 px-4 rounded-full bg-gradient-to-r from-amber-500/20 to-orange-600/20 text-amber-200 border border-amber-400/40 text-[10px] sm:text-xs font-bold tracking-widest mb-3 sm:mb-4 uppercase backdrop-blur-md shadow-lg">
+              ✦ Collection Exclusive 2024 ✦
             </span>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 leading-tight tracking-tight">
-              Redéfinir le{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-400">
-                Rituel.
+              L'Art de la{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-orange-400 to-amber-500 drop-shadow-[0_0_30px_rgba(251,191,36,0.5)]">
+                Perfection
               </span>
             </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 mb-4 sm:mb-6 max-w-2xl mx-auto font-light leading-relaxed">
-              Chichas et accessoires premium sélectionnés pour les connaisseurs modernes. Vivez le luxe à chaque bouffée.
+            <p className="text-sm sm:text-base md:text-lg text-amber-100/90 mb-4 sm:mb-6 max-w-2xl mx-auto font-light leading-relaxed">
+              Découvrez notre sélection de chichas artisanales et accessoires raffinés.
+              <span className="block mt-1 text-amber-200/70 text-xs sm:text-sm">Chaque session devient une expérience inoubliable.</span>
             </p>
             <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
               {/* Mobile: Only show "Découvrir la Collection" in secondary style */}
               <Link
                 href="/produits"
-                className="md:hidden whitespace-nowrap px-6 py-2.5 bg-white/5 border border-white/10 hover:border-primary/50 text-white rounded-full text-sm backdrop-blur-sm transition-all hover:bg-white/10"
+                className="md:hidden whitespace-nowrap px-6 py-2.5 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-semibold rounded-full text-sm shadow-lg shadow-amber-900/50 transition-all hover:shadow-xl hover:shadow-amber-900/70 hover:scale-105"
               >
                 Découvrir la Collection
               </Link>
@@ -123,7 +124,7 @@ export function HomeClient({ featuredProducts, ratingsMap = {} }: HomeClientProp
               {/* Desktop: Show primary CTA */}
               <Link
                 href="/produits"
-                className="hidden md:inline-flex px-8 py-3 bg-primary text-background-dark font-bold rounded-full hover:bg-white transition-colors duration-300 text-base"
+                className="hidden md:inline-flex px-8 py-3 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold rounded-full shadow-lg shadow-amber-900/50 transition-all hover:shadow-xl hover:shadow-amber-900/70 hover:scale-105 text-base"
               >
                 Voir la Collection
               </Link>
@@ -132,19 +133,19 @@ export function HomeClient({ featuredProducts, ratingsMap = {} }: HomeClientProp
               <div className="hidden md:flex items-center gap-3">
                 <Link
                   href="/produits?categorie=chicha"
-                  className="whitespace-nowrap px-5 py-2.5 bg-white/5 border border-white/10 hover:border-primary/50 text-white rounded-full text-sm backdrop-blur-sm transition-all hover:bg-white/10"
+                  className="whitespace-nowrap px-5 py-2.5 bg-white/5 border-2 border-amber-600/30 hover:border-amber-500/60 hover:bg-amber-600/10 text-amber-100 rounded-full text-sm backdrop-blur-sm transition-all font-medium"
                 >
                   Chichas
                 </Link>
                 <Link
                   href="/produits?categorie=accessoire"
-                  className="whitespace-nowrap px-5 py-2.5 bg-white/5 border border-white/10 hover:border-primary/50 text-white rounded-full text-sm backdrop-blur-sm transition-all hover:bg-white/10"
+                  className="whitespace-nowrap px-5 py-2.5 bg-white/5 border-2 border-amber-600/30 hover:border-amber-500/60 hover:bg-amber-600/10 text-amber-100 rounded-full text-sm backdrop-blur-sm transition-all font-medium"
                 >
                   Accessoires
                 </Link>
                 <Link
                   href="/produits?categorie=charbon"
-                  className="whitespace-nowrap px-5 py-2.5 bg-white/5 border border-white/10 hover:border-primary/50 text-white rounded-full text-sm backdrop-blur-sm transition-all hover:bg-white/10"
+                  className="whitespace-nowrap px-5 py-2.5 bg-white/5 border-2 border-amber-600/30 hover:border-amber-500/60 hover:bg-amber-600/10 text-amber-100 rounded-full text-sm backdrop-blur-sm transition-all font-medium"
                 >
                   Charbon
                 </Link>
@@ -333,69 +334,81 @@ export function HomeClient({ featuredProducts, ratingsMap = {} }: HomeClientProp
         {/* Curated Collection Starter Kits - Hidden for now */}
         {/* <StarterKitsSection /> */}
 
-        {/* Experience / Brand Section */}
-        <section className="py-8 sm:py-10 md:py-12 px-4 md:px-6 relative overflow-hidden w-full">
-          <div className="absolute inset-0 z-0 bg-background-dark"></div>
+        {/* Mobile Fractured Category Grid */}
+        <section className="lg:hidden py-4 px-4">
+          <div className="mb-3">
+            <h2 className="text-lg font-bold">Découvrir les Catégories</h2>
+          </div>
 
-          <div className="max-w-[1600px] w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-center relative z-10">
-            <div className="order-2 md:order-1">
-              <div className="bg-white/5 p-5 sm:p-6 rounded-lg backdrop-blur-md border border-white/5">
-                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">Sublimez Votre Session</h2>
-                <p className="text-gray-300 mb-3 sm:mb-4 text-xs sm:text-sm leading-relaxed">
-                  Nuage n'est pas seulement une boutique ; c'est une destination pour les passionnés. Nous sélectionnons uniquement les
-                  meilleurs matériaux—aluminium aérospatial, cristal bohème et silicone médical—pour garantir que chaque session soit pure, puissante et parfaite.
+          <div className="grid grid-cols-2 gap-1.5 auto-rows-[85px]">
+            {/* Large Item: Chichas - Spans 2 columns and 2 rows */}
+            <Link
+              href="/produits?categorie=chicha"
+              className="col-span-2 row-span-2 relative group rounded-lg overflow-hidden cursor-pointer active:scale-[0.98] transition-all shadow-lg"
+            >
+              <img
+                src="/chicha.jpg"
+                alt="Chichas"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-active:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent"></div>
+              <div className="absolute inset-0 flex flex-col justify-end p-2.5 z-10">
+                <span className="text-primary text-[9px] font-bold tracking-wider mb-0.5 uppercase">Phare</span>
+                <h3 className="text-base font-bold text-white mb-0.5">Chichas</h3>
+                <p className="text-gray-300 text-[10px] leading-tight">
+                  Sélection premium de classe mondiale
                 </p>
-                <ul className="space-y-2 sm:space-y-2.5 mb-4 sm:mb-6">
-                  <li className="flex items-center gap-2 sm:gap-2.5">
-                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-primary/20 flex items-center justify-center text-primary flex-shrink-0">
-                      <span className="material-icons text-xs">check</span>
-                    </div>
-                    <span className="text-white text-xs sm:text-sm">Expédition garantie sous 24h</span>
-                  </li>
-                  <li className="flex items-center gap-2 sm:gap-2.5">
-                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-primary/20 flex items-center justify-center text-primary flex-shrink-0">
-                      <span className="material-icons text-xs">verified</span>
-                    </div>
-                    <span className="text-white text-xs sm:text-sm">Marques Premium Authentiques</span>
-                  </li>
-                  <li className="flex items-center gap-2 sm:gap-2.5">
-                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-primary/20 flex items-center justify-center text-primary flex-shrink-0">
-                      <span className="material-icons text-xs">support_agent</span>
-                    </div>
-                    <span className="text-white text-xs sm:text-sm">Support Expert Connaisseur</span>
-                  </li>
-                </ul>
-
-                {/* Founders Quote */}
-                <div className="my-4 sm:my-6 pl-4 border-l-2 border-primary/30">
-                  <p className="text-gray-300 text-xs sm:text-sm italic leading-relaxed mb-2">
-                    "Nous avons réalisé que la chicha en Europe était souvent perçue comme une simple distraction, dépouillée de toute sa dimension culturelle et spirituelle. Les produits étaient de qualité médiocre, l'expérience précipitée, la passion absente."
-                  </p>
-                  <p className="text-primary text-xs font-semibold">
-                    — Ali & Haidar, Fondateurs de Nuage
-                  </p>
-                </div>
-
-                <Link
-                  href="/about"
-                  className="text-primary font-bold hover:text-white transition-colors flex items-center gap-2 group text-sm sm:text-base"
-                >
-                  Lire Notre Histoire{" "}
-                  <span className="material-icons text-sm group-hover:translate-x-1 transition-transform">
-                    arrow_forward
-                  </span>
-                </Link>
               </div>
-            </div>
-            <div className="order-1 md:order-2 relative">
-              <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl aspect-square">
-                <img
-                  src="/history.jpeg"
-                  alt="Notre histoire - Deux frères libanais passionnés par la chicha"
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
+            </Link>
+
+            {/* Medium Item: Bowls - Spans 2 columns, 1 row */}
+            <Link
+              href="/produits?categorie=bol"
+              className="col-span-2 row-span-1 relative group rounded-lg overflow-hidden cursor-pointer active:scale-[0.98] transition-all shadow-lg"
+            >
+              <img
+                src="/bowl.jpg"
+                alt="Bols"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-active:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent"></div>
+              <div className="absolute inset-0 flex flex-col justify-end p-2 z-10">
+                <h3 className="text-xs font-bold text-white mb-0.5">Bols (Bowls)</h3>
+                <p className="text-gray-300 text-[9px]">Céramiques artisanales premium</p>
               </div>
-            </div>
+            </Link>
+
+            {/* Small Item: Charbon */}
+            <Link
+              href="/produits?categorie=charbon"
+              className="col-span-1 row-span-1 relative group rounded-lg overflow-hidden cursor-pointer active:scale-[0.98] transition-all shadow-lg"
+            >
+              <img
+                src="/coal.webp"
+                alt="Charbon"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-active:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent"></div>
+              <div className="absolute inset-0 flex flex-col justify-end p-2 z-10">
+                <h3 className="text-xs font-bold text-white">Charbon</h3>
+              </div>
+            </Link>
+
+            {/* Small Item: Accessories */}
+            <Link
+              href="/produits?categorie=accessoire"
+              className="col-span-1 row-span-1 relative group rounded-lg overflow-hidden cursor-pointer active:scale-[0.98] transition-all shadow-lg"
+            >
+              <img
+                src="/hose.webp"
+                alt="Accessoires"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-active:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent"></div>
+              <div className="absolute inset-0 flex flex-col justify-end p-2 z-10">
+                <h3 className="text-xs font-bold text-white">Accessoires</h3>
+              </div>
+            </Link>
           </div>
         </section>
       </div>
