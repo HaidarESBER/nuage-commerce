@@ -885,11 +885,9 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
               </button>
             </div>
 
-            {sortedReviews.length > 0 && (
-
-              {/* Reviews Content */}
-              {reviewsExpanded && (
-                <div className="mt-2 p-3 bg-background-card rounded-lg border border-white/10">
+            {/* Reviews Content */}
+            {sortedReviews.length > 0 && reviewsExpanded && (
+              <div className="mt-2 p-3 bg-background-card rounded-lg border border-white/10">
                   {/* Sort Dropdown */}
                   <div className="flex justify-end mb-2">
                     <select
@@ -983,7 +981,6 @@ export function ProductDetailClient({ product, allProducts, reviews, stats }: Pr
                   </div>
                 </div>
               )}
-            )}
           </section>
 
           {/* Related Products - Same Category */}
