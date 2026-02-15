@@ -96,9 +96,10 @@ export function FloatingCartButton() {
           }}
           exit={{ x: 100, opacity: 0 }}
           transition={{
-            type: "spring",
+            type: shouldShake ? "tween" : "spring",
             stiffness: 300,
             damping: 30,
+            duration: shouldShake ? 0.4 : undefined,
           }}
           onClick={handleClick}
           className="fixed bottom-6 right-6 w-14 h-14 flex items-center justify-center bg-primary text-background rounded-full shadow-lg hover:bg-accent hover:text-primary transition-colors z-40"
