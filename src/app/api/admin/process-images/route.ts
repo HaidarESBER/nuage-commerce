@@ -1,12 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import Replicate from "replicate";
 
 /**
- * API endpoint to process product images with local SD
- * Requires local Python server running on localhost:5001
+ * API endpoint to process product images with Replicate AI
+ * No local GPU required - uses cloud processing
+ * Get API key from: https://replicate.com/account/api-tokens
  */
 
 const SD_SERVER_URL = process.env.SD_SERVER_URL || "http://localhost:5001";
+const USE_CLOUD = !process.env.SD_SERVER_URL; // Use cloud if no local server specified
+
+const replicate = process.env.REPLICATE_API_TOKEN
+  ? new Replicate({ auth: process.env.REPLICATE_API_TOKEN })
+  : null;
 
 export async function POST(request: NextRequest) {
   try {
@@ -38,45 +45,61 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if SD server is available
+    let result: any;
+
+    // Try local SD first, fallback to Replicate
     const healthCheck = await fetch(`${SD_SERVER_URL}/health`, {
       method: "GET",
     }).catch(() => null);
 
-    if (!healthCheck || !healthCheck.ok) {
+    if (healthCheck?.ok) {
+      // Use local SD
+      const response = await fetch(`${SD_SERVER_URL}/process-image`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          image_url,
+          style,
+          prompt: "professional product photo for e-commerce, studio lighting, clean background",
+          remove_bg: true,
+          use_ai_bg: true,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Local SD processing failed");
+      }
+
+      result = await response.json();
+    } else if (replicate) {
+      // Use Replicate cloud (no GPU needed)
+      const output: any = await replicate.run(
+        "stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b",
+        {
+          input: {
+            image: image_url,
+            prompt: `professional product photo, ${style} background, studio lighting, e-commerce`,
+            strength: 0.4,
+          },
+        }
+      );
+
+      result = {
+        success: true,
+        image: output[0], // Replicate returns array of URLs
+        width: 1024,
+        height: 1024,
+      };
+    } else {
       return NextResponse.json(
         {
-          error: "SD server not available",
-          message: "Make sure Python server is running on localhost:5001",
+          error: "No processing method available",
+          message: "Set REPLICATE_API_TOKEN in .env or run local SD server",
         },
         { status: 503 }
       );
-    }
-
-    // Process image with local SD
-    const response = await fetch(`${SD_SERVER_URL}/process-image`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        image_url,
-        style,
-        prompt: "professional product photo for e-commerce, studio lighting, clean background",
-        remove_bg: true,
-        use_ai_bg: true,
-      }),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || "SD processing failed");
-    }
-
-    const result = await response.json();
-
-    if (!result.success) {
-      throw new Error(result.error || "Processing failed");
     }
 
     // Store processed image for review in Supabase
