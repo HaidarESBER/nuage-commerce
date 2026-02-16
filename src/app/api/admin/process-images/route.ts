@@ -1,18 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import Replicate from "replicate";
+import { HfInference } from "@huggingface/inference";
 
 /**
- * API endpoint to process product images with Replicate AI
- * No local GPU required - uses cloud processing
- * Get API key from: https://replicate.com/account/api-tokens
+ * API endpoint to process product images with Hugging Face AI
+ * 100% FREE - No GPU required - Uses cloud processing
+ * Get FREE API key from: https://huggingface.co/settings/tokens
  */
 
 const SD_SERVER_URL = process.env.SD_SERVER_URL || "http://localhost:5001";
-const USE_CLOUD = !process.env.SD_SERVER_URL; // Use cloud if no local server specified
 
-const replicate = process.env.REPLICATE_API_TOKEN
-  ? new Replicate({ auth: process.env.REPLICATE_API_TOKEN })
+const hf = process.env.HUGGINGFACE_API_TOKEN
+  ? new HfInference(process.env.HUGGINGFACE_API_TOKEN)
   : null;
 
 export async function POST(request: NextRequest) {
@@ -73,22 +72,32 @@ export async function POST(request: NextRequest) {
       }
 
       result = await response.json();
-    } else if (replicate) {
-      // Use Replicate cloud (no GPU needed)
-      const output: any = await replicate.run(
-        "stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b",
-        {
-          input: {
-            image: image_url,
-            prompt: `professional product photo, ${style} background, studio lighting, e-commerce`,
-            strength: 0.4,
-          },
-        }
-      );
+    } else if (hf) {
+      // Use Hugging Face cloud (FREE, no GPU needed)
+
+      // First, fetch the image
+      const imageResponse = await fetch(image_url);
+      const imageBlob = await imageResponse.blob();
+
+      // Process with Hugging Face Stable Diffusion
+      const output = await hf.imageToImage({
+        model: "timbrooks/instruct-pix2pix",
+        inputs: imageBlob,
+        parameters: {
+          prompt: `professional product photo with ${style} background, studio lighting, clean, e-commerce`,
+          negative_prompt: "blurry, low quality, distorted, amateur",
+          num_inference_steps: 20,
+        },
+      });
+
+      // Convert blob to base64
+      const arrayBuffer = await output.arrayBuffer();
+      const base64 = Buffer.from(arrayBuffer).toString('base64');
+      const dataUrl = `data:image/png;base64,${base64}`;
 
       result = {
         success: true,
-        image: output[0], // Replicate returns array of URLs
+        image: dataUrl,
         width: 1024,
         height: 1024,
       };
@@ -96,7 +105,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: "No processing method available",
-          message: "Set REPLICATE_API_TOKEN in .env or run local SD server",
+          message: "Set HUGGINGFACE_API_TOKEN in .env.local (FREE) or run local SD server",
         },
         { status: 503 }
       );
