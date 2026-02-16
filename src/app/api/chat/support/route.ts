@@ -157,7 +157,7 @@ Réponds maintenant au message du client en utilisant ces informations.
 
     // Parse product recommendations [PRODUCT:slug]
     const productMatches = assistantMessage.matchAll(/\[PRODUCT:([\w-]+)\]/g);
-    const productSlugs = Array.from(productMatches).map(match => match[1]);
+    const productSlugs = Array.from(productMatches).map((match: RegExpMatchArray) => match[1]);
     const recommendedProducts = products
       .filter(p => productSlugs.includes(p.slug))
       .map(p => ({
