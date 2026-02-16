@@ -73,34 +73,43 @@ export async function POST(request: NextRequest) {
 
       result = await response.json();
     } else if (hf) {
-      // Use Hugging Face cloud (FREE, no GPU needed)
+      // Use Hugging Face cloud (FREE, no GPU needed) - Image to Image
+      try {
+        // Fetch the original image
+        const imageResponse = await fetch(image_url);
+        if (!imageResponse.ok) {
+          throw new Error(`Failed to fetch image: ${imageResponse.statusText}`);
+        }
+        const imageBlob = await imageResponse.blob();
 
-      // First, fetch the image
-      const imageResponse = await fetch(image_url);
-      const imageBlob = await imageResponse.blob();
+        // Use Stable Diffusion for image-to-image transformation
+        const output = await hf.imageToImage({
+          model: "stabilityai/stable-diffusion-2-1",
+          inputs: imageBlob,
+          parameters: {
+            prompt: `professional product photography with ${style} gradient background, studio lighting, clean backdrop, e-commerce product photo, high quality, centered`,
+            negative_prompt: "blurry, low quality, distorted, amateur, cluttered background, text, watermark",
+            guidance_scale: 7.5,
+            num_inference_steps: 30,
+            strength: 0.75,
+          },
+        });
 
-      // Process with Hugging Face Stable Diffusion
-      const output = await hf.imageToImage({
-        model: "timbrooks/instruct-pix2pix",
-        inputs: imageBlob,
-        parameters: {
-          prompt: `professional product photo with ${style} background, studio lighting, clean, e-commerce`,
-          negative_prompt: "blurry, low quality, distorted, amateur",
-          num_inference_steps: 20,
-        },
-      });
+        // Convert blob to base64
+        const arrayBuffer = await output.arrayBuffer();
+        const base64 = Buffer.from(arrayBuffer).toString('base64');
+        const dataUrl = `data:image/png;base64,${base64}`;
 
-      // Convert blob to base64
-      const arrayBuffer = await output.arrayBuffer();
-      const base64 = Buffer.from(arrayBuffer).toString('base64');
-      const dataUrl = `data:image/png;base64,${base64}`;
-
-      result = {
-        success: true,
-        image: dataUrl,
-        width: 1024,
-        height: 1024,
-      };
+        result = {
+          success: true,
+          image: dataUrl,
+          width: 1024,
+          height: 1024,
+        };
+      } catch (error: any) {
+        console.error("Hugging Face error:", error);
+        throw new Error(`Hugging Face processing failed: ${error.message}`);
+      }
     } else {
       return NextResponse.json(
         {
