@@ -1,4 +1,4 @@
-# Chicha E-Commerce
+# Nuage — Premium Chicha E-Commerce
 
 A full-stack, French-language e-commerce platform for selling hookahs (chichas) and accessories, built with Next.js 16 and the App Router. Beyond a storefront, the project bundles an automated product-sourcing pipeline (scraping, AI curation, review translation, and image processing), an admin back office, analytics, an AI support chatbot, and transactional email — designed to run largely on autopilot via scheduled cron jobs.
 
