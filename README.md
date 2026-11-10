@@ -16,6 +16,20 @@
 
 A full-stack, French-language e-commerce platform for selling hookahs (chichas) and accessories, built with Next.js 16 and the App Router. Beyond a storefront, the project bundles an automated product-sourcing pipeline (scraping, AI curation, review translation, and image processing), an admin back office, analytics, an AI support chatbot, and transactional email — designed to run largely on autopilot via scheduled cron jobs.
 
+**Live site:** <https://chichanuage.com>
+
+<div align="center">
+
+| | |
+|:---:|:---:|
+| <img src="docs/screenshot-home.jpg" alt="Nuage home page with hero, delivery banner and search" width="420"><br>**Home** | <img src="docs/screenshot-catalog.jpg" alt="Product catalog with category, availability and price filters" width="420"><br>**Catalog with filters** |
+| <img src="docs/screenshot-product.jpg" alt="Product page with gallery, rating, stock status and purchase buttons" width="420"><br>**Product page** | <img src="docs/screenshot-about.jpg" alt="Brand story page" width="420"><br>**Brand story** |
+| <img src="docs/screenshot-blog.jpg" alt="Blog index, Le Journal" width="420"><br>**Blog** | |
+
+</div>
+
+<sub>Captured from the live site.</sub>
+
 ## Tech Stack
 
 - **Framework:** Next.js 16 (App Router, Turbopack, MDX pages) with React 19
@@ -153,4 +167,4 @@ Scheduled jobs are defined in `vercel.json`: daily product scrape, daily curatio
 
 Released under the [MIT License](LICENSE).
 
-> Screenshots are not included: the app needs a configured Supabase project (the catalog is read from the database), so it does not render meaningfully without one.
+> Running the app locally needs your own Supabase project, because the catalog is read from the database. The screenshots above come from the live site.
