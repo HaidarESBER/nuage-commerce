@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif">
+  <title>Nuage architecture</title>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect width="960" height="540" rx="14" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="480" y="36" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a">Architecture</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#64748b">One Next.js app on Vercel, backed by Supabase, with third-party APIs for payments, email and AI.</text>
+
+  <rect x="30" y="150" width="150" height="90" rx="12" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="105" y="185" text-anchor="middle" font-size="15" font-weight="700" fill="#14532d">Shoppers</text>
+  <text x="105" y="206" text-anchor="middle" font-size="12" fill="#166534">French storefront, PWA</text>
+  <rect x="30" y="290" width="150" height="90" rx="12" fill="#fef3c7" stroke="#d97706"/>
+  <text x="105" y="325" text-anchor="middle" font-size="15" font-weight="700" fill="#78350f">Admin</text>
+  <text x="105" y="346" text-anchor="middle" font-size="12" fill="#92400e">/admin back office</text>
+
+  <rect x="230" y="90" width="330" height="400" rx="14" fill="none" stroke="#6366f1" stroke-dasharray="7 5"/>
+  <text x="247" y="112" font-size="12" font-weight="700" fill="#4f46e5">NEXT.JS 16 APP (App Router, Vercel)</text>
+  <rect x="255" y="130" width="280" height="70" rx="10" fill="#e0e7ff" stroke="#6366f1" stroke-width="2"/>
+  <text x="395" y="158" text-anchor="middle" font-size="14" font-weight="700" fill="#312e81">Pages (src/app)</text>
+  <text x="395" y="178" text-anchor="middle" font-size="11" fill="#3730a3">produits, panier, compte, suivi, blog, admin</text>
+  <rect x="255" y="215" width="280" height="70" rx="10" fill="#e0e7ff" stroke="#6366f1" stroke-width="2"/>
+  <text x="395" y="243" text-anchor="middle" font-size="14" font-weight="700" fill="#312e81">API routes (src/app/api)</text>
+  <text x="395" y="263" text-anchor="middle" font-size="11" fill="#3730a3">checkout, webhooks/stripe, chat, reviews, ...</text>
+  <rect x="255" y="300" width="280" height="70" rx="10" fill="#e0e7ff" stroke="#6366f1" stroke-width="2"/>
+  <text x="395" y="328" text-anchor="middle" font-size="14" font-weight="700" fill="#312e81">Cron routes (/api/cron/*)</text>
+  <text x="395" y="348" text-anchor="middle" font-size="11" fill="#3730a3">scrape, curate, translate-reviews, email-campaigns</text>
+  <rect x="255" y="385" width="280" height="85" rx="10" fill="#fff" stroke="#94a3b8"/>
+  <text x="395" y="412" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Domain logic (src/lib)</text>
+  <text x="395" y="432" text-anchor="middle" font-size="11" fill="#475569">products, orders, scraper, ai, email, search,</text>
+  <text x="395" y="448" text-anchor="middle" font-size="11" fill="#475569">analytics, supabase clients</text>
+
+  <rect x="640" y="110" width="290" height="62" rx="10" fill="#fff" stroke="#94a3b8"/>
+  <text x="785" y="136" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Supabase</text>
+  <text x="785" y="155" text-anchor="middle" font-size="11" fill="#475569">Postgres, Auth, Storage</text>
+  <rect x="640" y="185" width="290" height="62" rx="10" fill="#fff" stroke="#94a3b8"/>
+  <text x="785" y="211" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Stripe</text>
+  <text x="785" y="230" text-anchor="middle" font-size="11" fill="#475569">Checkout sessions, webhooks</text>
+  <rect x="640" y="260" width="290" height="62" rx="10" fill="#fff" stroke="#94a3b8"/>
+  <text x="785" y="286" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Resend</text>
+  <text x="785" y="305" text-anchor="middle" font-size="11" fill="#475569">Order, shipping, newsletter emails</text>
+  <rect x="640" y="335" width="290" height="62" rx="10" fill="#fff" stroke="#94a3b8"/>
+  <text x="785" y="361" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">OpenRouter / Groq</text>
+  <text x="785" y="380" text-anchor="middle" font-size="11" fill="#475569">Translation (OpenRouter), support chatbot (Groq)</text>
+  <rect x="640" y="410" width="290" height="62" rx="10" fill="#fff" stroke="#94a3b8"/>
+  <text x="785" y="436" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Image processing (optional)</text>
+  <text x="785" y="455" text-anchor="middle" font-size="11" fill="#475569">Hugging Face, or local sd-processor server</text>
+
+  <path d="M180 195H252" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <path d="M180 335H252" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <path d="M535 240C590 240 590 141 637 141" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <path d="M535 250C580 250 590 216 637 216" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <path d="M535 265C580 265 590 291 637 291" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <path d="M535 335C580 335 590 366 637 366" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <path d="M535 350C580 350 590 441 637 441" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <text x="480" y="515" text-anchor="middle" font-size="11" fill="#64748b">Stripe also calls POST /api/webhooks/stripe on the app to confirm paid orders.</text>
+</svg>

@@ -1,4 +1,18 @@
-# Nuage — Premium Chicha E-Commerce
+<div align="center">
+
+# Nuage
+
+**Premium chicha e-commerce: a French-language storefront, admin back office and automated product-sourcing pipeline, built on Next.js 16.**
+
+![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=nextdotjs)
+![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-Postgres-3ecf8e?logo=supabase&logoColor=white)
+![Stripe](https://img.shields.io/badge/Stripe-Checkout-635bff?logo=stripe&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-Vitest-6e9f18?logo=vitest&logoColor=white)
+![License](https://img.shields.io/badge/license-MIT-blue)
+
+</div>
 
 A full-stack, French-language e-commerce platform for selling hookahs (chichas) and accessories, built with Next.js 16 and the App Router. Beyond a storefront, the project bundles an automated product-sourcing pipeline (scraping, AI curation, review translation, and image processing), an admin back office, analytics, an AI support chatbot, and transactional email — designed to run largely on autopilot via scheduled cron jobs.
 
@@ -11,7 +25,7 @@ A full-stack, French-language e-commerce platform for selling hookahs (chichas) 
 - **Payments:** Stripe (Checkout + webhooks)
 - **Email:** Resend with React Email templates (`@react-email/*`)
 - **Search:** FlexSearch (client-side full-text search)
-- **AI:** OpenRouter (support chatbot), Hugging Face / Groq (product & review translation), Replicate or a local Stable Diffusion server for product-image processing
+- **AI:** OpenRouter (product & review translation), Groq (support chatbot), Hugging Face or a local Stable Diffusion server (`sd-processor/`) for product-image processing
 - **Scraping:** Playwright + Cheerio (AliExpress and generic adapters)
 - **PWA:** Serwist (`@serwist/next`) service worker with an offline page
 - **Auth helpers:** bcryptjs for password hashing
@@ -24,17 +38,29 @@ A full-stack, French-language e-commerce platform for selling hookahs (chichas) 
 - **Checkout & orders:** Stripe checkout, order confirmation, order tracking (`/suivi`), and email verification of orders. Transactional order/shipping emails via Resend.
 - **Admin back office (`/admin`):** dashboards for products, orders, promotions, reviews, newsletter, sourcing/curation, an image processor, a pipeline view, and analytics (revenue, sales, customers, inventory, products, orders).
 - **Automated sourcing pipeline:** scrapes supplier/product URLs, curates drafts, AI-translates product data and customer reviews, and processes product images — orchestrated by scheduled cron endpoints under `/api/cron`.
-- **AI support chatbot:** floating chat widget backed by a store knowledge base and OpenRouter (see `CHATBOT_README.md`).
+- **AI support chatbot:** floating chat widget backed by a store knowledge base and Groq (see `CHATBOT_README.md`).
 - **Analytics & tracking:** first-party event tracking plus optional GA4, Microsoft Clarity, TikTok Pixel, and Meta Pixel (cookie-consent aware).
 - **Blog:** MDX articles in `content/blog/` rendered at `/blog`.
 - **Newsletter:** subscribe/unsubscribe flows with tokenized links and campaign emails.
 - **PWA:** installable app with offline support and generated icons.
 - **Legal pages:** CGV, mentions légales, contact (French compliance).
 
+## How it works
+
+![Architecture](docs/architecture.svg)
+
+The app is a single Next.js deployment. Pages and API routes read and write Supabase (Postgres, Auth, Storage). Checkout creates an order, then a Stripe Checkout session; the Stripe webhook (`/api/webhooks/stripe`) marks the order `confirmed` on `checkout.session.completed` and triggers the confirmation email through Resend.
+
+### Sourcing pipeline
+
+![Sourcing pipeline](docs/sourcing-pipeline.svg)
+
+Scheduled cron routes scrape supplier pages into drafts, translate them to French through OpenRouter, and an admin approves a draft before `publishDraft()` turns it into a product. Schedules live in `vercel.json`.
+
 ## Project Structure
 
 ```
-chich/
+nuage-commerce/
 ├── src/
 │   ├── app/                 # Next.js App Router (pages + API routes)
 │   │   ├── admin/           # Admin back office (products, orders, analytics, pipeline...)
@@ -99,9 +125,9 @@ Copy `.env.example` to `.env.local`. Notable variables referenced by the code:
 - `NEXT_PUBLIC_SITE_URL`
 
 **AI services**
-- `OPENROUTER_API_KEY` (support chatbot)
-- `HUGGINGFACE_API_TOKEN`, `GROQ_API_KEY` (product/review translation)
-- `REPLICATE_API_TOKEN` and/or `SD_SERVER_URL` (image processing)
+- `OPENROUTER_API_KEY` (product/review translation)
+- `GROQ_API_KEY` (support chatbot)
+- `HUGGINGFACE_API_TOKEN` and/or `SD_SERVER_URL` (image processing)
 
 **Sourcing & cron**
 - `SCRAPE_URLS` (comma-separated URLs to scrape)
@@ -123,4 +149,8 @@ This repository contains a large set of standalone Markdown documents produced d
 
 Scheduled jobs are defined in `vercel.json`: daily product scrape, daily curation, daily review translation, and a weekly email campaign — all calling protected `/api/cron/*` routes.
 
-No `LICENSE` file is present in the repository.
+## License
+
+Released under the [MIT License](LICENSE).
+
+> Screenshots are not included: the app needs a configured Supabase project (the catalog is read from the database), so it does not render meaningfully without one.
