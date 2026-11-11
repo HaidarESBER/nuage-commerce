@@ -150,7 +150,7 @@ describe("generateOpenGraphTags", () => {
       url: "https://nuage.fr",
       image: "/img.jpg",
     }) as Record<string, unknown>;
-    expect(tags["og:image"]).toBe("/img.jpg");
+    expect(tags["og:image"]).toBe("https://nuage.fr/img.jpg");
     expect(tags["og:image:alt"]).toBe("Test");
   });
 
