@@ -11,6 +11,7 @@
 ![Stripe](https://img.shields.io/badge/Stripe-Checkout-635bff?logo=stripe&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-Vitest-6e9f18?logo=vitest&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-blue)
+[![CI](https://github.com/HaidarESBER/nuage-commerce/actions/workflows/ci.yml/badge.svg)](https://github.com/HaidarESBER/nuage-commerce/actions/workflows/ci.yml)
 
 </div>
 
