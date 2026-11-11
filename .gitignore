@@ -58,3 +58,7 @@ next-env.d.ts
 # Debug files
 debug-screenshot.png
 nul
+
+# Local file-based dev data: customer orders and accounts (never commit; production uses Supabase)
+data/orders.json
+data/users.json
